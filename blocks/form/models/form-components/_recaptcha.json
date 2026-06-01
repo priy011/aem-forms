@@ -1,0 +1,32 @@
+{
+    "definitions": [
+        {
+            "title": "Captcha (Invisible)",
+            "id": "captcha",
+            "plugins": {
+                "xwalk": {
+                    "page": {
+                        "resourceType": "core/fd/components/form/recaptcha/v1/recaptcha",
+                        "template": {
+                            "jcr:title": "Captcha (Invisible)"
+                        }
+                    }
+                }
+            }
+        }
+    ],
+    "models": [
+        {
+            "id": "captcha",
+            "fields": [
+                {
+                    "component": "text",
+                    "name": "name",
+                    "label": "Name",
+                    "valueType": "string",
+                    "required": true
+                }
+            ]
+        }
+    ]
+}
