@@ -1,0 +1,60 @@
+{
+    "definitions": [
+        {
+            "title": "Checkbox With Others",
+            "id": "checkbox-with-others",
+            "plugins": {
+                "xwalk": {
+                    "page": {
+                        "resourceType": "core/fd/components/form/panelcontainer/v1/panelcontainer",
+                        "template": {
+                            "fieldType": "panel",
+                            "fd:viewType": "checkbox-with-others",
+                            "jcr:title": "Checkbox with Others",
+                            "sling:resourceType": "core/fd/components/form/panelcontainer/v1/panelcontainer",
+                            "checkboxgroup": {
+                                "jcr:title": "Checkbox Group",
+                                "enum": [
+                                    "0",
+                                    "1",
+                                    "other"
+                                ],
+                                "enumNames": [
+                                    "Item 1",
+                                    "Item 2",
+                                    "Other"
+                                ],
+                                "fieldType": "checkbox-group",
+                                "sling:resourceType": "core/fd/components/form/checkboxgroup/v1/checkboxgroup",
+                                "orientation": "horizontal",
+                                "type": "string[]"
+                            },
+                            "textinput": {
+                                "fieldType": "text-input",
+                                "jcr:title": "Please specify",
+                                "sling:resourceType": "core/fd/components/form/textinput/v1/textinput"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ],
+    "models": [
+        {
+            "id": "checkbox-with-others",
+            "fields": [
+                {
+                    "component": "container",
+                    "name": "basic",
+                    "label": "Basic",
+                    "collapsible": false,
+                    "...": "../../models/form-common/_basic-input-fields.json"
+                },
+                {
+                    "...": "../../models/form-common/_help-container.json"
+                }
+            ]
+        }
+    ]
+}
