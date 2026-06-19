@@ -126,6 +126,15 @@ async function loadLazy(doc) {
 
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
   loadFonts();
+
+  const { pathname } = globalThis.location;
+  if (pathname.includes('personal-loan-welcome')) {
+    const { initWelcomePage } = await import('./loan-journey.js');
+    initWelcomePage();
+  } else if (pathname.includes('personal-loan-otp')) {
+    const { initOtpPage } = await import('./loan-journey.js');
+    initOtpPage();
+  }
 }
 
 /**
