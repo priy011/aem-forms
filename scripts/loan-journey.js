@@ -57,10 +57,9 @@ export async function initOtpPage() {
     e.stopImmediatePropagation();
 
     // Try multiple possible field names used by AEM OTP components
-    const otpInput = form.querySelector('[name="otpValue"]')
+    const otpInput = form.querySelector('[name="otp_code"]')
+      ?? form.querySelector('[name="otpValue"]')
       ?? form.querySelector('[name="otp"]')
-      ?? form.querySelector('[name="otpinput"]')
-      ?? form.querySelector('[name="OTP"]')
       ?? form.querySelector('input[maxlength="6"]')
       ?? form.querySelector('input[type="number"]');
 
