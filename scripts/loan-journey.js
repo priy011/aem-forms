@@ -33,7 +33,7 @@ export async function initWelcomePage() {
       const result = await initiateCustomerIdentification(mobileNo, identifierType, identifierValue);
       if (result.status.responseCode === '0') {
         sessionStorage.setItem('maskedMobile', `*****${mobileNo.slice(5)}`);
-        globalThis.location.href = siblingPath('personal-loan-otp');
+        globalThis.location.href = `${siblingPath('personal-loan-otp')}.html?ref=capstone`;
       } else {
         showError(form, result.status.errorDesc || 'Unable to process. Please try again.');
         if (submitBtn) submitBtn.disabled = false;
@@ -68,7 +68,7 @@ export async function initOtpPage() {
     try {
       const result = await verifyOTPAndGetDemogDetails(otp);
       if (result.status.responseCode === '0') {
-        globalThis.location.href = siblingPath('personal-loan-offer');
+        globalThis.location.href = `${siblingPath('personal-loan-offer')}.html?ref=capstone`;
       } else {
         showError(form, result.status.errorDesc || 'Invalid OTP. Please try again.');
         if (submitBtn) submitBtn.disabled = false;
