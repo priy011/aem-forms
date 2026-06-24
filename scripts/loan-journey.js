@@ -52,12 +52,20 @@ export async function initOtpPage() {
   const form = await waitForForm();
   if (!form) return;
 
-  form.addEventListener('submit', async (e) => {
+  const handleOtpSubmit = async (e) => {
     e.preventDefault();
     e.stopImmediatePropagation();
 
-    const otp = form.querySelector('[name="otpValue"]')?.value?.trim();
-    if (!otp || otp.length !== 6) {
+    // Try multiple possible field names used by AEM OTP components
+    const otpInput = form.querySelector('[name="otpValue"]')
+      ?? form.querySelector('[name="otp"]')
+      ?? form.querySelector('[name="otpinput"]')
+      ?? form.querySelector('[name="OTP"]')
+      ?? form.querySelector('input[maxlength="6"]')
+      ?? form.querySelector('input[type="number"]');
+
+    const otp = otpInput?.value?.trim();
+    if (otp?.length !== 6) {
       showError(form, 'Please enter the 6-digit OTP.');
       return;
     }
@@ -79,6 +87,13 @@ export async function initOtpPage() {
       showError(form, 'Something went wrong. Please try again.');
       if (submitBtn) submitBtn.disabled = false;
     }
+  };
+
+  // Intercept both form submit and button click (AEM OTP component uses click, not submit)
+  form.addEventListener('submit', handleOtpSubmit, true);
+  document.addEventListener('click', async (e) => {
+    const btn = e.target.closest('button[type="submit"]');
+    if (btn && form.contains(btn)) handleOtpSubmit(e);
   }, true);
 }
 
