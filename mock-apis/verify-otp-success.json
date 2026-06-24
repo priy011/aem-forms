@@ -1,0 +1,35 @@
+{
+  "contextParam": {
+    "partnerID": "HDFCBANK",
+    "channelID": "ADOBE",
+    "productName": "PL",
+    "partnerJourneyID": "160120221234567890",
+    "bankJourneyID": "20211601234567890"
+  },
+  "responseString": {
+    "OfferDemogDetails": [{
+      "customerFirstName": "Ankit",
+      "customerMiddleName": "",
+      "customerLastName": "Enterprises",
+      "customerAddress1": "1301, Barkha",
+      "customerAddress2": "Opposite Brigh School, Village Road",
+      "customerCity": "Mumbai",
+      "customerState": "Maharashtra",
+      "zipCode": "400016",
+      "customerCountry": "India",
+      "emailAddress": "ankit@gmail.com",
+      "customerMobileNo": "98709212345",
+      "offerAmount": "1000000.00",
+      "tenure": "36",
+      "rateOfInterest": "10.20",
+      "kycFlag": "Y",
+      "accountNumber": "XX50151",
+      "customerID": "XX12345"
+    }]
+  },
+  "status": {
+    "responseCode": "0",
+    "errorCode": "",
+    "errorDesc": ""
+  }
+}
