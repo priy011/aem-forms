@@ -10,9 +10,22 @@ const JOURNEY_CONTEXT = {
  * Sends mobile + identifier, returns offerAvailable + bankJourneyID
  */
 export async function initiateCustomerIdentification(mobileNo, identifierName, identifierValue) {
-  // Tier 1 mock — simulate network latency
   await new Promise((r) => setTimeout(r, 500));
 
+  // Failure scenario: mobile 9999999999 simulates "no offer available" error response
+  if (mobileNo === '9999999999') {
+    return {
+      contextParam: { ...JOURNEY_CONTEXT },
+      responseString: { offerAvailable: 'N', existingCustomer: 'N' },
+      status: {
+        responseCode: '1',
+        errorCode: 'NO_OFFER',
+        errorDesc: 'No pre-approved offer found for this customer.',
+      },
+    };
+  }
+
+  // Success scenario (happy path)
   const mockResponse = {
     contextParam: {
       ...JOURNEY_CONTEXT,
@@ -25,7 +38,6 @@ export async function initiateCustomerIdentification(mobileNo, identifierName, i
     status: { responseCode: '0', errorCode: '', errorDesc: '' },
   };
 
-  // Persist journey IDs for downstream API calls — no PII stored
   sessionStorage.setItem('bankJourneyID', mockResponse.contextParam.bankJourneyID);
   sessionStorage.setItem('partnerJourneyID', JOURNEY_CONTEXT.partnerJourneyID);
 
