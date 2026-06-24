@@ -134,6 +134,9 @@ async function loadLazy(doc) {
   } else if (pathname.includes('personal-loan-otp')) {
     const { initOtpPage } = await import('./loan-journey.js');
     initOtpPage();
+  } else if (pathname.includes('personal-loan-offer')) {
+    const { initOfferPage } = await import('./loan-journey.js');
+    initOfferPage();
   }
 }
 

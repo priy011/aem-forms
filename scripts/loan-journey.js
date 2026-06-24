@@ -1,4 +1,5 @@
 import { initiateCustomerIdentification, verifyOTPAndGetDemogDetails } from './api-service.js';
+import { calculateEMI, formatINR } from './emi-calculator.js';
 
 // Derives sibling page path: .../personal-loan-welcome → .../personal-loan-otp
 function siblingPath(pageName) {
@@ -96,6 +97,45 @@ export async function initOtpPage() {
   }, true);
 }
 
+// ── Offer page: pre-populate offer details + EMI from sessionStorage ──────────
+export async function initOfferPage() {
+  const stored = sessionStorage.getItem('offerDemogDetails');
+  if (!stored) {
+    globalThis.location.href = `${siblingPath('personal-loan-welcome')}.html?ref=capstone`;
+    return;
+  }
+
+  const offer = JSON.parse(stored);
+  const form = await waitForForm();
+  if (!form) return;
+
+  const principal = Number.parseFloat(offer.offerAmount);
+  const rate = Number.parseFloat(offer.rateOfInterest);
+  const tenure = Number.parseInt(offer.tenure, 10);
+  const emi = calculateEMI(principal, rate, tenure);
+
+  setField(form, 'customerName', `${offer.customerFirstName} ${offer.customerLastName}`.trim());
+  setField(form, 'loanAmount', formatINR(principal));
+  setField(form, 'loanTenure', `${tenure} Months`);
+  setField(form, 'interestRate', `${rate}% p.a.`);
+  setField(form, 'monthlyEMI', formatINR(emi));
+
+  const handleAccept = (e) => {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    sessionStorage.setItem('selectedEMI', emi);
+    sessionStorage.setItem('selectedTenure', tenure);
+    sessionStorage.setItem('selectedAmount', principal);
+    globalThis.location.href = `${siblingPath('personal-loan-preview')}.html?ref=capstone`;
+  };
+
+  form.addEventListener('submit', handleAccept, true);
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[type="submit"]');
+    if (btn && form.contains(btn)) handleAccept(e);
+  }, true);
+}
+
 // ── Shared helpers ────────────────────────────────────────────────────────────
 function waitForForm() {
   return new Promise((resolve) => {
@@ -109,6 +149,11 @@ function waitForForm() {
     observer.observe(document.body, { childList: true, subtree: true });
     setTimeout(() => { observer.disconnect(); resolve(null); }, 5000);
   });
+}
+
+function setField(form, name, value) {
+  const el = form.querySelector(`[name="${name}"]`);
+  if (el) el.value = value;
 }
 
 function showError(form, message) {
