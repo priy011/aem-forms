@@ -53,6 +53,13 @@ export async function initOtpPage() {
   const form = await waitForForm();
   if (!form) return;
 
+  // Update masked mobile from sessionStorage if available
+  const maskedMobile = sessionStorage.getItem('maskedMobile');
+  if (maskedMobile) {
+    const instrEl = form.querySelector('.field-otp-instruction p');
+    if (instrEl) instrEl.innerHTML = instrEl.innerHTML.replace(/\*+\d+/, maskedMobile);
+  }
+
   const handleOtpSubmit = async (e) => {
     e.preventDefault();
     e.stopImmediatePropagation();

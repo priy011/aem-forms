@@ -939,3 +939,68 @@ main .form form .field-offer-card .field-customername {
     padding-right: 0;
   }
 }
+
+/* ── OTP Page ──────────────────────────────────────────────────────────────── */
+
+/* OTP card panel */
+main .form form .field-help-us-confirm-this-is-you {
+  max-width: 640px;
+  margin: 2rem auto;
+  padding: 2rem 2.5rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgb(0 0 0 / 8%);
+}
+
+/* Panel legend "Help us confirm this is you!" */
+main .form form fieldset.panel-wrapper.field-help-us-confirm-this-is-you > legend {
+  font-size: 1.2rem !important;
+  font-weight: 700 !important;
+  color: #1a1a1a !important;
+  margin-bottom: 0.5rem;
+}
+
+/* Instruction text */
+main .form form .field-otp-instruction p {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* "Enter OTP" sub-label */
+main .form form .field-enter-otp-heading p {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 0 !important;
+}
+
+/* OTP text input — spaced characters to suggest 6 boxes */
+main .form form .text-wrapper.field-wrapper.field-otp-code input {
+  font-size: 1.4rem;
+  letter-spacing: 0.75rem;
+  text-align: left;
+  font-weight: 600;
+  border: 1.5px solid #ccc !important;
+  border-radius: 8px !important;
+  padding: 0.75rem 1rem !important;
+}
+
+/* Resend / attempts row — items already col-6, just align right side */
+main .form form .field-attempts-left {
+  text-align: right;
+}
+
+main .form form .field-resend-otp-timer p,
+main .form form .field-attempts-left p {
+  font-size: 0.85rem;
+  color: #555;
+  margin: 0;
+}
+
+/* Submit button */
+main .form form .button-wrapper.field-submit-otp button {
+  background: #3c3cff !important;
+  border-radius: 30px !important;
+  min-width: 160px;
+  padding: 12px 36px;
+}
