@@ -97,7 +97,7 @@ export async function initOtpPage() {
   }, true);
 }
 
-// ── Offer page: sliders + reactive EMI from sessionStorage offer data ─────────
+// ── Offer page: two-column layout, sliders, reactive EMI ─────────────────────
 export async function initOfferPage() {
   const stored = sessionStorage.getItem('offerDemogDetails');
   if (!stored) {
@@ -113,7 +113,16 @@ export async function initOfferPage() {
   const offerAmount = Math.min(Number.parseFloat(offer.offerAmount), 1500000);
   const offerTenure = Number.parseInt(offer.tenure, 10);
 
-  // Set slider attributes and initial values
+  // Blue banner above the sliders
+  const offerCard = form.querySelector('.field-offer-card');
+  if (offerCard) {
+    const banner = document.createElement('div');
+    banner.className = 'loan-offer-banner';
+    banner.innerHTML = `🎉 You can get a loan up to <strong>₹15,00,000!</strong>`;
+    offerCard.before(banner);
+  }
+
+  // Initialise sliders
   const amountSlider = form.querySelector('[name="loanAmount"]');
   const tenureSlider = form.querySelector('[name="loanTenure"]');
 
@@ -130,25 +139,63 @@ export async function initOfferPage() {
     tenureSlider.value = offerTenure;
   }
 
-  setField(form, 'customerName', `${offer.customerFirstName} ${offer.customerLastName}`.trim());
-  setField(form, 'interestRate', `${rate}% p.a.`);
+  const amountPill = addSliderExtras(amountSlider, formatINR(offerAmount),
+    ['50K', '2L', '4L', '6L', '8L', '10L', '12L', '15L']);
+  const tenurePill = addSliderExtras(tenureSlider, `${offerTenure} months`,
+    ['12m', '24m', '36m', '48m', '60m', '72m', '84m']);
 
-  // Recalculates and updates the right panel on every slider change
+  // Replace offer-summary fieldset with styled card HTML
+  const offerSummary = form.querySelector('.field-offer-summary');
+  const initialEMI = calculateEMI(offerAmount, rate, offerTenure);
+  if (offerSummary) {
+    offerSummary.innerHTML = `
+      <p style="font-size:0.85rem;color:#888;margin:0 0 4px">Avail XPRESS Personal Loan of</p>
+      <div class="offer-big-amount" id="offerBigAmount">${formatINR(offerAmount)}</div>
+      <hr style="border:none;border-top:1px dashed #d0c0a0;margin:0 0 0.75rem">
+      <div class="offer-metrics-row">
+        <div class="metric-item">
+          <div class="metric-label">EMI Amount</div>
+          <div class="metric-value" id="offerEMI">${formatINR(initialEMI)}</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-label">Rate of Interest</div>
+          <div class="metric-value">${rate}%</div>
+        </div>
+      </div>
+      <div class="offer-taxes-row">
+        <div class="metric-label">Taxes</div>
+        <div class="metric-value" id="offerTaxes">${formatINR(Math.round(offerAmount * 0.004))}</div>
+      </div>
+      <div class="offer-disclaimer">
+        ⓘ The principal offer is subject to credit review, basis which the loan amount may be down-sized or rejected.
+      </div>`;
+  }
+
+  // Reactive update on slider move
   const updateOffer = () => {
     const principal = Number.parseFloat(amountSlider?.value ?? offerAmount);
     const tenure = Number.parseInt(tenureSlider?.value ?? offerTenure, 10);
     const emi = calculateEMI(principal, rate, tenure);
-    setField(form, 'loanAmountDisplay', formatINR(principal));
-    setField(form, 'monthlyEMI', formatINR(emi));
+    const taxes = Math.round(principal * 0.004);
+
+    const bigAmountEl = document.getElementById('offerBigAmount');
+    const emiEl = document.getElementById('offerEMI');
+    const taxesEl = document.getElementById('offerTaxes');
+    if (bigAmountEl) bigAmountEl.textContent = formatINR(principal);
+    if (emiEl) emiEl.textContent = formatINR(emi);
+    if (taxesEl) taxesEl.textContent = formatINR(taxes);
+    if (amountPill) amountPill.textContent = formatINR(principal);
+    if (tenurePill) tenurePill.textContent = `${tenure} months`;
+
     sessionStorage.setItem('selectedAmount', principal);
     sessionStorage.setItem('selectedTenure', tenure);
     sessionStorage.setItem('selectedEMI', emi);
   };
 
-  updateOffer(); // initial render
-
   amountSlider?.addEventListener('input', updateOffer);
+  amountSlider?.addEventListener('change', updateOffer);
   tenureSlider?.addEventListener('input', updateOffer);
+  tenureSlider?.addEventListener('change', updateOffer);
 
   const handleProceed = (e) => {
     e.preventDefault();
@@ -161,6 +208,28 @@ export async function initOfferPage() {
     const btn = e.target.closest('button[type="submit"]');
     if (btn && form.contains(btn)) handleProceed(e);
   }, true);
+}
+
+function addSliderExtras(slider, initialValue, ticks) {
+  if (!slider) return null;
+  const fieldWrapper = slider.closest('.field-wrapper');
+  const label = fieldWrapper?.querySelector('label');
+
+  const pill = document.createElement('span');
+  pill.className = 'offer-value-pill';
+  pill.textContent = initialValue;
+  label?.after(pill);
+
+  const ticksEl = document.createElement('div');
+  ticksEl.className = 'offer-slider-ticks';
+  ticks.forEach((t) => {
+    const span = document.createElement('span');
+    span.textContent = t;
+    ticksEl.appendChild(span);
+  });
+  slider.closest('.range-widget-wrapper')?.after(ticksEl);
+
+  return pill;
 }
 
 // ── Shared helpers ────────────────────────────────────────────────────────────

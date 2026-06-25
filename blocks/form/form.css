@@ -792,3 +792,142 @@ main div.form-wrapper {
 main .form form select[multiple] {
     height: calc(42px + 50px);
 }
+
+/* ── Offer Display Page ──────────────────────────────────────────────────── */
+
+/* Two-column layout: sliders left (7/12), offer summary right (5/12) */
+main .form form .field-offer-card {
+  grid-column: span 7 !important;
+  padding-right: 2.5rem;
+}
+
+main .form form .field-offer-summary {
+  grid-column: span 5 !important;
+  background: #fef9f0;
+  border-radius: 16px;
+  padding: 1.75rem;
+  align-self: start;
+}
+
+/* Proceed button aligned under left panel */
+main .form form .button-wrapper.field-proceedbtn {
+  grid-column: span 7 !important;
+}
+
+main .form form .button-wrapper.field-proceedbtn button {
+  width: auto;
+  min-width: 220px;
+  border-radius: 30px;
+  background: #3c3cff;
+  padding: 14px 40px;
+  font-size: 1rem;
+}
+
+/* Loan offer banner */
+.loan-offer-banner {
+  grid-column: span 12;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #eef6ff;
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+/* Orange slider */
+main .form form .field-offer-card input[type="range"] {
+  accent-color: #f5a623;
+}
+
+/* Formatted value pill beside slider label */
+.offer-value-pill {
+  float: right;
+  border: 1.5px solid #ccc;
+  border-radius: 8px;
+  padding: 3px 14px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  background: white;
+}
+
+/* Tick marks row under each slider */
+.offer-slider-ticks {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 2px 0.75rem;
+}
+
+.offer-slider-ticks span {
+  font-size: 0.7rem;
+  color: #999;
+}
+
+/* ── Offer Summary Card internals ── */
+.offer-big-amount {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0.25rem 0 1rem;
+}
+
+.offer-metrics-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  padding-top: 0.75rem;
+}
+
+.offer-metrics-row .metric-item {
+  border-left: 3px solid #d0c0a0;
+  padding-left: 0.75rem;
+}
+
+.metric-label {
+  font-size: 0.78rem;
+  color: #888;
+  margin-bottom: 3px;
+}
+
+.metric-value {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.offer-taxes-row {
+  border-top: 1px dashed #d0c0a0;
+  padding-top: 0.75rem;
+  margin-top: 0.75rem;
+  border-left: 3px solid #d0c0a0;
+  padding-left: 0.75rem;
+}
+
+.offer-disclaimer {
+  background: #f5a623;
+  color: #2d0a00;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  margin-top: 1rem;
+}
+
+/* Hide customerName field in offer card (not in capstone design) */
+main .form form .field-offer-card .field-customername {
+  display: none;
+}
+
+/* Responsive: stack to single column on mobile */
+@media (width <= 768px) {
+  main .form form .field-offer-card,
+  main .form form .field-offer-summary,
+  main .form form .field-proceedbtn {
+    grid-column: span 12 !important;
+    padding-right: 0;
+  }
+}
