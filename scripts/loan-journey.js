@@ -97,7 +97,7 @@ export async function initOtpPage() {
   }, true);
 }
 
-// ── Offer page: pre-populate offer details + EMI from sessionStorage ──────────
+// ── Offer page: sliders + reactive EMI from sessionStorage offer data ─────────
 export async function initOfferPage() {
   const stored = sessionStorage.getItem('offerDemogDetails');
   if (!stored) {
@@ -109,30 +109,57 @@ export async function initOfferPage() {
   const form = await waitForForm();
   if (!form) return;
 
-  const principal = Number.parseFloat(offer.offerAmount);
   const rate = Number.parseFloat(offer.rateOfInterest);
-  const tenure = Number.parseInt(offer.tenure, 10);
-  const emi = calculateEMI(principal, rate, tenure);
+  const offerAmount = Math.min(Number.parseFloat(offer.offerAmount), 1500000);
+  const offerTenure = Number.parseInt(offer.tenure, 10);
+
+  // Set slider attributes and initial values
+  const amountSlider = form.querySelector('[name="loanAmount"]');
+  const tenureSlider = form.querySelector('[name="loanTenure"]');
+
+  if (amountSlider) {
+    amountSlider.min = 50000;
+    amountSlider.max = 1500000;
+    amountSlider.step = 50000;
+    amountSlider.value = offerAmount;
+  }
+  if (tenureSlider) {
+    tenureSlider.min = 12;
+    tenureSlider.max = 84;
+    tenureSlider.step = 12;
+    tenureSlider.value = offerTenure;
+  }
 
   setField(form, 'customerName', `${offer.customerFirstName} ${offer.customerLastName}`.trim());
-  setField(form, 'loanAmount', formatINR(principal));
-  setField(form, 'loanTenure', `${tenure} Months`);
   setField(form, 'interestRate', `${rate}% p.a.`);
-  setField(form, 'monthlyEMI', formatINR(emi));
 
-  const handleAccept = (e) => {
+  // Recalculates and updates the right panel on every slider change
+  const updateOffer = () => {
+    const principal = Number.parseFloat(amountSlider?.value ?? offerAmount);
+    const tenure = Number.parseInt(tenureSlider?.value ?? offerTenure, 10);
+    const emi = calculateEMI(principal, rate, tenure);
+    setField(form, 'loanAmountDisplay', formatINR(principal));
+    setField(form, 'monthlyEMI', formatINR(emi));
+    sessionStorage.setItem('selectedAmount', principal);
+    sessionStorage.setItem('selectedTenure', tenure);
+    sessionStorage.setItem('selectedEMI', emi);
+  };
+
+  updateOffer(); // initial render
+
+  amountSlider?.addEventListener('input', updateOffer);
+  tenureSlider?.addEventListener('input', updateOffer);
+
+  const handleProceed = (e) => {
     e.preventDefault();
     e.stopImmediatePropagation();
-    sessionStorage.setItem('selectedEMI', emi);
-    sessionStorage.setItem('selectedTenure', tenure);
-    sessionStorage.setItem('selectedAmount', principal);
     globalThis.location.href = `${siblingPath('personal-loan-preview')}.html?ref=capstone`;
   };
 
-  form.addEventListener('submit', handleAccept, true);
+  form.addEventListener('submit', handleProceed, true);
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('button[type="submit"]');
-    if (btn && form.contains(btn)) handleAccept(e);
+    if (btn && form.contains(btn)) handleProceed(e);
   }, true);
 }
 
