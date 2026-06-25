@@ -803,6 +803,7 @@ main .form form .field-offer-card {
 
 main .form form .field-offer-summary {
   grid-column: span 5 !important;
+  display: block !important;
   background: #fef9f0;
   border-radius: 16px;
   padding: 1.75rem;
@@ -841,6 +842,13 @@ main .form form .button-wrapper.field-proceedbtn button {
 /* Orange slider */
 main .form form .field-offer-card input[type="range"] {
   accent-color: #f5a623;
+}
+
+/* Hide AEM default range bubble and raw min/max — replaced by pill + tick marks */
+main .form form .field-offer-card .range-bubble,
+main .form form .field-offer-card .range-min,
+main .form form .field-offer-card .range-max {
+  display: none;
 }
 
 /* Formatted value pill beside slider label */
