@@ -1,4 +1,8 @@
-import { initiateCustomerIdentification, verifyOTPAndGetDemogDetails } from './api-service.js';
+import {
+  initiateCustomerIdentification,
+  verifyOTPAndGetDemogDetails,
+  submitLoanApplication,
+} from './api-service.js';
 import { calculateEMI, formatINR } from './emi-calculator.js';
 
 // ── Shared helpers ────────────────────────────────────────────────────────────
@@ -338,5 +342,114 @@ export async function initOfferPage() {
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('button[type="submit"]');
     if (btn && form.contains(btn)) handleProceed(e);
+  }, true);
+}
+
+// ── Preview page: review summary + confirm → submitLoanApplication ────────────
+export async function initPreviewPage() {
+  const stored = sessionStorage.getItem('offerDemogDetails');
+  if (!stored) {
+    window.location.href = `${siblingPath('personal-loan-welcome')}.html?ref=capstone`;
+    return;
+  }
+
+  const offer = JSON.parse(stored);
+  const rawAmount = sessionStorage.getItem('selectedAmount') || offer.offerAmount;
+  const selectedAmount = Number.parseFloat(rawAmount);
+  const rawTenure = sessionStorage.getItem('selectedTenure') || offer.tenure;
+  const selectedTenure = Number.parseInt(rawTenure, 10);
+  const storedEMI = Number.parseFloat(sessionStorage.getItem('selectedEMI'));
+  const selectedEMI = storedEMI || calculateEMI(
+    selectedAmount, Number.parseFloat(offer.rateOfInterest), selectedTenure,
+  );
+
+  const fullName = [offer.customerFirstName, offer.customerLastName]
+    .filter(Boolean).join(' ');
+
+  const form = await waitForForm();
+  if (!form) return;
+
+  const reviewPanel = form.querySelector('.field-loan-review') ?? form.querySelector('fieldset');
+  if (reviewPanel) {
+    reviewPanel.innerHTML = `
+      <div class="preview-header">
+        <h2 class="preview-title">Review Your Loan Application</h2>
+        <p class="preview-subtitle">Please confirm the details before we submit</p>
+      </div>
+      <div class="preview-card">
+        <div class="preview-row">
+          <span class="preview-label">Customer Name</span>
+          <span class="preview-value">${fullName || '—'}</span>
+        </div>
+        <div class="preview-row">
+          <span class="preview-label">Loan Amount</span>
+          <span class="preview-value preview-highlight">${formatINR(selectedAmount)}</span>
+        </div>
+        <div class="preview-row">
+          <span class="preview-label">Tenure</span>
+          <span class="preview-value">${selectedTenure} months</span>
+        </div>
+        <div class="preview-row">
+          <span class="preview-label">Monthly EMI</span>
+          <span class="preview-value preview-highlight">${formatINR(selectedEMI)}</span>
+        </div>
+        <div class="preview-row">
+          <span class="preview-label">Rate of Interest</span>
+          <span class="preview-value">${offer.rateOfInterest}% p.a.</span>
+        </div>
+        <div class="preview-row">
+          <span class="preview-label">Account</span>
+          <span class="preview-value">${offer.accountNumber || '—'}</span>
+        </div>
+      </div>
+      <p class="preview-edit-link">
+        <a href="${siblingPath('personal-loan-offer')}.html?ref=capstone">← Edit selections</a>
+      </p>`;
+  }
+
+  const handleConfirm = async (e) => {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    const confirmBtn = form.querySelector('button[type="submit"]');
+    if (confirmBtn) {
+      confirmBtn.disabled = true;
+      confirmBtn.textContent = 'Submitting…';
+    }
+
+    try {
+      const result = await submitLoanApplication({
+        bankJourneyID: sessionStorage.getItem('bankJourneyID'),
+        customerID: offer.customerID,
+        offerAmount: selectedAmount,
+        tenure: selectedTenure,
+        rateOfInterest: offer.rateOfInterest,
+      });
+
+      if (result.status.responseCode === '0') {
+        window.location.href = `${siblingPath('personal-loan-thankyou')}.html?ref=capstone`;
+      } else {
+        showError(form, result.status.errorDesc || 'Submission failed. Please try again.');
+        if (confirmBtn) {
+          confirmBtn.disabled = false;
+          confirmBtn.textContent = 'Confirm & Proceed';
+        }
+      }
+    } catch (err) {
+      const jid = sessionStorage.getItem('partnerJourneyID') ?? 'unknown';
+      // eslint-disable-next-line no-console
+      console.error(`[Journey: ${jid}] SubmitLoanApplication failed:`, err.message);
+      showError(form, 'Something went wrong. Please try again.');
+      if (confirmBtn) {
+        confirmBtn.disabled = false;
+        confirmBtn.textContent = 'Confirm & Proceed';
+      }
+    }
+  };
+
+  form.addEventListener('submit', handleConfirm, true);
+  document.addEventListener('click', async (e) => {
+    const btn = e.target.closest('button[type="submit"]');
+    if (btn && form.contains(btn)) handleConfirm(e);
   }, true);
 }

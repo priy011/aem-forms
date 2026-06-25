@@ -1004,3 +1004,86 @@ main .form form .button-wrapper.field-submit-otp button {
   min-width: 160px;
   padding: 12px 36px;
 }
+/* ── Preview (Review) Page ────────────────────────────────────────────────── */
+main .form form .field-loan-review {
+  max-width: 640px;
+  margin: 2rem auto;
+  display: block !important;
+}
+
+.preview-header {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.preview-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 0.25rem;
+}
+
+.preview-subtitle {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
+}
+
+.preview-card {
+  background: #fff;
+  border: 1px solid #e8e0d0;
+  border-radius: 12px;
+  padding: 0.25rem 0;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 2px 12px rgb(0 0 0 / 6%);
+}
+
+.preview-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.85rem 1.5rem;
+  border-bottom: 1px solid #f0ece4;
+}
+
+.preview-row:last-child {
+  border-bottom: none;
+}
+
+.preview-label {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.preview-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.preview-value.preview-highlight {
+  font-size: 1.1rem;
+  color: #3c3cff;
+}
+
+.preview-edit-link {
+  text-align: center;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.preview-edit-link a {
+  color: #3c3cff;
+  text-decoration: none;
+}
+
+.preview-edit-link a:hover {
+  text-decoration: underline;
+}
+
+main .form form .button-wrapper.field-confirm-btn button {
+  background: #3c3cff !important;
+  border-radius: 30px !important;
+  min-width: 200px;
+  padding: 14px 40px;
+}
