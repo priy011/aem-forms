@@ -131,12 +131,14 @@ export async function initOfferPage() {
     amountSlider.max = 1500000;
     amountSlider.step = 50000;
     amountSlider.value = offerAmount;
+    syncSliderTrack(amountSlider);
   }
   if (tenureSlider) {
     tenureSlider.min = 12;
     tenureSlider.max = 84;
     tenureSlider.step = 12;
     tenureSlider.value = offerTenure;
+    syncSliderTrack(tenureSlider);
   }
 
   const amountPill = addSliderExtras(amountSlider, formatINR(offerAmount),
@@ -186,6 +188,8 @@ export async function initOfferPage() {
     if (taxesEl) taxesEl.textContent = formatINR(taxes);
     if (amountPill) amountPill.textContent = formatINR(principal);
     if (tenurePill) tenurePill.textContent = `${tenure} months`;
+    syncSliderTrack(amountSlider);
+    syncSliderTrack(tenureSlider);
 
     sessionStorage.setItem('selectedAmount', principal);
     sessionStorage.setItem('selectedTenure', tenure);
@@ -208,6 +212,19 @@ export async function initOfferPage() {
     const btn = e.target.closest('button[type="submit"]');
     if (btn && form.contains(btn)) handleProceed(e);
   }, true);
+}
+
+// AEM slider uses --current-steps CSS var to draw the filled track.
+// Setting .value via JS moves the thumb but NOT the track — sync it manually.
+function syncSliderTrack(slider) {
+  if (!slider) return;
+  const wrapper = slider.closest('.range-widget-wrapper');
+  if (!wrapper) return;
+  const min = Number.parseFloat(slider.min) || 0;
+  const max = Number.parseFloat(slider.max) || 100;
+  const val = Number.parseFloat(slider.value) || min;
+  wrapper.style.setProperty('--total-steps', String(max - min));
+  wrapper.style.setProperty('--current-steps', String(val - min));
 }
 
 function addSliderExtras(slider, initialValue, ticks) {
