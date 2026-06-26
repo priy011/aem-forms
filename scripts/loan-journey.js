@@ -32,8 +32,11 @@ function showError(form, message) {
 }
 
 // Derives sibling page path: .../personal-loan-welcome → .../personal-loan-otp
+// Strips .html (and optional trailing slash) before removing the last segment
+// so the path works whether the browser URL ends in .html, .html/, or nothing.
 function siblingPath(pageName) {
-  const base = window.location.pathname.replace(/\/[^/]+$/, '');
+  const clean = window.location.pathname.replace(/\.html\/?$/, '');
+  const base = clean.replace(/\/[^/]+$/, '');
   return `${base}/${pageName}`;
 }
 
