@@ -1222,6 +1222,7 @@ main .form form .field-summary-loan-amount input {
 main .form form fieldset.panel-wrapper.field-header-bar {
   grid-column: span 12 !important;
   display: flex !important;
+  flex-direction: row !important;
   align-items: center;
   justify-content: space-between;
   background: #0d1b3e;
