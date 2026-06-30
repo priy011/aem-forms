@@ -1225,36 +1225,25 @@ main .form form .field-summary-loan-amount input {
 
 /* ── Header Fragment ─────────────────────────────────────────────────────── */
 
-/* Dark navy section background */
-.section.form-container:has(.field-header) {
-  background: #0d1b3e;
-  padding: 0 !important;
-}
-
-/* Remove white card from header form-wrapper */
-.section.form-container:has(.field-header) .form-wrapper {
-  background: transparent;
-  padding: 0;
-  border-radius: 0;
-  box-shadow: none;
-}
-
-.section.form-container:has(.field-header) .form {
-  background: transparent;
-}
-
-/* Override AEM's 12-col grid → flex row with logo left, badge right */
-.section.form-container:has(.field-header) form {
+/* Header bar panel — wraps HDFC logo + safe badge, spans full form width */
+main .form form fieldset.panel-wrapper.field-header-bar {
+  grid-column: span 12 !important;
   display: flex !important;
-  grid-template-columns: none !important;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 32px;
-  min-height: 56px;
+  background: #0d1b3e;
+  padding: 10px 32px !important;
+  border-radius: 8px;
+  gap: 0;
 }
 
-/* Logo wrapper — remove grid-column span */
-.section.form-container:has(.field-header) form .field-header {
+main .form form fieldset.panel-wrapper.field-header-bar > legend {
+  display: none;
+}
+
+/* Both image wrappers — remove grid-column, align center */
+main .form form fieldset.panel-wrapper.field-header-bar .field-header,
+main .form form fieldset.panel-wrapper.field-header-bar .field-safe-badge {
   grid-column: unset !important;
   margin: 0;
   display: flex;
@@ -1262,8 +1251,8 @@ main .form form .field-summary-loan-amount input {
   line-height: 0;
 }
 
-/* Logo image — white card border around SVG */
-.section.form-container:has(.field-header) form .field-header img {
+/* HDFC logo — white card border around SVG */
+main .form form fieldset.panel-wrapper.field-header-bar .field-header img {
   display: block;
   height: 34px;
   width: auto;
@@ -1273,16 +1262,8 @@ main .form form .field-summary-loan-amount input {
   padding: 4px 10px;
 }
 
-/* Safe & Secure badge image — authored in AEM as a second image field */
-.section.form-container:has(.field-header) form .field-safe-badge {
-  grid-column: unset !important;
-  margin: 0;
-  display: flex;
-  align-items: center;
-  line-height: 0;
-}
-
-.section.form-container:has(.field-header) form .field-safe-badge img {
+/* Safe & Secure badge image */
+main .form form fieldset.panel-wrapper.field-header-bar .field-safe-badge img {
   display: block;
   height: 34px;
   width: auto;
