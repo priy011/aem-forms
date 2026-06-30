@@ -1004,138 +1004,90 @@ main .form form .button-wrapper.field-submit-otp button {
   min-width: 160px;
   padding: 12px 36px;
 }
+
 /* ── Preview (Review) Page ────────────────────────────────────────────────── */
-main .form form .field-loan-review {
-  max-width: 760px;
-  margin: 2rem auto;
-  display: block !important;
-}
 
-/* Page title */
-.preview-page-header {
-  margin-bottom: 1.75rem;
-}
-
-.preview-page-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin: 0 0 0.25rem;
-}
-
-.preview-page-subtitle {
-  font-size: 0.9rem;
-  color: #555;
-  margin: 0;
-}
-
-/* Section card */
-.preview-section {
-  background: #fff;
-  border: 1px solid #e2e6f3;
+/* Section panels — override AEM's 12-col grid with 4-col display grid */
+main .form form fieldset.panel-wrapper.field-loan-details,
+main .form form fieldset.panel-wrapper.field-personal-details {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  border: 1px solid #e2e6f3 !important;
   border-radius: 12px;
   overflow: hidden;
-  margin-bottom: 1.25rem;
   box-shadow: 0 2px 12px rgb(0 0 0 / 6%);
+  margin-bottom: 1.25rem;
+  padding: 0 !important;
 }
 
-/* Section header bar */
-.preview-section-header {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  width: 100%;
+/* Section header legend */
+main .form form fieldset.panel-wrapper.field-loan-details > legend,
+main .form form fieldset.panel-wrapper.field-personal-details > legend {
+  grid-column: span 4;
   background: #eef0ff;
-  border: none;
-  padding: 0.9rem 1.25rem;
-  cursor: pointer;
-  text-align: left;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #1a1a1a;
+  padding: 0.9rem 1.25rem !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  color: #1a1a1a !important;
+  border-bottom: 1px solid #e2e6f3;
+  margin: 0;
+  width: 100%;
 }
 
-.preview-section-icon {
-  font-size: 1rem;
-}
-
-.preview-section-title {
-  flex: 1;
-}
-
-.preview-section-chevron {
-  font-size: 1rem;
-  color: #555;
-  transition: transform 0.2s ease;
-  display: inline-block;
-}
-
-/* Section body */
-.preview-section-body {
-  padding: 1rem 1.25rem 1.25rem;
-}
-
-/* 4-column grid for fields */
-.preview-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0;
-  border: 1px solid #e8eaf0;
-  border-radius: 8px;
-  overflow: hidden;
-  margin-bottom: 0.75rem;
-}
-
-.preview-field {
-  padding: 0.75rem 1rem;
+/* Every field defaults to 1 column */
+main .form form fieldset.panel-wrapper.field-loan-details .field-wrapper,
+main .form form fieldset.panel-wrapper.field-personal-details .field-wrapper {
+  grid-column: span 1 !important;
   border-right: 1px solid #e8eaf0;
   border-bottom: 1px solid #e8eaf0;
+  padding: 0.75rem 1rem !important;
 }
 
-.preview-field:nth-child(4n) {
+/* Address and residence span full width */
+main .form form fieldset.panel-wrapper.field-personal-details .field-address-display,
+main .form form fieldset.panel-wrapper.field-personal-details .field-residence-display {
+  grid-column: span 4 !important;
   border-right: none;
 }
 
-.preview-field:nth-last-child(-n+4) {
-  border-bottom: none;
-}
-
-/* Full-width field (address, residence type) */
-.preview-field.preview-field-full {
-  grid-column: span 4;
-  border-right: none;
-  border-bottom: 1px solid #e8eaf0;
-  padding: 0.75rem 1rem;
-}
-
-.preview-field.preview-field-full:last-child {
-  border-bottom: none;
-}
-
-.preview-field-label {
-  display: block;
-  font-size: 0.78rem;
-  color: #888;
-  margin-bottom: 0.2rem;
-}
-
-.preview-field-value {
-  display: block;
+/* Hide input chrome — show value as plain display text */
+main .form form fieldset.panel-wrapper.field-loan-details .field-wrapper input,
+main .form form fieldset.panel-wrapper.field-personal-details .field-wrapper input,
+main .form form fieldset.panel-wrapper.field-personal-details .field-wrapper textarea {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
   font-size: 0.95rem;
   font-weight: 600;
   color: #1a1a1a;
+  pointer-events: none;
+  outline: none !important;
+  resize: none;
+  height: auto;
+  min-height: unset;
 }
 
-.preview-link {
+/* Field label — small gray above the value */
+main .form form fieldset.panel-wrapper.field-loan-details .text-wrapper.field-wrapper label,
+main .form form fieldset.panel-wrapper.field-personal-details .text-wrapper.field-wrapper label {
+  font-size: 0.78rem !important;
+  color: #888 !important;
+  font-weight: 400 !important;
+  margin-bottom: 0.2rem;
+}
+
+/* Schedule of charges — blue link style */
+main .form form fieldset.panel-wrapper.field-loan-details .field-schedule-charges input {
   color: #3c6af5;
-  cursor: pointer;
   font-weight: 500;
 }
 
 /* Confirm button */
 main .form form .button-wrapper.field-confirm-btn {
   text-align: center;
-  margin-top: 0.5rem;
+  margin-top: 1rem;
 }
 
 main .form form .button-wrapper.field-confirm-btn button {
@@ -1146,20 +1098,19 @@ main .form form .button-wrapper.field-confirm-btn button {
   font-size: 1rem;
 }
 
-main .form form .button-wrapper.field-confirm-btn button::after {
-  content: ' ›';
-}
-
 @media (width <= 600px) {
-  .preview-grid {
-    grid-template-columns: repeat(2, 1fr);
+  main .form form fieldset.panel-wrapper.field-loan-details,
+  main .form form fieldset.panel-wrapper.field-personal-details {
+    grid-template-columns: repeat(2, 1fr) !important;
   }
 
-  .preview-field:nth-child(4n) {
-    border-right: 1px solid #e8eaf0;
+  main .form form fieldset.panel-wrapper.field-loan-details > legend,
+  main .form form fieldset.panel-wrapper.field-personal-details > legend {
+    grid-column: span 2;
   }
 
-  .preview-field:nth-child(2n) {
-    border-right: none;
+  main .form form fieldset.panel-wrapper.field-personal-details .field-address-display,
+  main .form form fieldset.panel-wrapper.field-personal-details .field-residence-display {
+    grid-column: span 2 !important;
   }
 }

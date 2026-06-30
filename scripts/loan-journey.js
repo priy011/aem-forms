@@ -21,6 +21,11 @@ function waitForForm() {
   });
 }
 
+function setField(form, name, value) {
+  const el = form.querySelector(`[name="${name}"]`);
+  if (el) el.value = value;
+}
+
 function showError(form, message) {
   let errorEl = form.querySelector('.loan-api-error');
   if (!errorEl) {
@@ -368,10 +373,6 @@ export async function initPreviewPage() {
 
   const fullName = [offer.customerFirstName, offer.customerLastName]
     .filter(Boolean).join(' ');
-
-  const form = await waitForForm();
-  if (!form) return;
-
   const processingFee = Number.parseFloat(offer.processingFee || '0');
   const address = [
     offer.customerAddress1,
@@ -380,108 +381,32 @@ export async function initPreviewPage() {
     `${offer.customerState} - ${offer.zipCode}`,
   ].filter(Boolean).join(', ');
 
-  const reviewPanel = form.querySelector('.field-loan-review') ?? form.querySelector('fieldset');
-  if (reviewPanel) {
-    reviewPanel.innerHTML = `
-      <div class="preview-page-header">
-        <h2 class="preview-page-title">Review Details</h2>
-        <p class="preview-page-subtitle">Please check the following details before proceeding.</p>
-      </div>
+  const form = await waitForForm();
+  if (!form) return;
 
-      <div class="preview-section" id="previewLoanSection">
-        <button type="button" class="preview-section-header" aria-expanded="true"
-          aria-controls="previewLoanBody">
-          <span class="preview-section-icon">&#128274;</span>
-          <span class="preview-section-title">Loan Details</span>
-          <span class="preview-section-chevron">&#8963;</span>
-        </button>
-        <div class="preview-section-body" id="previewLoanBody">
-          <div class="preview-grid">
-            <div class="preview-field">
-              <span class="preview-field-label">Loan Amount</span>
-              <span class="preview-field-value">${formatINR(selectedAmount)}</span>
-            </div>
-            <div class="preview-field">
-              <span class="preview-field-label">EMI Amount</span>
-              <span class="preview-field-value">${formatINR(selectedEMI)}</span>
-            </div>
-            <div class="preview-field">
-              <span class="preview-field-label">Tenure</span>
-              <span class="preview-field-value">${selectedTenure} months</span>
-            </div>
-            <div class="preview-field">
-              <span class="preview-field-label">Processing Fee</span>
-              <span class="preview-field-value">${formatINR(processingFee)}</span>
-            </div>
-            <div class="preview-field">
-              <span class="preview-field-label">Rate of Interest</span>
-              <span class="preview-field-value">${offer.rateOfInterest}%</span>
-            </div>
-            <div class="preview-field">
-              <span class="preview-field-label">Employer Name</span>
-              <span class="preview-field-value">${offer.employerName || '—'}</span>
-            </div>
-            <div class="preview-field">
-              <span class="preview-field-label">Schedule of Charges</span>
-              <span class="preview-field-value preview-link">Click here</span>
-            </div>
-            <div class="preview-field">
-              <span class="preview-field-label">Type of Loan</span>
-              <span class="preview-field-value">${offer.typeOfLoan || 'Fresh Loan'}</span>
-            </div>
-          </div>
-        </div>
-      </div>
+  // Populate loan details fields authored in AEM
+  setField(form, 'loan_amount_display', formatINR(selectedAmount));
+  setField(form, 'emi_amount_display', formatINR(selectedEMI));
+  setField(form, 'tenure_display', `${selectedTenure} months`);
+  setField(form, 'processing_fee_display', formatINR(processingFee));
+  setField(form, 'rate_display', `${offer.rateOfInterest}%`);
+  setField(form, 'employer_display', offer.employerName || '—');
+  setField(form, 'schedule_charges', 'Click here');
+  setField(form, 'type_of_loan_display', offer.typeOfLoan || 'Fresh Loan');
 
-      <div class="preview-section" id="previewPersonalSection">
-        <button type="button" class="preview-section-header" aria-expanded="true"
-          aria-controls="previewPersonalBody">
-          <span class="preview-section-icon">&#128100;</span>
-          <span class="preview-section-title">Personal Details</span>
-          <span class="preview-section-chevron">&#8963;</span>
-        </button>
-        <div class="preview-section-body" id="previewPersonalBody">
-          <div class="preview-grid">
-            <div class="preview-field">
-              <span class="preview-field-label">Full Name</span>
-              <span class="preview-field-value">${fullName || '—'}</span>
-            </div>
-            <div class="preview-field">
-              <span class="preview-field-label">Mobile Number</span>
-              <span class="preview-field-value">+91 ${offer.customerMobileNo || '—'}</span>
-            </div>
-            <div class="preview-field">
-              <span class="preview-field-label">Date of Birth</span>
-              <span class="preview-field-value">${offer.dateOfBirth || '—'}</span>
-            </div>
-            <div class="preview-field">
-              <span class="preview-field-label">PAN</span>
-              <span class="preview-field-value">${offer.maskedPan || '—'}</span>
-            </div>
-          </div>
-          <div class="preview-field preview-field-full">
-            <span class="preview-field-label">Current Address</span>
-            <span class="preview-field-value">${address || '—'}</span>
-          </div>
-          <div class="preview-field preview-field-full">
-            <span class="preview-field-label">Residence Type</span>
-            <span class="preview-field-value">${offer.residenceType || '—'}</span>
-          </div>
-        </div>
-      </div>`;
+  // Populate personal details fields authored in AEM
+  setField(form, 'full_name_display', fullName || '—');
+  setField(form, 'mobile_display', `+91 ${offer.customerMobileNo || ''}`);
+  setField(form, 'dob_display', offer.dateOfBirth || '—');
+  setField(form, 'pan_display', offer.maskedPan || '—');
+  setField(form, 'address_display', address || '—');
+  setField(form, 'residence_display', offer.residenceType || '—');
 
-    reviewPanel.querySelectorAll('.preview-section-header').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const bodyId = btn.getAttribute('aria-controls');
-        const body = document.getElementById(bodyId);
-        const expanded = btn.getAttribute('aria-expanded') === 'true';
-        btn.setAttribute('aria-expanded', String(!expanded));
-        btn.querySelector('.preview-section-chevron').style.transform = expanded
-          ? 'rotate(180deg)' : '';
-        if (body) body.style.display = expanded ? 'none' : '';
-      });
-    });
-  }
+  // Make all display fields read-only
+  form.querySelectorAll(
+    '.field-loan-details input, .field-loan-details textarea,'
+    + '.field-personal-details input, .field-personal-details textarea',
+  ).forEach((el) => el.setAttribute('readonly', ''));
 
   const handleConfirm = async (e) => {
     e.preventDefault();
@@ -508,7 +433,7 @@ export async function initPreviewPage() {
         showError(form, result.status.errorDesc || 'Submission failed. Please try again.');
         if (confirmBtn) {
           confirmBtn.disabled = false;
-          confirmBtn.textContent = 'Confirm & Proceed';
+          confirmBtn.textContent = 'Confirm';
         }
       }
     } catch (err) {
@@ -518,7 +443,7 @@ export async function initPreviewPage() {
       showError(form, 'Something went wrong. Please try again.');
       if (confirmBtn) {
         confirmBtn.disabled = false;
-        confirmBtn.textContent = 'Confirm & Proceed';
+        confirmBtn.textContent = 'Confirm';
       }
     }
   };
