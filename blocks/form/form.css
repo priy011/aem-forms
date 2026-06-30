@@ -1273,17 +1273,17 @@ main .form form .field-summary-loan-amount input {
   padding: 4px 10px;
 }
 
-/* "100% SAFE & SECURE" green pill badge on the right */
-.section.form-container:has(.field-header) form::after {
-  content: '\2713\00a0\00a0100% SAFE & SECURE';
-  background: #15803d;
-  color: #fff;
-  font-size: 0.58rem;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  padding: 6px 14px;
-  border-radius: 20px;
-  white-space: nowrap;
-  border: 1.5px solid rgb(255 255 255 / 20%);
+/* Safe & Secure badge image — authored in AEM as a second image field */
+.section.form-container:has(.field-header) form .field-safe-badge {
+  grid-column: unset !important;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  line-height: 0;
+}
+
+.section.form-container:has(.field-header) form .field-safe-badge img {
+  display: block;
+  height: 34px;
+  width: auto;
 }
