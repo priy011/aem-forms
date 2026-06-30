@@ -1114,3 +1114,84 @@ main .form form .button-wrapper.field-confirm-btn button {
     grid-column: span 2 !important;
   }
 }
+
+/* ── Thank You Page ──────────────────────────────────────────────────────── */
+
+/* Application number — large bold display */
+main .form form .field-application-number {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+main .form form .field-application-number label {
+  font-size: 0.85rem !important;
+  color: #888 !important;
+  font-weight: 400 !important;
+  width: 100%;
+}
+
+main .form form .field-application-number input {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  pointer-events: none;
+  outline: none !important;
+  width: auto;
+}
+
+.thankyou-copy-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  padding: 0 0.25rem;
+  color: #555;
+  line-height: 1;
+}
+
+/* Loan summary panel */
+main .form form fieldset.panel-wrapper.field-loan-summary {
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin-top: 1rem;
+  display: block !important;
+}
+
+main .form form fieldset.panel-wrapper.field-loan-summary > legend {
+  font-size: 1.1rem !important;
+  font-weight: 700 !important;
+  color: #1a1a1a !important;
+  border: none !important;
+  padding: 0 0 0.75rem !important;
+}
+
+/* Loan amount — left-bordered display value */
+main .form form .field-summary-loan-amount {
+  border-left: 3px solid #5b6ef5;
+  padding-left: 0.75rem;
+}
+
+main .form form .field-summary-loan-amount label {
+  font-size: 0.8rem !important;
+  color: #888 !important;
+  font-weight: 400 !important;
+}
+
+main .form form .field-summary-loan-amount input {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  pointer-events: none;
+  outline: none !important;
+}

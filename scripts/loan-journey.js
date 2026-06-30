@@ -454,3 +454,40 @@ export async function initPreviewPage() {
     if (btn && form.contains(btn)) handleConfirm(e);
   }, true);
 }
+
+// ── Thank You page: populate acknowledgement ID + loan amount ─────────────────
+export async function initThankYouPage() {
+  const resultRaw = sessionStorage.getItem('submissionResult');
+  const result = resultRaw ? JSON.parse(resultRaw) : {};
+  const rawAmount = sessionStorage.getItem('selectedAmount');
+  const selectedAmount = Number.parseFloat(rawAmount || '0');
+
+  const form = await waitForForm();
+  if (!form) return;
+
+  setField(form, 'application_number', result.acknowledgementId || '—');
+  setField(form, 'summary_loan_amount', formatINR(selectedAmount));
+
+  // Make display fields read-only
+  form.querySelectorAll(
+    '.field-application-number input, .field-summary-loan-amount input',
+  ).forEach((el) => el.setAttribute('readonly', ''));
+
+  // Copy-to-clipboard button next to the application number
+  const appWrapper = form.querySelector('.field-application-number');
+  if (appWrapper && result.acknowledgementId) {
+    const copyBtn = document.createElement('button');
+    copyBtn.type = 'button';
+    copyBtn.className = 'thankyou-copy-btn';
+    copyBtn.setAttribute('aria-label', 'Copy application number');
+    copyBtn.textContent = '📋';
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(result.acknowledgementId).then(() => {
+        copyBtn.textContent = '✓';
+        setTimeout(() => { copyBtn.textContent = '📋'; }, 2000);
+      });
+    });
+    const inputEl = appWrapper.querySelector('input');
+    if (inputEl) inputEl.after(copyBtn);
+  }
+}
