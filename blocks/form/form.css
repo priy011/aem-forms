@@ -1006,84 +1006,160 @@ main .form form .button-wrapper.field-submit-otp button {
 }
 /* ── Preview (Review) Page ────────────────────────────────────────────────── */
 main .form form .field-loan-review {
-  max-width: 640px;
+  max-width: 760px;
   margin: 2rem auto;
   display: block !important;
 }
 
-.preview-header {
-  margin-bottom: 1.5rem;
-  text-align: center;
+/* Page title */
+.preview-page-header {
+  margin-bottom: 1.75rem;
 }
 
-.preview-title {
-  font-size: 1.4rem;
+.preview-page-title {
+  font-size: 1.5rem;
   font-weight: 700;
   color: #1a1a1a;
   margin: 0 0 0.25rem;
 }
 
-.preview-subtitle {
+.preview-page-subtitle {
   font-size: 0.9rem;
-  color: #666;
+  color: #555;
   margin: 0;
 }
 
-.preview-card {
+/* Section card */
+.preview-section {
   background: #fff;
-  border: 1px solid #e8e0d0;
+  border: 1px solid #e2e6f3;
   border-radius: 12px;
-  padding: 0.25rem 0;
+  overflow: hidden;
   margin-bottom: 1.25rem;
   box-shadow: 0 2px 12px rgb(0 0 0 / 6%);
 }
 
-.preview-row {
+/* Section header bar */
+.preview-section-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 0.85rem 1.5rem;
-  border-bottom: 1px solid #f0ece4;
+  gap: 0.6rem;
+  width: 100%;
+  background: #eef0ff;
+  border: none;
+  padding: 0.9rem 1.25rem;
+  cursor: pointer;
+  text-align: left;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1a1a1a;
 }
 
-.preview-row:last-child {
+.preview-section-icon {
+  font-size: 1rem;
+}
+
+.preview-section-title {
+  flex: 1;
+}
+
+.preview-section-chevron {
+  font-size: 1rem;
+  color: #555;
+  transition: transform 0.2s ease;
+  display: inline-block;
+}
+
+/* Section body */
+.preview-section-body {
+  padding: 1rem 1.25rem 1.25rem;
+}
+
+/* 4-column grid for fields */
+.preview-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border: 1px solid #e8eaf0;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+}
+
+.preview-field {
+  padding: 0.75rem 1rem;
+  border-right: 1px solid #e8eaf0;
+  border-bottom: 1px solid #e8eaf0;
+}
+
+.preview-field:nth-child(4n) {
+  border-right: none;
+}
+
+.preview-field:nth-last-child(-n+4) {
   border-bottom: none;
 }
 
-.preview-label {
-  font-size: 0.9rem;
-  color: #666;
+/* Full-width field (address, residence type) */
+.preview-field.preview-field-full {
+  grid-column: span 4;
+  border-right: none;
+  border-bottom: 1px solid #e8eaf0;
+  padding: 0.75rem 1rem;
 }
 
-.preview-value {
+.preview-field.preview-field-full:last-child {
+  border-bottom: none;
+}
+
+.preview-field-label {
+  display: block;
+  font-size: 0.78rem;
+  color: #888;
+  margin-bottom: 0.2rem;
+}
+
+.preview-field-value {
+  display: block;
   font-size: 0.95rem;
   font-weight: 600;
   color: #1a1a1a;
 }
 
-.preview-value.preview-highlight {
-  font-size: 1.1rem;
-  color: #3c3cff;
+.preview-link {
+  color: #3c6af5;
+  cursor: pointer;
+  font-weight: 500;
 }
 
-.preview-edit-link {
+/* Confirm button */
+main .form form .button-wrapper.field-confirm-btn {
   text-align: center;
-  font-size: 0.9rem;
-  margin: 0;
-}
-
-.preview-edit-link a {
-  color: #3c3cff;
-  text-decoration: none;
-}
-
-.preview-edit-link a:hover {
-  text-decoration: underline;
+  margin-top: 0.5rem;
 }
 
 main .form form .button-wrapper.field-confirm-btn button {
-  background: #3c3cff !important;
+  background: #5b6ef5 !important;
   border-radius: 30px !important;
-  min-width: 200px;
-  padding: 14px 40px;
+  min-width: 160px;
+  padding: 12px 36px;
+  font-size: 1rem;
+}
+
+main .form form .button-wrapper.field-confirm-btn button::after {
+  content: ' ›';
+}
+
+@media (width <= 600px) {
+  .preview-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .preview-field:nth-child(4n) {
+    border-right: 1px solid #e8eaf0;
+  }
+
+  .preview-field:nth-child(2n) {
+    border-right: none;
+  }
 }

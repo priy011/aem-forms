@@ -372,42 +372,115 @@ export async function initPreviewPage() {
   const form = await waitForForm();
   if (!form) return;
 
+  const processingFee = Number.parseFloat(offer.processingFee || '0');
+  const address = [
+    offer.customerAddress1,
+    offer.customerAddress2,
+    offer.customerCity,
+    `${offer.customerState} - ${offer.zipCode}`,
+  ].filter(Boolean).join(', ');
+
   const reviewPanel = form.querySelector('.field-loan-review') ?? form.querySelector('fieldset');
   if (reviewPanel) {
     reviewPanel.innerHTML = `
-      <div class="preview-header">
-        <h2 class="preview-title">Review Your Loan Application</h2>
-        <p class="preview-subtitle">Please confirm the details before we submit</p>
+      <div class="preview-page-header">
+        <h2 class="preview-page-title">Review Details</h2>
+        <p class="preview-page-subtitle">Please check the following details before proceeding.</p>
       </div>
-      <div class="preview-card">
-        <div class="preview-row">
-          <span class="preview-label">Customer Name</span>
-          <span class="preview-value">${fullName || '—'}</span>
-        </div>
-        <div class="preview-row">
-          <span class="preview-label">Loan Amount</span>
-          <span class="preview-value preview-highlight">${formatINR(selectedAmount)}</span>
-        </div>
-        <div class="preview-row">
-          <span class="preview-label">Tenure</span>
-          <span class="preview-value">${selectedTenure} months</span>
-        </div>
-        <div class="preview-row">
-          <span class="preview-label">Monthly EMI</span>
-          <span class="preview-value preview-highlight">${formatINR(selectedEMI)}</span>
-        </div>
-        <div class="preview-row">
-          <span class="preview-label">Rate of Interest</span>
-          <span class="preview-value">${offer.rateOfInterest}% p.a.</span>
-        </div>
-        <div class="preview-row">
-          <span class="preview-label">Account</span>
-          <span class="preview-value">${offer.accountNumber || '—'}</span>
+
+      <div class="preview-section" id="previewLoanSection">
+        <button type="button" class="preview-section-header" aria-expanded="true"
+          aria-controls="previewLoanBody">
+          <span class="preview-section-icon">&#128274;</span>
+          <span class="preview-section-title">Loan Details</span>
+          <span class="preview-section-chevron">&#8963;</span>
+        </button>
+        <div class="preview-section-body" id="previewLoanBody">
+          <div class="preview-grid">
+            <div class="preview-field">
+              <span class="preview-field-label">Loan Amount</span>
+              <span class="preview-field-value">${formatINR(selectedAmount)}</span>
+            </div>
+            <div class="preview-field">
+              <span class="preview-field-label">EMI Amount</span>
+              <span class="preview-field-value">${formatINR(selectedEMI)}</span>
+            </div>
+            <div class="preview-field">
+              <span class="preview-field-label">Tenure</span>
+              <span class="preview-field-value">${selectedTenure} months</span>
+            </div>
+            <div class="preview-field">
+              <span class="preview-field-label">Processing Fee</span>
+              <span class="preview-field-value">${formatINR(processingFee)}</span>
+            </div>
+            <div class="preview-field">
+              <span class="preview-field-label">Rate of Interest</span>
+              <span class="preview-field-value">${offer.rateOfInterest}%</span>
+            </div>
+            <div class="preview-field">
+              <span class="preview-field-label">Employer Name</span>
+              <span class="preview-field-value">${offer.employerName || '—'}</span>
+            </div>
+            <div class="preview-field">
+              <span class="preview-field-label">Schedule of Charges</span>
+              <span class="preview-field-value preview-link">Click here</span>
+            </div>
+            <div class="preview-field">
+              <span class="preview-field-label">Type of Loan</span>
+              <span class="preview-field-value">${offer.typeOfLoan || 'Fresh Loan'}</span>
+            </div>
+          </div>
         </div>
       </div>
-      <p class="preview-edit-link">
-        <a href="${siblingPath('personal-loan-offer')}.html?ref=capstone">← Edit selections</a>
-      </p>`;
+
+      <div class="preview-section" id="previewPersonalSection">
+        <button type="button" class="preview-section-header" aria-expanded="true"
+          aria-controls="previewPersonalBody">
+          <span class="preview-section-icon">&#128100;</span>
+          <span class="preview-section-title">Personal Details</span>
+          <span class="preview-section-chevron">&#8963;</span>
+        </button>
+        <div class="preview-section-body" id="previewPersonalBody">
+          <div class="preview-grid">
+            <div class="preview-field">
+              <span class="preview-field-label">Full Name</span>
+              <span class="preview-field-value">${fullName || '—'}</span>
+            </div>
+            <div class="preview-field">
+              <span class="preview-field-label">Mobile Number</span>
+              <span class="preview-field-value">+91 ${offer.customerMobileNo || '—'}</span>
+            </div>
+            <div class="preview-field">
+              <span class="preview-field-label">Date of Birth</span>
+              <span class="preview-field-value">${offer.dateOfBirth || '—'}</span>
+            </div>
+            <div class="preview-field">
+              <span class="preview-field-label">PAN</span>
+              <span class="preview-field-value">${offer.maskedPan || '—'}</span>
+            </div>
+          </div>
+          <div class="preview-field preview-field-full">
+            <span class="preview-field-label">Current Address</span>
+            <span class="preview-field-value">${address || '—'}</span>
+          </div>
+          <div class="preview-field preview-field-full">
+            <span class="preview-field-label">Residence Type</span>
+            <span class="preview-field-value">${offer.residenceType || '—'}</span>
+          </div>
+        </div>
+      </div>`;
+
+    reviewPanel.querySelectorAll('.preview-section-header').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const bodyId = btn.getAttribute('aria-controls');
+        const body = document.getElementById(bodyId);
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!expanded));
+        btn.querySelector('.preview-section-chevron').style.transform = expanded
+          ? 'rotate(180deg)' : '';
+        if (body) body.style.display = expanded ? 'none' : '';
+      });
+    });
   }
 
   const handleConfirm = async (e) => {
