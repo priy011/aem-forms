@@ -1216,6 +1216,60 @@ main .form form .field-summary-loan-amount input {
   outline: none !important;
 }
 
+/* ── Welcome Page ─────────────────────────────────────────────────────────── */
+
+/* Mobile number — left column */
+main .form form .field-mobileno {
+  grid-column: 1 / span 4 !important;
+  grid-row: 1;
+}
+
+/* Identifier type radio (Pan Card / Date of Birth) — middle column */
+main .form form .field-identifiertype {
+  grid-column: 5 / span 4 !important;
+  grid-row: 1;
+}
+
+/* PAN / DOB inputs — middle column, row 2 */
+main .form form .field-panvalue,
+main .form form .field-dobvalue {
+  grid-column: 5 / span 4 !important;
+  grid-row: 2;
+}
+
+/* "We will send an OTP" helper text — left column, row 2 */
+main .form form .field-otp-helper-text {
+  grid-column: 1 / span 4 !important;
+  grid-row: 2;
+}
+
+/* View Loan Eligibility button — pill, not full width */
+main .form form .submit-wrapper {
+  width: auto !important;
+}
+
+main .form form .submit-wrapper button {
+  border-radius: 30px !important;
+  width: auto !important;
+  min-width: 220px;
+  padding: 14px 36px !important;
+  font-size: 0.95rem;
+}
+
+@media (width <= 768px) {
+  main .form form .field-mobileno,
+  main .form form .field-identifiertype,
+  main .form form .field-panvalue,
+  main .form form .field-dobvalue {
+    grid-column: span 12 !important;
+    grid-row: unset;
+  }
+
+  main .form form .submit-wrapper button {
+    width: 100% !important;
+  }
+}
+
 /* ── Header Fragment ─────────────────────────────────────────────────────── */
 
 /* Header bar panel — wraps HDFC logo + safe badge, spans full form width */
