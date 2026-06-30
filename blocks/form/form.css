@@ -766,13 +766,6 @@ main .form form .checkbox-group-wrapper.horizontal .field-description {
     margin-top: 0.5rem;
 }
 
-main div.form-wrapper {
-    background: white;
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 4px 24px rgb(0 0 0 / 8%);
-}
-
 /* Responsive adjustments for mobile */
 @media (width <= 599px) {
     :root {
@@ -1233,7 +1226,6 @@ main .form form fieldset.panel-wrapper.field-header-bar {
   justify-content: space-between;
   background: #0d1b3e;
   padding: 10px 32px !important;
-  border-radius: 8px;
   gap: 0;
 }
 
@@ -1256,15 +1248,12 @@ main .form form fieldset.panel-wrapper.field-header-bar .field-header img {
   display: block;
   height: 34px;
   width: auto;
-  background: #fff;
-  border: 2px solid rgb(255 255 255 / 85%);
-  border-radius: 4px;
   padding: 4px 10px;
 }
 
 /* Safe & Secure badge image */
 main .form form fieldset.panel-wrapper.field-header-bar .field-safe-badge img {
   display: block;
-  height: 34px;
+  height: 80px;
   width: auto;
 }

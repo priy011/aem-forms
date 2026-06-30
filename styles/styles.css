@@ -84,9 +84,6 @@ body.appear {
   display: block;
 }
 
-header {
-  height: var(--nav-height);
-}
 
 header .header,
 footer .footer {
@@ -234,8 +231,6 @@ main > .section {
 
 main > .section > div {
   max-width: 1200px;
-  margin: auto;
-  padding: 0 24px;
 }
 
 main > .section:first-of-type {
@@ -244,7 +239,7 @@ main > .section:first-of-type {
 
 @media (width >= 900px) {
   main > .section > div {
-    padding: 0 32px;
+    /* padding: 0 32px; */
   }
 }
 
