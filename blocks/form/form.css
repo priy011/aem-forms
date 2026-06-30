@@ -1216,6 +1216,11 @@ main .form form .field-summary-loan-amount input {
   outline: none !important;
 }
 
+/* Hide wizard step indicator — not needed in the loan journey */
+main .form form .wizard-menu-items {
+  display: none;
+}
+
 /* ── Welcome Page ─────────────────────────────────────────────────────────── */
 
 /* Welcome title — full width, row 1 */
