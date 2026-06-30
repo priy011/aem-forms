@@ -1218,37 +1218,49 @@ main .form form .field-summary-loan-amount input {
 
 /* ── Welcome Page ─────────────────────────────────────────────────────────── */
 
-/* Mobile number — left column */
+/* Welcome title — full width, row 1 */
+main .form form .field-welcome-text {
+  grid-column: 1 / span 12;
+  grid-row: 1;
+}
+
+/* Row 2: three-column split */
 main .form form .field-mobileno {
   grid-column: 1 / span 4 !important;
-  grid-row: 1;
+  grid-row: 2;
 }
 
-/* Identifier type radio (Pan Card / Date of Birth) — middle column */
 main .form form .field-identifiertype {
   grid-column: 5 / span 4 !important;
-  grid-row: 1;
+  grid-row: 2;
 }
 
-/* PAN / DOB inputs — middle column, row 2 */
+/* Income source spans rows 2–3 to fill the right column */
+main .form form .field-incometype {
+  grid-column: 9 / span 4 !important;
+  grid-row: 2 / span 2;
+}
+
+/* Row 3: sub-fields below each column */
+main .form form .field-mobile-otp-note {
+  grid-column: 1 / span 4 !important;
+  grid-row: 3;
+}
+
 main .form form .field-panvalue,
 main .form form .field-dobvalue {
   grid-column: 5 / span 4 !important;
-  grid-row: 2;
+  grid-row: 3;
 }
 
-/* "We will send an OTP" helper text — left column, row 2 */
-main .form form .field-otp-helper-text {
-  grid-column: 1 / span 4 !important;
-  grid-row: 2;
-}
+/* Full-width rows */
+main .form form .field-consentdata { grid-column: 1 / span 12; grid-row: 4; }
+main .form form .field-consentmarketing { grid-column: 1 / span 12; grid-row: 5; }
+main .form form .field-terms-privacy-text { grid-column: 1 / span 12; grid-row: 6; }
+main .form form .field-submitbtn { grid-column: 1 / span 12; grid-row: 7; }
 
 /* View Loan Eligibility button — pill, not full width */
-main .form form .submit-wrapper {
-  width: auto !important;
-}
-
-main .form form .submit-wrapper button {
+main .form form .field-submitbtn button {
   border-radius: 30px !important;
   width: auto !important;
   min-width: 220px;
@@ -1257,15 +1269,22 @@ main .form form .submit-wrapper button {
 }
 
 @media (width <= 768px) {
+  main .form form .field-welcome-text,
   main .form form .field-mobileno,
+  main .form form .field-mobile-otp-note,
   main .form form .field-identifiertype,
   main .form form .field-panvalue,
-  main .form form .field-dobvalue {
+  main .form form .field-dobvalue,
+  main .form form .field-incometype,
+  main .form form .field-consentdata,
+  main .form form .field-consentmarketing,
+  main .form form .field-terms-privacy-text,
+  main .form form .field-submitbtn {
     grid-column: span 12 !important;
     grid-row: unset;
   }
 
-  main .form form .submit-wrapper button {
+  main .form form .field-submitbtn button {
     width: 100% !important;
   }
 }
