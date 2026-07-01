@@ -825,25 +825,48 @@ main .form form .button-wrapper.field-proceedbtn button {
   font-size: 1rem;
 }
 
-/* Loan offer banner */
-.loan-offer-banner {
-  grid-column: span 12;
-  display: flex;
+/* Authored loan offer banner panel (image + text) */
+main .form form fieldset.panel-wrapper.field-panel1782916559529 {
+  grid-column: span 12 !important;
+  display: flex !important;
+  flex-direction: row !important;
   align-items: center;
   gap: 1rem;
   background: #eef6ff;
   border-radius: 12px;
   padding: 1rem 1.5rem;
   margin-bottom: 0.5rem;
+}
+
+main .form form fieldset.panel-wrapper.field-panel1782916559529 > legend {
+  display: none;
+}
+
+main .form form fieldset.panel-wrapper.field-panel1782916559529 .image-wrapper {
+  flex-shrink: 0;
+  width: 64px;
+  margin: 0;
+}
+
+main .form form fieldset.panel-wrapper.field-panel1782916559529 .image-wrapper img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border: none !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+}
+
+main .form form fieldset.panel-wrapper.field-panel1782916559529 .field-loan-offer-banner {
+  flex: 1;
+  margin: 0;
+}
+
+main .form form .field-loan-offer-banner p {
   font-size: 1rem;
   font-weight: 500;
   color: #1a1a1a;
-}
-
-.loan-offer-banner::before {
-  content: "💰";
-  font-size: 2.5rem;
-  flex-shrink: 0;
+  margin: 0;
 }
 
 /* Orange range slider */
