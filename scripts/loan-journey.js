@@ -253,6 +253,15 @@ export async function initOfferPage() {
   const offerAmount = Math.min(Number.parseFloat(offer.offerAmount), 1500000);
   const offerTenure = Number.parseInt(offer.tenure, 10);
 
+  // Inject offer banner (authored plain-text doesn't support image+text layout)
+  if (!form.querySelector('.loan-offer-banner')) {
+    const banner = document.createElement('div');
+    banner.className = 'loan-offer-banner';
+    banner.innerHTML = `You can get a loan up to <strong>${formatINR(1500000)}!</strong>`;
+    const offerCard = form.querySelector('.field-offer-card');
+    if (offerCard) offerCard.before(banner);
+  }
+
   const amountSlider = form.querySelector('[name="loanAmount"]');
   const tenureSlider = form.querySelector('[name="loanTenure"]');
 

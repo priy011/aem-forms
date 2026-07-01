@@ -788,6 +788,11 @@ main .form form select[multiple] {
 
 /* ── Offer Display Page ──────────────────────────────────────────────────── */
 
+/* 🎉 icon before the declared income heading */
+main .form form .field-loan-offer-declared-income-text p::before {
+  content: "🎉 ";
+}
+
 /* Two-column layout: sliders left (7/12), offer summary right (5/12) */
 main .form form .field-offer-card {
   grid-column: span 7 !important;
@@ -825,7 +830,7 @@ main .form form .button-wrapper.field-proceedbtn button {
   grid-column: span 12;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1rem;
   background: #eef6ff;
   border-radius: 12px;
   padding: 1rem 1.5rem;
@@ -835,9 +840,30 @@ main .form form .button-wrapper.field-proceedbtn button {
   color: #1a1a1a;
 }
 
-/* Orange slider */
+.loan-offer-banner::before {
+  content: "💰";
+  font-size: 2.5rem;
+  flex-shrink: 0;
+}
+
+/* Orange range slider */
 main .form form .field-offer-card input[type="range"] {
-  accent-color: #f5a623;
+  accent-color: #f5870a;
+  height: 4px !important;
+  border: none !important;
+  box-shadow: none !important;
+  margin: 0.75rem 0 0.25rem !important;
+  padding: 0 !important;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+main .form form .field-offer-card .range-widget-wrapper.decorated input[type="range"] {
+  background: linear-gradient(
+    to right,
+    #f5870a calc(var(--current-steps) / var(--total-steps) * 100%),
+    #e0e0e0 calc(var(--current-steps) / var(--total-steps) * 100%)
+  ) !important;
 }
 
 /* Hide AEM default range bubble and raw min/max — replaced by pill + tick marks */
@@ -903,17 +929,13 @@ main .form form .field-offer-summary .text-wrapper.field-wrapper.field-loanamoun
   font-weight: 400 !important;
 }
 
-/* EMI and Rate — side by side with dashed top border */
+/* EMI and Rate — side by side, each with left accent border */
 main .form form fieldset.panel-wrapper.field-offer-summary .field-monthlyemi,
 main .form form fieldset.panel-wrapper.field-offer-summary .field-interestrate {
   grid-column: span 6 !important;
   border-top: 1px dashed #d0c0a0;
+  border-left: 3px solid #f5870a;
   padding-top: 0.75rem;
-}
-
-/* Vertical divider only on Rate of Interest (right column) */
-main .form form fieldset.panel-wrapper.field-offer-summary .field-interestrate {
-  border-left: 1px solid #d0c0a0;
   padding-left: 0.75rem;
 }
 
@@ -943,11 +965,13 @@ main .form form .field-offer-summary-text-2 {
   display: none;
 }
 
-/* Taxes — full width row, dashed border above */
+/* Taxes — full width row with left accent border */
 main .form form fieldset.panel-wrapper.field-offer-summary .field-taxes {
   grid-column: span 12 !important;
   border-top: 1px dashed #d0c0a0;
+  border-left: 3px solid #f5870a;
   padding-top: 0.75rem;
+  padding-left: 0.75rem;
 }
 
 main .form form .text-wrapper.field-wrapper.field-taxes input {
