@@ -868,57 +868,72 @@ main .form form .field-offer-card .range-max {
   color: #999;
 }
 
-/* ── Offer Summary Card internals ── */
-.offer-big-amount {
+/* ── Offer Summary Card — authored fields ── */
+
+/* Hide legend and "Avail XPRESS" static text label */
+main .form form fieldset.panel-wrapper.field-offer-summary > legend {
+  display: none;
+}
+
+/* Selected Amount — large bold display */
+main .form form .text-wrapper.field-wrapper.field-loanamountdisplay input {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
   font-size: 2rem;
   font-weight: 700;
   color: #1a1a1a;
-  margin: 0.25rem 0 1rem;
+  pointer-events: none;
+  height: auto;
 }
 
-.offer-metrics-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.5rem;
+main .form form .field-offer-summary .text-wrapper.field-wrapper.field-loanamountdisplay label {
+  font-size: 0.78rem !important;
+  color: #888 !important;
+  font-weight: 400 !important;
+}
+
+/* EMI and Rate — side by side, left-bordered */
+main .form form fieldset.panel-wrapper.field-offer-summary .field-monthlyemi,
+main .form form fieldset.panel-wrapper.field-offer-summary .field-interestrate {
+  grid-column: span 6 !important;
+  border-left: 3px solid #d0c0a0;
+  padding-left: 0.75rem;
+  border-top: 1px dashed #d0c0a0;
   padding-top: 0.75rem;
 }
 
-.offer-metrics-row .metric-item {
-  border-left: 3px solid #d0c0a0;
-  padding-left: 0.75rem;
-}
-
-.metric-label {
-  font-size: 0.78rem;
-  color: #888;
-  margin-bottom: 3px;
-}
-
-.metric-value {
+main .form form .text-wrapper.field-wrapper.field-monthlyemi input,
+main .form form .text-wrapper.field-wrapper.field-interestrate input {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
   font-size: 1rem;
   font-weight: 600;
   color: #1a1a1a;
+  pointer-events: none;
+  height: auto;
 }
 
-.offer-taxes-row {
-  border-top: 1px dashed #d0c0a0;
-  padding-top: 0.75rem;
-  margin-top: 0.75rem;
-  border-left: 3px solid #d0c0a0;
-  padding-left: 0.75rem;
+main .form form .field-offer-summary .text-wrapper.field-wrapper.field-monthlyemi label,
+main .form form .field-offer-summary .text-wrapper.field-wrapper.field-interestrate label {
+  font-size: 0.78rem !important;
+  color: #888 !important;
+  font-weight: 400 !important;
 }
 
-.offer-disclaimer {
-  background: #f5a623;
-  color: #2d0a00;
-  border-radius: 10px;
-  padding: 0.75rem 1rem;
+/* "Plus applicable taxes" static text */
+main .form form .field-offer-summary-text-2 p {
   font-size: 0.78rem;
-  line-height: 1.5;
-  margin-top: 1rem;
+  color: #888;
+  margin: 0.5rem 0 0;
 }
 
-/* Hide customerName field in offer card (not in capstone design) */
+/* Hide customerName field in offer card */
 main .form form .field-offer-card .field-customername {
   display: none;
 }
