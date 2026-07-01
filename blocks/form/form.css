@@ -796,11 +796,14 @@ main .form form .field-offer-card {
 
 main .form form .field-offer-summary {
   grid-column: span 5 !important;
-  display: block !important;
+  display: grid !important;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 0;
   background: #fef9f0;
   border-radius: 16px;
   padding: 1.75rem;
   align-self: start;
+  align-content: start;
 }
 
 /* Proceed button aligned under left panel */
@@ -870,6 +873,11 @@ main .form form .field-offer-card .range-max {
 
 /* ── Offer Summary Card — authored fields ── */
 
+/* All direct children span full 12 cols by default */
+main .form form fieldset.panel-wrapper.field-offer-summary > * {
+  grid-column: span 12;
+}
+
 /* Hide legend and "Avail XPRESS" static text label */
 main .form form fieldset.panel-wrapper.field-offer-summary > legend {
   display: none;
@@ -926,11 +934,47 @@ main .form form .field-offer-summary .text-wrapper.field-wrapper.field-interestr
   font-weight: 400 !important;
 }
 
-/* "Plus applicable taxes" static text */
-main .form form .field-offer-summary-text-2 p {
-  font-size: 0.78rem;
-  color: #888;
-  margin: 0.5rem 0 0;
+/* Hide "Plus applicable taxes" static text — replaced by taxes field */
+main .form form .field-offer-summary-text-2 {
+  display: none;
+}
+
+/* Taxes — full width row, dashed border above */
+main .form form fieldset.panel-wrapper.field-offer-summary .field-taxes {
+  grid-column: span 12 !important;
+  border-top: 1px dashed #d0c0a0;
+  padding-top: 0.75rem;
+}
+
+main .form form .text-wrapper.field-wrapper.field-taxes input {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  pointer-events: none;
+  height: auto;
+}
+
+/* Disclaimer banner — orange */
+main .form form fieldset.panel-wrapper.field-offer-summary .field-offer-disclaimer {
+  grid-column: span 12 !important;
+  background: #f5a623;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+main .form form .field-offer-disclaimer p {
+  font-size: 0.82rem;
+  color: #1a1a1a;
+  margin: 0;
 }
 
 /* Hide customerName field in offer card */

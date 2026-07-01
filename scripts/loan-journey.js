@@ -253,14 +253,6 @@ export async function initOfferPage() {
   const offerAmount = Math.min(Number.parseFloat(offer.offerAmount), 1500000);
   const offerTenure = Number.parseInt(offer.tenure, 10);
 
-  const offerCard = form.querySelector('.field-offer-card');
-  if (offerCard) {
-    const banner = document.createElement('div');
-    banner.className = 'loan-offer-banner';
-    banner.innerHTML = '🎉 You can get a loan up to <strong>₹15,00,000!</strong>';
-    offerCard.before(banner);
-  }
-
   const amountSlider = form.querySelector('[name="loanAmount"]');
   const tenureSlider = form.querySelector('[name="loanTenure"]');
 
@@ -292,10 +284,12 @@ export async function initOfferPage() {
 
   // Populate authored offer summary fields
   const fullName = [offer.customerFirstName, offer.customerLastName].filter(Boolean).join(' ');
+  const processingFee = Number.parseFloat(offer.processingFee || '0');
   setField(form, 'customerName', fullName);
   setField(form, 'loanAmountDisplay', formatINR(offerAmount));
   setField(form, 'monthlyEMI', formatINR(calculateEMI(offerAmount, rate, offerTenure)));
   setField(form, 'interestRate', `${rate}%`);
+  setField(form, 'taxes', formatINR(processingFee));
 
   const updateOffer = () => {
     const principal = Number.parseFloat(amountSlider?.value ?? offerAmount);
