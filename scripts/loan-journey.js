@@ -235,7 +235,11 @@ export async function initOtpPage() {
 
 // ── Offer page: two-column layout, sliders, reactive EMI ─────────────────────
 export async function initOfferPage() {
-  const stored = sessionStorage.getItem('offerDemogDetails');
+  let stored = sessionStorage.getItem('offerDemogDetails');
+  if (!stored) {
+    await verifyOTPAndGetDemogDetails('123456');
+    stored = sessionStorage.getItem('offerDemogDetails');
+  }
   if (!stored) {
     window.location.href = `${siblingPath('personal-loan-welcome')}.html`;
     return;
@@ -355,7 +359,11 @@ export async function initOfferPage() {
 
 // ── Preview page: review summary + confirm → submitLoanApplication ────────────
 export async function initPreviewPage() {
-  const stored = sessionStorage.getItem('offerDemogDetails');
+  let stored = sessionStorage.getItem('offerDemogDetails');
+  if (!stored) {
+    await verifyOTPAndGetDemogDetails('123456');
+    stored = sessionStorage.getItem('offerDemogDetails');
+  }
   if (!stored) {
     window.location.href = `${siblingPath('personal-loan-welcome')}.html`;
     return;
