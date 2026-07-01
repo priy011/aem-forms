@@ -1342,10 +1342,17 @@ main .form form .wizard-menu-items {
 
 /* ── Welcome Page ─────────────────────────────────────────────────────────── */
 
-/* Welcome title — full width, row 1 */
+/* Welcome title — bold heading, full width, row 1 */
 main .form form .field-welcome-text {
   grid-column: 1 / span 12;
   grid-row: 1;
+}
+
+main .form form .field-welcome-text p {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 0.5rem;
 }
 
 /* Row 2: three-column split */
@@ -1359,7 +1366,7 @@ main .form form .field-identifiertype {
   grid-row: 2;
 }
 
-/* Income source spans rows 2–3 to fill the right column */
+/* Income source — right column, rows 2–3 */
 main .form form .field-incometype {
   grid-column: 9 / span 4 !important;
   grid-row: 2 / span 2;
@@ -1371,17 +1378,55 @@ main .form form .field-mobile-otp-note {
   grid-row: 3;
 }
 
+main .form form .field-mobile-otp-note p {
+  font-size: 0.82rem;
+  color: #888;
+  margin: 0;
+}
+
 main .form form .field-panvalue,
 main .form form .field-dobvalue {
   grid-column: 5 / span 4 !important;
   grid-row: 3;
 }
 
+/* Salaried income note — yellow box, right column row 4 (authored as field-income-salaried-note) */
+main .form form .field-income-salaried-note {
+  grid-column: 9 / span 4 !important;
+  grid-row: 4;
+  background: #fff8e7;
+  border: 1px solid #f0c040;
+  border-radius: 6px;
+  padding: 0.6rem 0.8rem;
+}
+
+main .form form .field-income-salaried-note p {
+  font-size: 0.82rem;
+  color: #7a5c00;
+  margin: 0;
+}
+
 /* Full-width rows */
-main .form form .field-consentdata { grid-column: 1 / span 12; grid-row: 4; }
-main .form form .field-consentmarketing { grid-column: 1 / span 12; grid-row: 5; }
-main .form form .field-terms-privacy-text { grid-column: 1 / span 12; grid-row: 6; }
-main .form form .field-submitbtn { grid-column: 1 / span 12; grid-row: 7; }
+main .form form .field-consentdata { grid-column: 1 / span 12; grid-row: 5; }
+main .form form .field-consentmarketing { grid-column: 1 / span 12; grid-row: 6; }
+main .form form .field-terms-privacy-text { grid-column: 1 / span 12; grid-row: 7; }
+main .form form .field-submitbtn { grid-column: 1 / span 12; grid-row: 8; }
+
+/* Terms text — links styled */
+main .form form .field-terms-privacy-text p {
+  font-size: 0.85rem;
+  color: #555;
+  margin: 0;
+}
+
+main .form form .field-terms-privacy-text a {
+  color: #3c6af5;
+  text-decoration: none;
+}
+
+main .form form .field-terms-privacy-text a:hover {
+  text-decoration: underline;
+}
 
 /* View Loan Eligibility button — pill, not full width */
 main .form form .field-submitbtn button {
