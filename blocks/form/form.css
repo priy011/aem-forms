@@ -1393,7 +1393,7 @@ main .form form .field-dobvalue {
 /* Salaried income note — yellow box, right column row 4 (authored as field-income-salaried-note) */
 main .form form .field-income-salaried-note {
   grid-column: 9 / span 4 !important;
-  grid-row: 4;
+  grid-row: 3;
   background: #fff8e7;
   border: 1px solid #f0c040;
   border-radius: 6px;
@@ -1437,6 +1437,84 @@ main .form form .field-submitbtn button {
   font-size: 0.95rem;
 }
 
+/* ── Welcome Page — Essentials Section ─────────────────────────────────── */
+
+/* Pin essentials to row 9 so it never auto-places into the empty row 4 gap */
+main .form form .field-essentials {
+  grid-column: 1 / span 12 !important;
+  grid-row: 9;
+  border-top: 1px solid #e0e0e0;
+  padding-top: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+/* "Important links" text — centered blue link-style */
+main .form form .field-essentials-main-heading p {
+  font-size: 0.85rem;
+  color: #3c6af5;
+  text-align: center;
+  text-decoration: underline;
+  margin: 0 0 1.2rem;
+}
+
+/* "Essentials for the journey" heading */
+main .form form .field-essentials-heading p {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 1rem;
+}
+
+/* 4-column grid for the essential items */
+main .form form .field-essentials-panel {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 0.5rem 1rem;
+}
+
+/* Each essential item card */
+main .form form .field-essentials-panel > fieldset.panel-wrapper {
+  grid-column: span 1 !important;
+  display: flex !important;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: #f8f9ff;
+  border-radius: 8px;
+  border: 1px solid #e0e6ff;
+}
+
+/* Emoji icons per card */
+main .form form .field-essential-mobile::before {
+  content: "📱";
+  font-size: 1.4rem;
+}
+
+main .form form .field-essential-pan::before {
+  content: "🪪";
+  font-size: 1.4rem;
+}
+
+main .form form .field-essential-dob::before {
+  content: "📅";
+  font-size: 1.4rem;
+}
+
+main .form form .field-essential-cheque::before {
+  content: "🏦";
+  font-size: 1.4rem;
+}
+
+/* Item label text */
+main .form form .field-essentials-panel .plain-text-wrapper p {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #1a1a1a;
+  margin: 0;
+  line-height: 1.3;
+}
+
 @media (width <= 768px) {
   main .form form .field-welcome-text,
   main .form form .field-mobileno,
@@ -1448,13 +1526,18 @@ main .form form .field-submitbtn button {
   main .form form .field-consentdata,
   main .form form .field-consentmarketing,
   main .form form .field-terms-privacy-text,
-  main .form form .field-submitbtn {
+  main .form form .field-submitbtn,
+  main .form form .field-essentials {
     grid-column: span 12 !important;
     grid-row: unset;
   }
 
   main .form form .field-submitbtn button {
     width: 100% !important;
+  }
+
+  main .form form .field-essentials-panel {
+    grid-template-columns: repeat(2, 1fr) !important;
   }
 }
 
