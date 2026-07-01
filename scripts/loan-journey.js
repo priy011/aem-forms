@@ -40,7 +40,7 @@ function showError(form, message) {
 // Strips .html (and optional trailing slash) before removing the last segment
 // so the path works whether the browser URL ends in .html, .html/, or nothing.
 function siblingPath(pageName) {
-  const clean = window.location.pathname.replace(/\.html\/?$/, '');
+  const clean = window.location.pathname.replace(/\.html\/?$/, '').replace(/\/$/, '');
   const base = clean.replace(/\/[^/]+$/, '');
   return `${base}/${pageName}`;
 }
