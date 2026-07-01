@@ -162,7 +162,7 @@ export async function initWelcomePage() {
       );
       if (result.status.responseCode === '0') {
         sessionStorage.setItem('maskedMobile', `*****${mobileNo.slice(5)}`);
-        window.location.href = `${siblingPath('personal-loan-otp')}.html?ref=capstone`;
+        window.location.href = `${siblingPath('personal-loan-otp')}.html`;
       } else {
         showError(form, result.status.errorDesc || 'Unable to process. Please try again.');
         if (submitBtn) submitBtn.disabled = false;
@@ -210,7 +210,7 @@ export async function initOtpPage() {
     try {
       const result = await verifyOTPAndGetDemogDetails(otp);
       if (result.status.responseCode === '0') {
-        window.location.href = `${siblingPath('personal-loan-offer')}.html?ref=capstone`;
+        window.location.href = `${siblingPath('personal-loan-offer')}.html`;
       } else {
         showError(form, result.status.errorDesc || 'Invalid OTP. Please try again.');
         if (submitBtn) submitBtn.disabled = false;
@@ -237,7 +237,7 @@ export async function initOtpPage() {
 export async function initOfferPage() {
   const stored = sessionStorage.getItem('offerDemogDetails');
   if (!stored) {
-    window.location.href = `${siblingPath('personal-loan-welcome')}.html?ref=capstone`;
+    window.location.href = `${siblingPath('personal-loan-welcome')}.html`;
     return;
   }
 
@@ -343,7 +343,7 @@ export async function initOfferPage() {
   const handleProceed = (e) => {
     e.preventDefault();
     e.stopImmediatePropagation();
-    window.location.href = `${siblingPath('personal-loan-preview')}.html?ref=capstone`;
+    window.location.href = `${siblingPath('personal-loan-preview')}.html`;
   };
 
   form.addEventListener('submit', handleProceed, true);
@@ -357,7 +357,7 @@ export async function initOfferPage() {
 export async function initPreviewPage() {
   const stored = sessionStorage.getItem('offerDemogDetails');
   if (!stored) {
-    window.location.href = `${siblingPath('personal-loan-welcome')}.html?ref=capstone`;
+    window.location.href = `${siblingPath('personal-loan-welcome')}.html`;
     return;
   }
 
@@ -428,7 +428,7 @@ export async function initPreviewPage() {
       });
 
       if (result.status.responseCode === '0') {
-        window.location.href = `${siblingPath('personal-loan-thankyou')}.html?ref=capstone`;
+        window.location.href = `${siblingPath('personal-loan-thankyou')}.html`;
       } else {
         showError(form, result.status.errorDesc || 'Submission failed. Please try again.');
         if (confirmBtn) {
