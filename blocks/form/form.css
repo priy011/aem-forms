@@ -1451,9 +1451,8 @@ main .form form .field-essentials {
 /* "Important links" text — centered blue link-style */
 main .form form .field-essentials-main-heading p {
   font-size: 0.85rem;
-  color: #3c6af5;
+  color: #1a1a1a;
   text-align: center;
-  text-decoration: underline;
   margin: 0 0 1.2rem;
 }
 
@@ -1479,10 +1478,6 @@ main .form form .field-essentials-panel > fieldset.panel-wrapper {
   flex-direction: row;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.75rem 1rem;
-  background: #f8f9ff;
-  border-radius: 8px;
-  border: 1px solid #e0e6ff;
 }
 
 /* Emoji icons per card */
@@ -1509,8 +1504,8 @@ main .form form .field-essential-cheque::before {
 /* Item label text */
 main .form form .field-essentials-panel .plain-text-wrapper p {
   font-size: 0.85rem;
-  font-weight: 500;
-  color: #1a1a1a;
+  font-weight: 600;
+  color: #173d9d;
   margin: 0;
   line-height: 1.3;
 }
