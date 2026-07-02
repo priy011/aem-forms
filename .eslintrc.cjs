@@ -7,6 +7,7 @@ module.exports = {
   ],
   env: {
     browser: true,
+    es2020: true,
   },
   parser: '@babel/eslint-parser',
   parserOptions: {

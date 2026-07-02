@@ -26,21 +26,23 @@ function setField(form, name, value) {
   if (el) el.value = value;
 }
 
+function clearError(form) {
+  form.querySelector('.loan-api-error')?.remove();
+}
+
 function showError(form, message) {
-  let errorEl = form.querySelector('.loan-api-error');
-  if (!errorEl) {
-    errorEl = document.createElement('p');
-    errorEl.className = 'loan-api-error';
-    form.prepend(errorEl);
-  }
+  clearError(form);
+  const errorEl = document.createElement('p');
+  errorEl.className = 'loan-api-error';
   errorEl.textContent = message;
+  form.prepend(errorEl);
 }
 
 // Derives sibling page path: .../personal-loan-welcome → .../personal-loan-otp
 // Strips .html (and optional trailing slash) before removing the last segment
 // so the path works whether the browser URL ends in .html, .html/, or nothing.
 function siblingPath(pageName) {
-  const clean = window.location.pathname.replace(/\.html\/?$/, '').replace(/\/$/, '');
+  const clean = globalThis.location.pathname.replace(/\.html\/?$/, '').replace(/\/$/, '');
   const base = clean.replace(/\/[^/]+$/, '');
   return `${base}/${pageName}`;
 }
@@ -131,6 +133,20 @@ function startOtpTimer(form) {
   startCountdown();
 }
 
+function validateWelcomeForm(form, mobileNo, identifierType, panValue, dobValue) {
+  if (!mobileNo || !/^[6-9]\d{9}$/.test(mobileNo)) {
+    return 'Please enter a valid 10-digit mobile number.';
+  }
+  if (identifierType === 'PAN_NO') {
+    if (!/^[A-Z]{5}\d{4}[A-Z]$/.test(panValue)) return 'Please enter a valid PAN number (e.g. ABCDE1234F).';
+  } else {
+    const ageYears = (Date.now() - new Date(dobValue)) / (365.25 * 24 * 3600 * 1000);
+    if (!dobValue || Number.isNaN(ageYears) || ageYears < 18) return 'Applicant must be at least 18 years old.';
+  }
+  if (!form.querySelector('[name="consentData"]')?.checked) return 'Please accept the consent to proceed.';
+  return null;
+}
+
 // ── Welcome page: intercept submit, call InitiateCustomerIdentification ────────
 export async function initWelcomePage() {
   const form = await waitForForm();
@@ -146,8 +162,9 @@ export async function initWelcomePage() {
     const dobValue = form.querySelector('[name="dobValue"]')?.value?.trim();
     const identifierValue = identifierType === 'PAN_NO' ? panValue : dobValue;
 
-    if (!mobileNo || !/^[6-9]\d{9}$/.test(mobileNo)) {
-      showError(form, 'Please enter a valid 10-digit mobile number.');
+    const validationError = validateWelcomeForm(form, mobileNo, identifierType, panValue, dobValue);
+    if (validationError) {
+      showError(form, validationError);
       return;
     }
 
@@ -162,7 +179,7 @@ export async function initWelcomePage() {
       );
       if (result.status.responseCode === '0') {
         sessionStorage.setItem('maskedMobile', `*****${mobileNo.slice(5)}`);
-        window.location.href = `${siblingPath('personal-loan-otp')}.html`;
+        globalThis.location.href = `${siblingPath('personal-loan-otp')}.html`;
       } else {
         showError(form, result.status.errorDesc || 'Unable to process. Please try again.');
         if (submitBtn) submitBtn.disabled = false;
@@ -210,7 +227,7 @@ export async function initOtpPage() {
     try {
       const result = await verifyOTPAndGetDemogDetails(otp);
       if (result.status.responseCode === '0') {
-        window.location.href = `${siblingPath('personal-loan-offer')}.html`;
+        globalThis.location.href = `${siblingPath('personal-loan-offer')}.html`;
       } else {
         showError(form, result.status.errorDesc || 'Invalid OTP. Please try again.');
         if (submitBtn) submitBtn.disabled = false;
@@ -241,7 +258,7 @@ export async function initOfferPage() {
     stored = sessionStorage.getItem('offerDemogDetails');
   }
   if (!stored) {
-    window.location.href = `${siblingPath('personal-loan-welcome')}.html`;
+    globalThis.location.href = `${siblingPath('personal-loan-welcome')}.html`;
     return;
   }
 
@@ -316,7 +333,7 @@ export async function initOfferPage() {
   const handleProceed = (e) => {
     e.preventDefault();
     e.stopImmediatePropagation();
-    window.location.href = `${siblingPath('personal-loan-preview')}.html`;
+    globalThis.location.href = `${siblingPath('personal-loan-preview')}.html`;
   };
 
   form.addEventListener('submit', handleProceed, true);
@@ -334,7 +351,7 @@ export async function initPreviewPage() {
     stored = sessionStorage.getItem('offerDemogDetails');
   }
   if (!stored) {
-    window.location.href = `${siblingPath('personal-loan-welcome')}.html`;
+    globalThis.location.href = `${siblingPath('personal-loan-welcome')}.html`;
     return;
   }
 
@@ -405,7 +422,7 @@ export async function initPreviewPage() {
       });
 
       if (result.status.responseCode === '0') {
-        window.location.href = `${siblingPath('personal-loan-thankyou')}.html`;
+        globalThis.location.href = `${siblingPath('personal-loan-thankyou')}.html`;
       } else {
         showError(form, result.status.errorDesc || 'Submission failed. Please try again.');
         if (confirmBtn) {

@@ -12,6 +12,20 @@ const JOURNEY_CONTEXT = {
 export async function initiateCustomerIdentification(mobileNo, identifierName, identifierValue) {
   await new Promise((r) => setTimeout(r, 500));
 
+  // Server-side input validation (independent of client-side checks)
+  if (!/^[6-9]\d{9}$/.test(mobileNo)) {
+    return { status: { responseCode: '1', errorCode: 'INVALID_MOBILE', errorDesc: 'Invalid mobile number format.' } };
+  }
+  if (identifierName === 'PAN_NO' && !/^[A-Z]{5}\d{4}[A-Z]$/.test(identifierValue)) {
+    return { status: { responseCode: '1', errorCode: 'INVALID_PAN', errorDesc: 'Invalid PAN format.' } };
+  }
+  if (identifierName === 'DOB') {
+    const age = (Date.now() - new Date(identifierValue)) / (365.25 * 24 * 3600 * 1000);
+    if (Number.isNaN(age) || age < 18) {
+      return { status: { responseCode: '1', errorCode: 'INVALID_DOB', errorDesc: 'Applicant must be at least 18 years old.' } };
+    }
+  }
+
   // Failure scenario: mobile 9999999999 simulates "no offer available" error response
   if (mobileNo === '9999999999') {
     return {
