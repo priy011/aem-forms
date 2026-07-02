@@ -1355,27 +1355,29 @@ main .form form .field-welcome-text p {
   margin: 0 0 0.5rem;
 }
 
-/* Row 2: three-column split */
+/* Row 2: inputs aligned — mobile input (left), PAN/DOB input (middle), income source (right) */
 main .form form .field-mobileno {
   grid-column: 1 / span 4 !important;
   grid-row: 2;
   align-self: start;
 }
 
-main .form form .field-identifiertype {
+/* PAN / DOB value input — row 2 so it sits level with the mobile number input */
+main .form form .field-panvalue,
+main .form form .field-dobvalue {
   grid-column: 5 / span 4 !important;
   grid-row: 2;
   align-self: start;
 }
 
-/* Income source — right column, rows 2–3 */
+/* Income source — right column, row 2 only (no span 2; salaried note sits at row 3 below) */
 main .form form .field-incometype {
   grid-column: 9 / span 4 !important;
-  grid-row: 2 / span 2;
+  grid-row: 2;
   align-self: start;
 }
 
-/* Row 3: sub-fields below each column */
+/* Row 3: helper text / toggles / salaried note */
 main .form form .field-mobile-otp-note {
   grid-column: 1 / span 4 !important;
   grid-row: 3;
@@ -1388,8 +1390,8 @@ main .form form .field-mobile-otp-note p {
   margin: 0;
 }
 
-main .form form .field-panvalue,
-main .form form .field-dobvalue {
+/* Identifier type toggle (Pan Card / DOB) — row 3, below the value input */
+main .form form .field-identifiertype {
   grid-column: 5 / span 4 !important;
   grid-row: 3;
   align-self: start;
@@ -1540,6 +1542,7 @@ main .form form .field-essentials-panel .plain-text-wrapper p {
   main .form form .field-panvalue,
   main .form form .field-dobvalue,
   main .form form .field-incometype,
+  main .form form .field-income-salaried-note,
   main .form form .field-consentdata,
   main .form form .field-consentmarketing,
   main .form form .field-terms-privacy-text,
