@@ -1355,29 +1355,28 @@ main .form form .field-welcome-text p {
   margin: 0 0 0.5rem;
 }
 
-/* Row 2: inputs aligned — mobile input (left), PAN/DOB input (middle), income source (right) */
+/* Row 2: mobile input (left) | Pan Card/DOB toggle (middle) | income source (right) — all same row */
 main .form form .field-mobileno {
   grid-column: 1 / span 4 !important;
   grid-row: 2;
   align-self: start;
 }
 
-/* PAN / DOB value input — row 2 so it sits level with the mobile number input */
-main .form form .field-panvalue,
-main .form form .field-dobvalue {
+/* Identifier type toggle — row 2, above the value input so user picks PAN vs DOB before entering value */
+main .form form .field-identifiertype {
   grid-column: 5 / span 4 !important;
   grid-row: 2;
   align-self: start;
 }
 
-/* Income source — right column, row 2 only (no span 2; salaried note sits at row 3 below) */
+/* Income source — row 2 only, no span 2 so salaried note at row 3 never overlaps */
 main .form form .field-incometype {
   grid-column: 9 / span 4 !important;
   grid-row: 2;
   align-self: start;
 }
 
-/* Row 3: helper text / toggles / salaried note */
+/* Row 3: OTP note (left) | PAN/DOB value input (middle) | salaried note (right) */
 main .form form .field-mobile-otp-note {
   grid-column: 1 / span 4 !important;
   grid-row: 3;
@@ -1390,8 +1389,9 @@ main .form form .field-mobile-otp-note p {
   margin: 0;
 }
 
-/* Identifier type toggle (Pan Card / DOB) — row 3, below the value input */
-main .form form .field-identifiertype {
+/* PAN / DOB value input — row 3, below the toggle that controls which field is active */
+main .form form .field-panvalue,
+main .form form .field-dobvalue {
   grid-column: 5 / span 4 !important;
   grid-row: 3;
   align-self: start;
