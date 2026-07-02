@@ -1355,46 +1355,61 @@ main .form form .field-welcome-text p {
   margin: 0 0 0.5rem;
 }
 
-/* Row 2: mobile input (left) | Pan Card/DOB toggle (middle) | income source (right) — all same row */
-main .form form .field-mobileno {
-  grid-column: 1 / span 4 !important;
-  grid-row: 2;
-  align-self: start;
-}
-
-/* Identifier type toggle — row 2, above the value input so user picks PAN vs DOB before entering value */
+/* Row 2: toggle (middle) | income label (right) — same row */
 main .form form .field-identifiertype {
   grid-column: 5 / span 4 !important;
   grid-row: 2;
   align-self: start;
 }
 
-/* Income source panel — row 2, right column (wraps label + radio group) */
+/* Dissolve the radio panel into the outer grid so label and radios sit on separate rows */
 main .form form .field-radio-panel {
+  display: contents !important;
+}
+
+/* "Your source of Income" label — row 2, right column, aligned with toggle */
+main .form form .field-income-text {
   grid-column: 9 / span 4 !important;
   grid-row: 2;
   align-self: start;
 }
 
-/* "Your source of Income" label inside the panel */
-main .form form .field-radio-panel .field-income-text p {
+main .form form .field-income-text p {
   font-size: 0.9rem;
   font-weight: 500;
   color: #555;
   margin: 0 0 0.5rem;
 }
 
-/* Radio group inside the panel — stack options vertically */
+/* Row 3: mobile input (left) | PAN/DOB input (middle) | income radios (right) — same row */
+main .form form .field-mobileno {
+  grid-column: 1 / span 4 !important;
+  grid-row: 3;
+  align-self: start;
+}
+
+/* PAN / DOB value input — row 3, same row as mobile input */
+main .form form .field-panvalue,
+main .form form .field-dobvalue {
+  grid-column: 5 / span 4 !important;
+  grid-row: 3;
+  align-self: start;
+}
+
+/* Income type radio group — row 3, right column, same row as mobile + PAN inputs */
 main .form form .field-radio-panel .field-incometype {
+  grid-column: 9 / span 4 !important;
+  grid-row: 3;
+  align-self: start;
   display: flex !important;
   flex-direction: column;
   gap: 0.4rem;
 }
 
-/* Row 3: OTP note (left) | PAN/DOB value input (middle) | salaried note (right) */
+/* Row 4: OTP note (left) | salaried note (right) */
 main .form form .field-mobile-otp-note {
   grid-column: 1 / span 4 !important;
-  grid-row: 3;
+  grid-row: 4;
   align-self: start;
 }
 
@@ -1404,18 +1419,10 @@ main .form form .field-mobile-otp-note p {
   margin: 0;
 }
 
-/* PAN / DOB value input — row 3, below the toggle that controls which field is active */
-main .form form .field-panvalue,
-main .form form .field-dobvalue {
-  grid-column: 5 / span 4 !important;
-  grid-row: 3;
-  align-self: start;
-}
-
-/* Salaried income note — yellow box, right column row 4 (authored as field-income-salaried-note) */
+/* Salaried income note — yellow box, right column row 4 */
 main .form form .field-income-salaried-note {
   grid-column: 9 / span 4 !important;
-  grid-row: 3;
+  grid-row: 4;
   align-self: start;
   background: #fff8e7;
   border: 1px solid #f0c040;
@@ -1556,7 +1563,8 @@ main .form form .field-essentials-panel .plain-text-wrapper p {
   main .form form .field-identifiertype,
   main .form form .field-panvalue,
   main .form form .field-dobvalue,
-  main .form form .field-radio-panel,
+  main .form form .field-income-text,
+  main .form form .field-radio-panel .field-incometype,
   main .form form .field-income-salaried-note,
   main .form form .field-consentdata,
   main .form form .field-consentmarketing,
