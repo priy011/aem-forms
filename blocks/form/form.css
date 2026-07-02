@@ -1369,11 +1369,26 @@ main .form form .field-identifiertype {
   align-self: start;
 }
 
-/* Income source — row 2 only, no span 2 so salaried note at row 3 never overlaps */
-main .form form .field-incometype {
+/* Income source panel — row 2, right column (wraps label + radio group) */
+main .form form .field-radio-panel {
   grid-column: 9 / span 4 !important;
   grid-row: 2;
   align-self: start;
+}
+
+/* "Your source of Income" label inside the panel */
+main .form form .field-radio-panel .field-income-text p {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #555;
+  margin: 0 0 0.5rem;
+}
+
+/* Radio group inside the panel — stack options vertically */
+main .form form .field-radio-panel .field-incometype {
+  display: flex !important;
+  flex-direction: column;
+  gap: 0.4rem;
 }
 
 /* Row 3: OTP note (left) | PAN/DOB value input (middle) | salaried note (right) */
@@ -1541,7 +1556,7 @@ main .form form .field-essentials-panel .plain-text-wrapper p {
   main .form form .field-identifiertype,
   main .form form .field-panvalue,
   main .form form .field-dobvalue,
-  main .form form .field-incometype,
+  main .form form .field-radio-panel,
   main .form form .field-income-salaried-note,
   main .form form .field-consentdata,
   main .form form .field-consentmarketing,
