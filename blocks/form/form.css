@@ -1359,23 +1359,27 @@ main .form form .field-welcome-text p {
 main .form form .field-mobileno {
   grid-column: 1 / span 4 !important;
   grid-row: 2;
+  align-self: start;
 }
 
 main .form form .field-identifiertype {
   grid-column: 5 / span 4 !important;
   grid-row: 2;
+  align-self: start;
 }
 
 /* Income source — right column, rows 2–3 */
 main .form form .field-incometype {
   grid-column: 9 / span 4 !important;
   grid-row: 2 / span 2;
+  align-self: start;
 }
 
 /* Row 3: sub-fields below each column */
 main .form form .field-mobile-otp-note {
   grid-column: 1 / span 4 !important;
   grid-row: 3;
+  align-self: start;
 }
 
 main .form form .field-mobile-otp-note p {
@@ -1388,12 +1392,14 @@ main .form form .field-panvalue,
 main .form form .field-dobvalue {
   grid-column: 5 / span 4 !important;
   grid-row: 3;
+  align-self: start;
 }
 
 /* Salaried income note — yellow box, right column row 4 (authored as field-income-salaried-note) */
 main .form form .field-income-salaried-note {
   grid-column: 9 / span 4 !important;
   grid-row: 3;
+  align-self: start;
   background: #fff8e7;
   border: 1px solid #f0c040;
   border-radius: 6px;
@@ -1407,8 +1413,24 @@ main .form form .field-income-salaried-note p {
 }
 
 /* Full-width rows */
-main .form form .field-consentdata { grid-column: 1 / span 12; grid-row: 5; }
-main .form form .field-consentmarketing { grid-column: 1 / span 12; grid-row: 6; }
+main .form form .field-consentdata {
+  grid-column: 1 / span 12;
+  grid-row: 5;
+  align-items: flex-start;
+}
+
+main .form form .field-consentmarketing {
+  grid-column: 1 / span 12;
+  grid-row: 6;
+  align-items: flex-start;
+}
+
+/* Align checkbox input to top so it sits next to the first line of a long label */
+main .form form .field-consentdata input[type="checkbox"],
+main .form form .field-consentmarketing input[type="checkbox"] {
+  margin-top: 2px;
+  flex-shrink: 0;
+}
 main .form form .field-terms-privacy-text { grid-column: 1 / span 12; grid-row: 7; }
 main .form form .field-submitbtn { grid-column: 1 / span 12; grid-row: 8; }
 
