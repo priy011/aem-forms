@@ -46,6 +46,12 @@ function siblingPath(pageName) {
   return `${base}/${pageName}`;
 }
 
+function isAgeValid(dob) {
+  if (!dob) return false;
+  const years = (Date.now() - new Date(dob)) / (365.25 * 24 * 3600 * 1000);
+  return !Number.isNaN(years) && years >= 18;
+}
+
 // AEM slider uses --current-steps CSS var to draw the filled track.
 // Setting .value via JS moves the thumb but NOT the track — sync it manually.
 function syncSliderTrack(slider) {
@@ -132,10 +138,36 @@ function startOtpTimer(form) {
   startCountdown();
 }
 
-// ── Welcome page: validation, button state and navigation handled by Rule Editor
+// ── Welcome page ─────────────────────────────────────────────────────────────
 export async function initWelcomePage() {
-  // Rule Editor owns: field validation, button enable/disable, Invoke Service, navigation.
-  // No JS logic needed here.
+  const form = await waitForForm();
+  if (!form) return;
+
+  const submitBtn = form.querySelector('button[type="submit"]');
+  if (submitBtn) submitBtn.disabled = true;
+
+  const dobInput = form.querySelector('[name="dobValue"]');
+  const dobError = form.querySelector('.field-dob-error-msg');
+
+  if (dobInput) {
+    if (dobError) dobError.style.display = 'none';
+
+    // Show error after user picks a date — not while typing
+    dobInput.addEventListener('change', () => {
+      if (!dobError) return;
+      dobError.style.display = (dobInput.value && !isAgeValid(dobInput.value))
+        ? '' : 'none';
+    });
+  }
+
+  // Safety net: block submit if DOB is blank or under 18
+  form.addEventListener('submit', (e) => {
+    if (!isAgeValid(dobInput?.value)) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      if (dobError) dobError.style.display = '';
+    }
+  }, true);
 }
 
 // ── OTP page: intercept submit, call VerifyOTPAndGetDemogDetails ───────────────
