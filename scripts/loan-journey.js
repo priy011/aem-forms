@@ -228,6 +228,22 @@ export async function initWelcomePage() {
   panInput?.addEventListener('input', () => {
     if (panInput.validity.valid) checkValidation(panInput);
   });
+
+  // Block native form submit so the Rule Editor Invoke Service is the only navigation trigger.
+  // Without this the browser reloads the page on every click, cancelling the async Invoke Service.
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+  }, true);
+
+  // Disable on click to prevent stacked Invoke Service calls while the async request is in flight.
+  // 8-second safety re-enables the button if navigation never fires (e.g. Rule Editor failure).
+  submitBtn?.addEventListener('click', () => {
+    submitBtn.disabled = true;
+    setTimeout(() => {
+      if (document.contains(submitBtn)) submitBtn.disabled = !checkFormValid();
+    }, 8000);
+  });
 }
 
 // ── OTP page: intercept submit, call VerifyOTPAndGetDemogDetails ───────────────
@@ -397,9 +413,8 @@ export async function initPreviewPage() {
   const rawTenure = sessionStorage.getItem('selectedTenure') || offer.tenure;
   const selectedTenure = Number.parseInt(rawTenure, 10);
   const storedEMI = Number.parseFloat(sessionStorage.getItem('selectedEMI'));
-  const selectedEMI = storedEMI || calculateEMI(
-    selectedAmount, Number.parseFloat(offer.rateOfInterest), selectedTenure,
-  );
+  const roi = Number.parseFloat(offer.rateOfInterest);
+  const selectedEMI = storedEMI || calculateEMI(selectedAmount, roi, selectedTenure);
 
   const fullName = [offer.customerFirstName, offer.customerLastName]
     .filter(Boolean).join(' ');
