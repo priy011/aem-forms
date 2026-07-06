@@ -1,5 +1,4 @@
 import {
-  initiateCustomerIdentification,
   verifyOTPAndGetDemogDetails,
   submitLoanApplication,
 } from './api-service.js';
@@ -200,52 +199,6 @@ export async function initWelcomePage() {
   dobInput?.addEventListener('change', updateSubmitBtn);
   consentInput?.addEventListener('change', updateSubmitBtn);
   consentMktInput?.addEventListener('change', updateSubmitBtn);
-
-  // ── Submit: validate → API → navigate ──────────────────────────────────────
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    e.stopImmediatePropagation();
-
-    if (!checkFormValid()) {
-      if (dobError && dobInput?.value && !isAgeValid(dobInput.value)) {
-        dobError.style.display = '';
-      }
-      return;
-    }
-
-    if (submitBtn) submitBtn.disabled = true;
-    clearError(form);
-
-    const mobileNo = mobileInput.value.trim();
-    const identifierName = getIdentifierType();
-    const identifierValue = identifierName === 'PAN_NO'
-      ? panInput.value.trim()
-      : dobInput.value;
-
-    try {
-      const res = await initiateCustomerIdentification(mobileNo, identifierName, identifierValue);
-      if (res.status.responseCode === '0') {
-        sessionStorage.setItem('maskedMobile', `*****${mobileNo.slice(5)}`);
-        globalThis.location.href = `${siblingPath('personal-loan-otp')}.html`;
-      } else {
-        const msg = res.status.errorDesc || 'Unable to process your request. Please try again.';
-        showError(form, msg);
-        if (submitBtn) submitBtn.disabled = false;
-      }
-    } catch (err) {
-      const jid = sessionStorage.getItem('partnerJourneyID') ?? 'unknown';
-      // eslint-disable-next-line no-console
-      console.error(`[Journey: ${jid}] InitiateCustomerIdentification failed:`, err.message);
-      showError(form, 'Something went wrong. Please try again.');
-      if (submitBtn) submitBtn.disabled = false;
-    }
-  };
-
-  form.addEventListener('submit', handleSubmit, true);
-  document.addEventListener('click', async (e) => {
-    const btn = e.target.closest('button[type="submit"]');
-    if (btn && form.contains(btn)) handleSubmit(e);
-  }, true);
 }
 
 // ── OTP page: intercept submit, call VerifyOTPAndGetDemogDetails ───────────────
