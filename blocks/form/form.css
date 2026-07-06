@@ -1340,6 +1340,178 @@ main .form form .wizard-menu-items {
   display: none;
 }
 
+/* ── Thank You — KYC notification banner (yellow) ────────────────────────── */
+main .form form .field-kyc-banner {
+  background: #fffbea;
+  border: 1px solid #f5c842;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.25rem;
+}
+
+main .form form .field-kyc-banner p {
+  color: #7d6008;
+  font-size: 0.88rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ── Thank You — "We may call" note inside the confirmation card ─────────── */
+main .form form .field-call-note {
+  margin: 0.5rem 0 0.5rem;
+}
+
+main .form form .field-call-note p {
+  color: #666;
+  font-size: 0.88rem;
+  margin: 0;
+}
+
+/* Dotted divider — appears above the loan summary legend ──────────────────*/
+main .form form fieldset.panel-wrapper.field-loan-summary::before {
+  content: '';
+  display: block;
+  border-top: 1.5px dashed #d0d5e8;
+  margin-bottom: 1rem;
+}
+
+/* ── Thank You — blue info note below the card ───────────────────────────── */
+main .form form .field-info-note {
+  background: #eef2ff;
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  margin-bottom: 1.25rem;
+}
+
+main .form form .field-info-note p {
+  color: #3849a2;
+  font-size: 0.85rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ── Thank You — For Easy Loan Management section ────────────────────────── */
+main .form form fieldset.panel-wrapper.field-loan-management {
+  background: #e8edff;
+  border: none !important;
+  border-radius: 10px;
+  padding: 1rem 1.25rem !important;
+  margin-bottom: 1.25rem;
+  display: block !important;
+}
+
+main .form form fieldset.panel-wrapper.field-loan-management > legend {
+  display: none;
+}
+
+main .form form .field-loan-management-header p {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #1a237e;
+  margin: 0 0 0.75rem;
+}
+
+/* Download app row — label on left, › arrow on right */
+main .form form .field-download-app-link {
+  background: #fff;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+}
+
+main .form form .field-download-app-link p {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0;
+  font-size: 0.9rem;
+  color: #1a1a1a;
+}
+
+main .form form .field-download-app-link p::after {
+  content: '›';
+  font-size: 1.4rem;
+  color: #5b6ef5;
+  line-height: 1;
+}
+
+main .form form .field-download-app-link a {
+  color: #003087;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+/* ── Thank You — two-column page layout (form left, promo cards right) ───── */
+.personal-loan-thankyou main {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 1.5rem;
+  align-items: start;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+}
+
+@media (width <= 900px) {
+  .personal-loan-thankyou main {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Promo card sidebar — authored as a separate section/columns block on page */
+.personal-loan-thankyou main .section:last-of-type {
+  grid-column: 2;
+  grid-row: 1 / span 99;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+@media (width <= 900px) {
+  .personal-loan-thankyou main .section:last-of-type {
+    grid-column: 1;
+    grid-row: auto;
+  }
+}
+
+/* Individual promo card (Cards block item) */
+.personal-loan-thankyou .cards > ul > li {
+  background: #f0ecff;
+  border-radius: 12px;
+  overflow: hidden;
+  border: none;
+  box-shadow: none;
+}
+
+.personal-loan-thankyou .cards > ul > li:nth-child(2) {
+  background: #fce8f3;
+}
+
+.personal-loan-thankyou .cards .cards-card-body p {
+  font-size: 0.78rem;
+  color: #888;
+  margin: 0 0 0.15rem;
+}
+
+.personal-loan-thankyou .cards .cards-card-body h3,
+.personal-loan-thankyou .cards .cards-card-body strong {
+  font-size: 1rem;
+  color: #1a1a1a;
+  display: block;
+}
+
+/* "For more services" footer text */
+.personal-loan-thankyou .footer-note p {
+  font-size: 0.9rem;
+  color: #444;
+  text-align: center;
+}
+
+.personal-loan-thankyou .footer-note a {
+  color: #003087;
+  font-weight: 600;
+  text-decoration: none;
+}
+
 /* ── Welcome Page ─────────────────────────────────────────────────────────── */
 
 /* Welcome title — bold heading, full width, row 1 */
