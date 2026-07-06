@@ -150,13 +150,11 @@ export async function initWelcomePage() {
   const panInput = form.querySelector('[name="panValue"]');
   const dobWrapper = form.querySelector('.field-dobvalue');
   const dobInput = form.querySelector('[name="dobValue"]');
-  const dobError = form.querySelector('.field-dob-error-msg');
   const consentInput = form.querySelector('[name="consentData"]');
   const consentMktInput = form.querySelector('[name="consentMarketing"]');
   const submitBtn = form.querySelector('button[type="submit"]');
 
   if (submitBtn) submitBtn.disabled = true;
-  if (dobError) dobError.style.display = 'none';
 
   // ── PAN ↔ DOB toggle ────────────────────────────────────────────────────────
   function getIdentifierType() {
@@ -174,8 +172,18 @@ export async function initWelcomePage() {
 
   // ── DOB inline error (show after date is picked) ────────────────────────────
   dobInput?.addEventListener('change', () => {
-    if (!dobError) return;
-    dobError.style.display = (dobInput.value && !isAgeValid(dobInput.value)) ? '' : 'none';
+    const dob = dobInput.value;
+    const parsed = new Date(dob);
+    let msg = '';
+    if (dob && Number.isNaN(parsed.getTime())) {
+      msg = 'Please enter a valid date of birth.';
+    } else if (dob && parsed > new Date()) {
+      msg = 'Date of birth cannot be a future date.';
+    } else if (dob && !isAgeValid(dob)) {
+      msg = 'Applicant must be at least 18 years old.';
+    }
+    dobInput.setCustomValidity(msg);
+    checkValidation(dobInput);
   });
 
   // ── Button enable / disable ─────────────────────────────────────────────────
@@ -184,7 +192,13 @@ export async function initWelcomePage() {
     const type = getIdentifierType();
     if (!type) return false;
     if (type === 'PAN_NO' && !/^[A-Z]{5}\d{4}[A-Z]$/.test(panInput?.value ?? '')) return false;
-    if (type !== 'PAN_NO' && !isAgeValid(dobInput?.value)) return false;
+    if (type !== 'PAN_NO') {
+      const dob = dobInput?.value;
+      const parsed = new Date(dob);
+      if (!dob || Number.isNaN(parsed.getTime()) || parsed > new Date() || !isAgeValid(dob)) {
+        return false;
+      }
+    }
     if (!consentInput?.checked) return false;
     if (!consentMktInput?.checked) return false;
     return true;
