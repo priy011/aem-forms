@@ -3,6 +3,7 @@ import {
   submitLoanApplication,
 } from './api-service.js';
 import { calculateEMI, formatINR } from './emi-calculator.js';
+import { checkValidation } from '../blocks/form/util.js';
 
 // ── Shared helpers ────────────────────────────────────────────────────────────
 
@@ -199,6 +200,20 @@ export async function initWelcomePage() {
   dobInput?.addEventListener('change', updateSubmitBtn);
   consentInput?.addEventListener('change', updateSubmitBtn);
   consentMktInput?.addEventListener('change', updateSubmitBtn);
+
+  // Inline field errors — show on blur, clear as soon as value becomes valid
+  mobileInput?.addEventListener('blur', () => {
+    if (mobileInput.value) checkValidation(mobileInput);
+  });
+  mobileInput?.addEventListener('input', () => {
+    if (mobileInput.validity.valid) checkValidation(mobileInput);
+  });
+  panInput?.addEventListener('blur', () => {
+    if (panInput.value) checkValidation(panInput);
+  });
+  panInput?.addEventListener('input', () => {
+    if (panInput.validity.valid) checkValidation(panInput);
+  });
 }
 
 // ── OTP page: intercept submit, call VerifyOTPAndGetDemogDetails ───────────────
