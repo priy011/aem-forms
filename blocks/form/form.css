@@ -1440,76 +1440,153 @@ main .form form .field-download-app-link a {
   font-weight: 500;
 }
 
-/* ── Thank You — two-column page layout (form left, promo cards right) ───── */
-.personal-loan-thankyou main {
+/* ── Thank You — app icon sizing ─────────────────────────────────────────── */
+main .form form .field-app-icon {
+  margin-bottom: 0.5rem;
+}
+
+main .form form .field-app-icon img {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  border-radius: 10px;
+  display: block;
+}
+
+/* ── Thank You — "For more services" footer link ─────────────────────────── */
+main .form form .field-services-text {
+  margin-top: 0.25rem;
+}
+
+main .form form .field-services-text p {
+  font-size: 0.88rem;
+  color: #444;
+  margin: 0;
+}
+
+main .form form .field-services-text a {
+  color: #003087;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* ── Thank You — two-column form grid (main left, promo cards right) ─────── */
+main .form form[data-formpath*="personal-loan-thankyou"] {
   display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: 1.5rem;
+  grid-template-columns: 1fr 300px;
+  column-gap: 1.5rem;
   align-items: start;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1.5rem 1rem;
+}
+
+/* Header fragment spans full width */
+main .form form[data-formpath*="personal-loan-thankyou"] > fieldset[class*="field-form-fragment"] {
+  grid-column: 1 / -1;
+}
+
+/* Cards section — right column, anchored to row 2 so it sits beside the main content */
+main .form form[data-formpath*="personal-loan-thankyou"] > .field-cards-section {
+  grid-column: 2;
+  grid-row: 2 / span 10;
+}
+
+/* Everything else stays in the left column */
+main .form form[data-formpath*="personal-loan-thankyou"] > :not([class*="field-form-fragment"]):not(.field-cards-section) {
+  grid-column: 1;
 }
 
 @media (width <= 900px) {
-  .personal-loan-thankyou main {
+  main .form form[data-formpath*="personal-loan-thankyou"] {
     grid-template-columns: 1fr;
   }
-}
 
-/* Promo card sidebar — authored as a separate section/columns block on page */
-.personal-loan-thankyou main .section:last-of-type {
-  grid-column: 2;
-  grid-row: 1 / span 99;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-@media (width <= 900px) {
-  .personal-loan-thankyou main .section:last-of-type {
+  main .form form[data-formpath*="personal-loan-thankyou"] > .field-cards-section {
     grid-column: 1;
     grid-row: auto;
   }
 }
 
-/* Individual promo card (Cards block item) */
-.personal-loan-thankyou .cards > ul > li {
+/* ── Thank You — promo cards section ─────────────────────────────────────── */
+main .form form .field-cards-section,
+main .form form .field-cards-block {
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  display: block !important;
+}
+
+main .form form .field-cards-section > legend,
+main .form form .field-cards-block > legend {
+  display: none;
+}
+
+/* Two side-by-side cards inside cards-block */
+main .form form .field-cards-block {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+/* Individual card panels */
+main .form form .field-card-1,
+main .form form .field-card-2 {
   background: #f0ecff;
-  border-radius: 12px;
+  border-radius: 14px;
   overflow: hidden;
-  border: none;
-  box-shadow: none;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  display: block !important;
 }
 
-.personal-loan-thankyou .cards > ul > li:nth-child(2) {
-  background: #fce8f3;
+main .form form .field-card-2 {
+  background: #fde8f3;
 }
 
-.personal-loan-thankyou .cards .cards-card-body p {
-  font-size: 0.78rem;
-  color: #888;
-  margin: 0 0 0.15rem;
+main .form form .field-card-1 > legend,
+main .form form .field-card-2 > legend {
+  display: none;
 }
 
-.personal-loan-thankyou .cards .cards-card-body h3,
-.personal-loan-thankyou .cards .cards-card-body strong {
-  font-size: 1rem;
-  color: #1a1a1a;
+/* Card image — fills the upper portion */
+main .form form .field-card-1-image,
+main .form form .field-card-2-image {
+  margin: 0;
+}
+
+main .form form .field-card-1-image img,
+main .form form .field-card-2-image img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
   display: block;
 }
 
-/* "For more services" footer text */
-.personal-loan-thankyou .footer-note p {
-  font-size: 0.9rem;
-  color: #444;
-  text-align: center;
+/* Card text area */
+main .form form .field-card-1 .plain-text-wrapper,
+main .form form .field-card-2 .plain-text-wrapper {
+  padding: 0.75rem;
 }
 
-.personal-loan-thankyou .footer-note a {
-  color: #003087;
-  font-weight: 600;
-  text-decoration: none;
+/* Small subtitle — "Open a new" / "Buy a new" */
+main .form form .field-card-1-label p,
+main .form form .field-card-2-label p {
+  font-size: 0.78rem;
+  color: #7c4dff;
+  font-weight: 500;
+  margin: 0 0 0.2rem;
+}
+
+main .form form .field-card-2-label p {
+  color: #c2185b;
+}
+
+/* Bold card title — "Recurring Deposit" / "Health Insurance" */
+main .form form .field-card-1-title p,
+main .form form .field-card-2-title p {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
 }
 
 /* ── Welcome Page ─────────────────────────────────────────────────────────── */
