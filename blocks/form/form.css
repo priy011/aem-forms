@@ -1440,6 +1440,19 @@ main .form form .field-download-app-link a {
   font-weight: 500;
 }
 
+/* ── Thank You — inner loan-panel wrapper (extra panel inside confirmation-card) */
+main .form form .field-loan-panel {
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin-bottom: 0.5rem;
+  display: block !important;
+}
+
+main .form form .field-loan-panel > legend {
+  display: none;
+}
+
 /* ── Thank You — app icon sizing ─────────────────────────────────────────── */
 main .form form .field-app-icon {
   margin-bottom: 0.5rem;
@@ -1519,21 +1532,22 @@ main .form form .field-cards-block > legend {
   display: none;
 }
 
-/* Two side-by-side cards inside cards-block */
+/* Cards stacked vertically in the sidebar — override col-6 side-by-side default */
 main .form form .field-cards-block {
-  display: grid !important;
-  grid-template-columns: 1fr 1fr;
+  display: flex !important;
+  flex-direction: column;
   gap: 1rem;
 }
 
-/* Individual card panels */
+/* Individual card panels — full width, rounded, coloured background */
 main .form form .field-card-1,
 main .form form .field-card-2 {
+  width: 100% !important;
   background: #f0ecff;
   border-radius: 14px;
   overflow: hidden;
   border: none !important;
-  box-shadow: none !important;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 8%);
   padding: 0 !important;
   display: block !important;
 }
@@ -1547,7 +1561,7 @@ main .form form .field-card-2 > legend {
   display: none;
 }
 
-/* Card image — fills the upper portion */
+/* Card image — show the full illustration; images include text baked in at the bottom */
 main .form form .field-card-1-image,
 main .form form .field-card-2-image {
   margin: 0;
@@ -1556,37 +1570,8 @@ main .form form .field-card-2-image {
 main .form form .field-card-1-image img,
 main .form form .field-card-2-image img {
   width: 100%;
-  height: 150px;
-  object-fit: cover;
+  height: auto;
   display: block;
-}
-
-/* Card text area */
-main .form form .field-card-1 .plain-text-wrapper,
-main .form form .field-card-2 .plain-text-wrapper {
-  padding: 0.75rem;
-}
-
-/* Small subtitle — "Open a new" / "Buy a new" */
-main .form form .field-card-1-label p,
-main .form form .field-card-2-label p {
-  font-size: 0.78rem;
-  color: #7c4dff;
-  font-weight: 500;
-  margin: 0 0 0.2rem;
-}
-
-main .form form .field-card-2-label p {
-  color: #c2185b;
-}
-
-/* Bold card title — "Recurring Deposit" / "Health Insurance" */
-main .form form .field-card-1-title p,
-main .form form .field-card-2-title p {
-  font-size: 1rem;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin: 0;
 }
 
 /* ── Welcome Page ─────────────────────────────────────────────────────────── */
