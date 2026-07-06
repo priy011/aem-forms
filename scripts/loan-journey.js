@@ -1,4 +1,5 @@
 import {
+  initiateCustomerIdentification,
   verifyOTPAndGetDemogDetails,
   submitLoanApplication,
 } from './api-service.js';
@@ -143,30 +144,107 @@ export async function initWelcomePage() {
   const form = await waitForForm();
   if (!form) return;
 
-  const submitBtn = form.querySelector('button[type="submit"]');
-  if (submitBtn) submitBtn.disabled = true;
-
+  const mobileInput = form.querySelector('[name="mobileNo"]');
+  const identifierRadios = form.querySelectorAll('[name="identifierType"]');
+  const panWrapper = form.querySelector('.field-panvalue');
+  const panInput = form.querySelector('[name="panValue"]');
+  const dobWrapper = form.querySelector('.field-dobvalue');
   const dobInput = form.querySelector('[name="dobValue"]');
   const dobError = form.querySelector('.field-dob-error-msg');
+  const consentInput = form.querySelector('[name="consentData"]');
+  const consentMktInput = form.querySelector('[name="consentMarketing"]');
+  const submitBtn = form.querySelector('button[type="submit"]');
 
-  if (dobInput) {
-    if (dobError) dobError.style.display = 'none';
+  if (submitBtn) submitBtn.disabled = true;
+  if (dobError) dobError.style.display = 'none';
 
-    // Show error after user picks a date — not while typing
-    dobInput.addEventListener('change', () => {
-      if (!dobError) return;
-      dobError.style.display = (dobInput.value && !isAgeValid(dobInput.value))
-        ? '' : 'none';
-    });
+  // ── PAN ↔ DOB toggle ────────────────────────────────────────────────────────
+  function getIdentifierType() {
+    return [...identifierRadios].find((r) => r.checked)?.value ?? '';
   }
 
-  // Safety net: block submit if DOB is blank or under 18
-  form.addEventListener('submit', (e) => {
-    if (!isAgeValid(dobInput?.value)) {
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      if (dobError) dobError.style.display = '';
+  function syncIdentifierVisibility() {
+    const type = getIdentifierType();
+    panWrapper?.setAttribute('data-visible', type === 'DOB' ? 'false' : 'true');
+    dobWrapper?.setAttribute('data-visible', type === 'DOB' ? 'true' : 'false');
+  }
+
+  identifierRadios.forEach((r) => r.addEventListener('change', syncIdentifierVisibility));
+  syncIdentifierVisibility();
+
+  // ── DOB inline error (show after date is picked) ────────────────────────────
+  dobInput?.addEventListener('change', () => {
+    if (!dobError) return;
+    dobError.style.display = (dobInput.value && !isAgeValid(dobInput.value)) ? '' : 'none';
+  });
+
+  // ── Button enable / disable ─────────────────────────────────────────────────
+  function checkFormValid() {
+    if (!/^[6-9]\d{9}$/.test(mobileInput?.value ?? '')) return false;
+    const type = getIdentifierType();
+    if (!type) return false;
+    if (type === 'PAN_NO' && !/^[A-Z]{5}\d{4}[A-Z]$/.test(panInput?.value ?? '')) return false;
+    if (type !== 'PAN_NO' && !isAgeValid(dobInput?.value)) return false;
+    if (!consentInput?.checked) return false;
+    if (!consentMktInput?.checked) return false;
+    return true;
+  }
+
+  function updateSubmitBtn() {
+    if (submitBtn) submitBtn.disabled = !checkFormValid();
+  }
+
+  mobileInput?.addEventListener('input', updateSubmitBtn);
+  identifierRadios.forEach((r) => r.addEventListener('change', updateSubmitBtn));
+  panInput?.addEventListener('input', updateSubmitBtn);
+  dobInput?.addEventListener('change', updateSubmitBtn);
+  consentInput?.addEventListener('change', updateSubmitBtn);
+  consentMktInput?.addEventListener('change', updateSubmitBtn);
+
+  // ── Submit: validate → API → navigate ──────────────────────────────────────
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    if (!checkFormValid()) {
+      if (dobError && dobInput?.value && !isAgeValid(dobInput.value)) {
+        dobError.style.display = '';
+      }
+      return;
     }
+
+    if (submitBtn) submitBtn.disabled = true;
+    clearError(form);
+
+    const mobileNo = mobileInput.value.trim();
+    const identifierName = getIdentifierType();
+    const identifierValue = identifierName === 'PAN_NO'
+      ? panInput.value.trim()
+      : dobInput.value;
+
+    try {
+      const res = await initiateCustomerIdentification(mobileNo, identifierName, identifierValue);
+      if (res.status.responseCode === '0') {
+        sessionStorage.setItem('maskedMobile', `*****${mobileNo.slice(5)}`);
+        globalThis.location.href = `${siblingPath('personal-loan-otp')}.html`;
+      } else {
+        const msg = res.status.errorDesc || 'Unable to process your request. Please try again.';
+        showError(form, msg);
+        if (submitBtn) submitBtn.disabled = false;
+      }
+    } catch (err) {
+      const jid = sessionStorage.getItem('partnerJourneyID') ?? 'unknown';
+      // eslint-disable-next-line no-console
+      console.error(`[Journey: ${jid}] InitiateCustomerIdentification failed:`, err.message);
+      showError(form, 'Something went wrong. Please try again.');
+      if (submitBtn) submitBtn.disabled = false;
+    }
+  };
+
+  form.addEventListener('submit', handleSubmit, true);
+  document.addEventListener('click', async (e) => {
+    const btn = e.target.closest('button[type="submit"]');
+    if (btn && form.contains(btn)) handleSubmit(e);
   }, true);
 }
 
