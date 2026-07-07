@@ -53,23 +53,6 @@ function isAgeValid(dob) {
   return !Number.isNaN(years) && years >= 18;
 }
 
-// Returns the validation error message for a DOB string, or '' if valid.
-function getDobValidationMsg(dob) {
-  if (!dob) return '';
-  const parsed = new Date(dob);
-  if (Number.isNaN(parsed.getTime())) return 'Please enter a valid date of birth.';
-  if (parsed > new Date()) return 'Date of birth cannot be a future date.';
-  if (!isAgeValid(dob)) return 'Applicant must be at least 18 years old.';
-  return '';
-}
-
-// True when dob is a parseable, non-future date for someone aged ≥ 18.
-function isDobInputValid(dob) {
-  if (!dob) return false;
-  const parsed = new Date(dob);
-  return !Number.isNaN(parsed.getTime()) && isAgeValid(dob);
-}
-
 // AEM slider uses --current-steps CSS var to draw the filled track.
 // Setting .value via JS moves the thumb but NOT the track — sync it manually.
 function syncSliderTrack(slider) {
@@ -189,7 +172,17 @@ export async function initWelcomePage() {
 
   // ── DOB inline error (show after date is picked) ────────────────────────────
   dobInput?.addEventListener('change', () => {
-    dobInput.setCustomValidity(getDobValidationMsg(dobInput.value));
+    const dob = dobInput.value;
+    const parsed = new Date(dob);
+    let msg = '';
+    if (dob && Number.isNaN(parsed.getTime())) {
+      msg = 'Please enter a valid date of birth.';
+    } else if (dob && parsed > new Date()) {
+      msg = 'Date of birth cannot be a future date.';
+    } else if (dob && !isAgeValid(dob)) {
+      msg = 'Applicant must be at least 18 years old.';
+    }
+    dobInput.setCustomValidity(msg);
     checkValidation(dobInput);
   });
 
@@ -199,7 +192,13 @@ export async function initWelcomePage() {
     const type = getIdentifierType();
     if (!type) return false;
     if (type === 'PAN_NO' && !/^[A-Z]{5}\d{4}[A-Z]$/.test(panInput?.value ?? '')) return false;
-    if (type !== 'PAN_NO' && !isDobInputValid(dobInput?.value)) return false;
+    if (type !== 'PAN_NO') {
+      const dob = dobInput?.value;
+      const parsed = new Date(dob);
+      if (!dob || Number.isNaN(parsed.getTime()) || parsed > new Date() || !isAgeValid(dob)) {
+        return false;
+      }
+    }
     if (!consentInput?.checked) return false;
     if (!consentMktInput?.checked) return false;
     return true;
@@ -238,40 +237,13 @@ export async function initWelcomePage() {
   }, true);
 
   // Disable on click to prevent stacked Invoke Service calls while the async request is in flight.
-  // Also save form state so the OTP page can show the masked mobile and "Edit mobile number"
-  // can return here with everything pre-filled.
   // 8-second safety re-enables the button if navigation never fires (e.g. Rule Editor failure).
   submitBtn?.addEventListener('click', () => {
     submitBtn.disabled = true;
-    const mobile = mobileInput?.value ?? '';
-    if (mobile) {
-      sessionStorage.setItem('maskedMobile', `*****${mobile.slice(5)}`);
-      sessionStorage.setItem('welcomeFormData', JSON.stringify({
-        mobileNo: mobile,
-        identifierType: getIdentifierType(),
-        panValue: panInput?.value ?? '',
-        dobValue: dobInput?.value ?? '',
-        consentData: consentInput?.checked ?? false,
-        consentMarketing: consentMktInput?.checked ?? false,
-      }));
-    }
     setTimeout(() => {
       if (document.contains(submitBtn)) submitBtn.disabled = !checkFormValid();
     }, 8000);
   });
-
-  // Pre-fill fields when returning from OTP page via "Edit mobile number"
-  const saved = JSON.parse(sessionStorage.getItem('welcomeFormData') || 'null');
-  if (saved) {
-    if (saved.mobileNo && mobileInput) mobileInput.value = saved.mobileNo;
-    identifierRadios.forEach((r) => { r.checked = r.value === saved.identifierType; });
-    syncIdentifierVisibility();
-    if (saved.panValue && panInput) panInput.value = saved.panValue;
-    if (saved.dobValue && dobInput) dobInput.value = saved.dobValue;
-    if (consentInput) consentInput.checked = saved.consentData ?? false;
-    if (consentMktInput) consentMktInput.checked = saved.consentMarketing ?? false;
-    updateSubmitBtn();
-  }
 }
 
 // ── OTP page: intercept submit, call VerifyOTPAndGetDemogDetails ───────────────
@@ -279,33 +251,10 @@ export async function initOtpPage() {
   const form = await waitForForm();
   if (!form) return;
 
-  // Show the masked mobile number in the OTP instruction paragraph.
-  // The authored text contains "registered mobile number" — replace that phrase.
   const maskedMobile = sessionStorage.getItem('maskedMobile');
-  const instrWrapper = form.querySelector('.field-otp-instruction');
-  if (instrWrapper) {
-    const walker = document.createTreeWalker(instrWrapper, NodeFilter.SHOW_TEXT);
-    let node = walker.nextNode();
-    while (node) {
-      if (node.nodeValue.includes('registered mobile number')) {
-        node.nodeValue = node.nodeValue.replace(
-          'registered mobile number',
-          maskedMobile || 'your registered mobile number',
-        );
-        break;
-      }
-      node = walker.nextNode();
-    }
-  }
-
-  // "Edit mobile number" link — navigate back to welcome page (works on both EDS and author URL)
-  const editLink = form.querySelector('.field-otp-instruction a');
-  if (editLink) {
-    editLink.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      globalThis.location.href = `${siblingPath('personal-loan-welcome')}.html`;
-    });
+  if (maskedMobile) {
+    const instrEl = form.querySelector('.field-otp-instruction p');
+    if (instrEl) instrEl.innerHTML = instrEl.innerHTML.replace(/\*+\d+/, maskedMobile);
   }
 
   const handleOtpSubmit = async (e) => {
