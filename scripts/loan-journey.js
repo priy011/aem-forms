@@ -21,22 +21,6 @@ function waitForForm() {
   });
 }
 
-// Wait until the AEM Forms Rule Engine worker has finished initialising.
-// The form block adds class "loading" when the form HTML is ready and removes
-// it only after the worker sends sync-complete — which is also when
-// applyRuleEngine() attaches its change/click listeners to the DOM.
-// Dispatching events before that point is silently dropped by the engine.
-function waitForRuleEngine(form) {
-  return new Promise((resolve) => {
-    if (!form.classList.contains('loading')) { resolve(); return; }
-    const observer = new MutationObserver(() => {
-      if (!form.classList.contains('loading')) { observer.disconnect(); resolve(); }
-    });
-    observer.observe(form, { attributes: true, attributeFilter: ['class'] });
-    setTimeout(() => { observer.disconnect(); resolve(); }, 8000);
-  });
-}
-
 function setField(form, name, value) {
   const el = form.querySelector(`[name="${name}"]`);
   if (el) el.value = value;
@@ -172,30 +156,6 @@ function startOtpTimer(form) {
   startCountdown();
 }
 
-// Dispatch change events to sync pre-filled DOM values into the AEM Forms model.
-// Must be called AFTER waitForRuleEngine so applyRuleEngine listeners are live.
-async function prefillWelcomeForm(form, saved) {
-  await waitForRuleEngine(form);
-  const mobileInput = form.querySelector('[name="mobileNo"]');
-  const identifierRadios = form.querySelectorAll('[name="identifierType"]');
-  const panInput = form.querySelector('[name="panValue"]');
-  const dobInput = form.querySelector('[name="dobValue"]');
-  const consentInput = form.querySelector('[name="consentData"]');
-  const consentMktInput = form.querySelector('[name="consentMarketing"]');
-  const change = (el) => el?.dispatchEvent(new Event('change', { bubbles: true }));
-
-  if (saved.mobileNo && mobileInput) { mobileInput.value = saved.mobileNo; change(mobileInput); }
-  identifierRadios.forEach((r) => { r.checked = r.value === saved.identifierType; });
-  change([...identifierRadios].find((r) => r.checked));
-  if (saved.panValue && panInput) { panInput.value = saved.panValue; change(panInput); }
-  if (saved.dobValue && dobInput) { dobInput.value = saved.dobValue; change(dobInput); }
-  if (consentInput) { consentInput.checked = saved.consentData ?? false; change(consentInput); }
-  if (consentMktInput) {
-    consentMktInput.checked = saved.consentMarketing ?? false;
-    change(consentMktInput);
-  }
-}
-
 // ── Welcome page ─────────────────────────────────────────────────────────────
 export async function initWelcomePage() {
   const form = await waitForForm();
@@ -301,10 +261,34 @@ export async function initWelcomePage() {
   });
 
   // Pre-fill fields when returning from OTP page via "Edit mobile number".
-  // See prefillWelcomeForm above for why we wait for the Rule Engine first.
+  // dispatchEvent calls are required so AEM Forms syncs each DOM value into its
+  // internal model — without them the Rule Editor reads stale/empty field values
+  // and falls into the wrong condition branch on re-submit.
   const saved = JSON.parse(sessionStorage.getItem('welcomeFormData') || 'null');
   if (saved) {
-    await prefillWelcomeForm(form, saved);
+    if (saved.mobileNo && mobileInput) {
+      mobileInput.value = saved.mobileNo;
+      mobileInput.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+    identifierRadios.forEach((r) => { r.checked = r.value === saved.identifierType; });
+    const checkedRadio = [...identifierRadios].find((r) => r.checked);
+    checkedRadio?.dispatchEvent(new Event('change', { bubbles: true }));
+    if (saved.panValue && panInput) {
+      panInput.value = saved.panValue;
+      panInput.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+    if (saved.dobValue && dobInput) {
+      dobInput.value = saved.dobValue;
+      dobInput.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+    if (consentInput) {
+      consentInput.checked = saved.consentData ?? false;
+      consentInput.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+    if (consentMktInput) {
+      consentMktInput.checked = saved.consentMarketing ?? false;
+      consentMktInput.dispatchEvent(new Event('change', { bubbles: true }));
+    }
     updateSubmitBtn();
   }
 }
