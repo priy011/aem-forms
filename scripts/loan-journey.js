@@ -260,16 +260,35 @@ export async function initWelcomePage() {
     }, 8000);
   });
 
-  // Pre-fill fields when returning from OTP page via "Edit mobile number"
+  // Pre-fill fields when returning from OTP page via "Edit mobile number".
+  // dispatchEvent calls are required so AEM Forms syncs each DOM value into its
+  // internal model — without them the Rule Editor reads stale/empty field values
+  // and falls into the wrong condition branch on re-submit.
   const saved = JSON.parse(sessionStorage.getItem('welcomeFormData') || 'null');
   if (saved) {
-    if (saved.mobileNo && mobileInput) mobileInput.value = saved.mobileNo;
+    if (saved.mobileNo && mobileInput) {
+      mobileInput.value = saved.mobileNo;
+      mobileInput.dispatchEvent(new Event('input', { bubbles: true }));
+    }
     identifierRadios.forEach((r) => { r.checked = r.value === saved.identifierType; });
-    syncIdentifierVisibility();
-    if (saved.panValue && panInput) panInput.value = saved.panValue;
-    if (saved.dobValue && dobInput) dobInput.value = saved.dobValue;
-    if (consentInput) consentInput.checked = saved.consentData ?? false;
-    if (consentMktInput) consentMktInput.checked = saved.consentMarketing ?? false;
+    const checkedRadio = [...identifierRadios].find((r) => r.checked);
+    checkedRadio?.dispatchEvent(new Event('change', { bubbles: true }));
+    if (saved.panValue && panInput) {
+      panInput.value = saved.panValue;
+      panInput.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+    if (saved.dobValue && dobInput) {
+      dobInput.value = saved.dobValue;
+      dobInput.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+    if (consentInput) {
+      consentInput.checked = saved.consentData ?? false;
+      consentInput.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+    if (consentMktInput) {
+      consentMktInput.checked = saved.consentMarketing ?? false;
+      consentMktInput.dispatchEvent(new Event('change', { bubbles: true }));
+    }
     updateSubmitBtn();
   }
 }
