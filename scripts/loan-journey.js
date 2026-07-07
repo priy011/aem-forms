@@ -290,15 +290,6 @@ export async function initWelcomePage() {
       consentMktInput.dispatchEvent(new Event('change', { bubbles: true }));
     }
     updateSubmitBtn();
-    // The Rule Editor may fire its ELSE branch in response to our dispatchEvent calls above
-    // (e.g. when it evaluates mobileNo after an input event and falls to the error branch
-    // before the full form state is settled). Clear the note field after the event queue
-    // drains so the welcome page is not shown with a stale error on return from OTP.
-    setTimeout(() => {
-      const otpNote = form.querySelector('.field-mobile-otp-note p');
-      if (otpNote) otpNote.textContent = '';
-      clearError(form);
-    }, 300);
   }
 }
 
