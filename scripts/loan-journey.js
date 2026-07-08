@@ -356,24 +356,24 @@ export async function initOtpPage() {
 }
 
 // ── Personal Info page: pre-fill from API data, email verify, confirm ────────
-// Authored fields expected on this page (field names → AEM CSS class):
-//   fullNameDisplay   → .field-full-name-display    (readonly plain-text)
-//   firstName         → .field-first-name
-//   middleName        → .field-middle-name
-//   lastName          → .field-last-name
-//   gender            → .field-gender               (dropdown)
-//   emailId           → .field-email-id
-//   verifyEmailBtn    → .field-verify-email-btn      (button type="button")
-//   emailOtpInput     → .field-email-otp-input       (text, hidden initially)
-//   submitEmailOtp    → .field-submit-email-otp      (button type="button", hidden initially)
-//   emailVerifiedMsg  → .field-email-verified-msg    (plain-text, hidden initially)
-//   aadhaarAddress    → .field-aadhaar-address       (readonly)
-//   addressType       → .field-address-type          (radio group)
-//   employerNameText  → .field-employer-name-text
-//   industryType      → .field-industry-type
-//   monthlyIncome     → .field-monthly-income
-//   ongoingEmis       → .field-ongoing-emis
-//   loanType          → .field-loan-type             (dropdown)
+// AEM Forms lowercases camelCase field names for CSS classes (no hyphens added):
+//   fullNameDisplay  → .field-fullnamedisplay   (readonly plain-text)
+//   firstName        → .field-firstname
+//   middleName       → .field-middlename
+//   lastName         → .field-lastname
+//   gender           → .field-gender            (dropdown)
+//   emailId          → .field-emailid
+//   verifyEmailBtn   → .field-verifyemailbtn    (button type="button")
+//   emailOtpInput    → .field-emailotpinput     (text, hidden initially)
+//   submitEmailOtp   → .field-submitemailotp    (button, hidden initially)
+//   emailVerifiedMsg → .field-emailverifiedmsg  (plain-text, hidden initially)
+//   aadhaarAddress   → .field-aadhaaraddress    (readonly)
+//   addressType      → .field-addresstype       (radio group)
+//   employerNameText → .field-employernametext
+//   industryType     → .field-industrytype
+//   monthlyIncome    → .field-monthlyincome
+//   ongoingEmis      → .field-ongoingemis
+//   loanType         → .field-loantype          (dropdown)
 export async function initPersonalInfoPage() {
   const stored = sessionStorage.getItem('offerDemogDetails');
   if (!stored) {
@@ -410,17 +410,25 @@ export async function initPersonalInfoPage() {
   form.querySelector('[name="aadhaarAddress"]')?.setAttribute('readonly', '');
 
   // ── Email OTP verification — toggling authored fields ──────────────────────
-  // Initially hide the OTP input row and the verified message.
-  const otpInputWrapper = form.querySelector('.field-email-otp-input');
-  const submitOtpWrapper = form.querySelector('.field-submit-email-otp');
-  const verifiedMsgWrapper = form.querySelector('.field-email-verified-msg');
+  const otpInputWrapper = form.querySelector('.field-emailotpinput');
+  const submitOtpWrapper = form.querySelector('.field-submitemailotp');
+  const verifiedMsgWrapper = form.querySelector('.field-emailverifiedmsg');
   otpInputWrapper?.setAttribute('data-visible', 'false');
   submitOtpWrapper?.setAttribute('data-visible', 'false');
   verifiedMsgWrapper?.setAttribute('data-visible', 'false');
 
+  // ── Accordion toggle for collapsible panels ────────────────────────────────
+  form.querySelectorAll('.field-employerdetails, .field-incomedetails, .field-loantypedetails')
+    .forEach((panel) => {
+      panel.querySelector('legend')?.addEventListener('click', () => {
+        const collapsed = panel.getAttribute('data-collapsed') === 'true';
+        panel.setAttribute('data-collapsed', String(!collapsed));
+      });
+    });
+
   form.addEventListener('click', async (e) => {
     // ── Verify email button ──────────────────────────────────────────────────
-    const verifyBtn = e.target.closest('.field-verify-email-btn button');
+    const verifyBtn = e.target.closest('.field-verifyemailbtn button');
     if (verifyBtn) {
       const email = form.querySelector('[name="emailId"]')?.value?.trim();
       if (!email) { showError(form, 'Please enter your email address first.'); return; }
@@ -440,7 +448,7 @@ export async function initPersonalInfoPage() {
     }
 
     // ── Submit email OTP button ──────────────────────────────────────────────
-    const submitOtpBtn = e.target.closest('.field-submit-email-otp button');
+    const submitOtpBtn = e.target.closest('.field-submitemailotp button');
     if (submitOtpBtn) {
       const email = form.querySelector('[name="emailId"]')?.value?.trim();
       const otp = form.querySelector('[name="emailOtpInput"]')?.value?.trim();
@@ -451,7 +459,7 @@ export async function initPersonalInfoPage() {
         otpInputWrapper?.setAttribute('data-visible', 'false');
         submitOtpWrapper?.setAttribute('data-visible', 'false');
         verifiedMsgWrapper?.setAttribute('data-visible', 'true');
-        form.querySelector('.field-verify-email-btn button')?.setAttribute('disabled', '');
+        form.querySelector('.field-verifyemailbtn button')?.setAttribute('disabled', '');
         sessionStorage.setItem('verifiedEmail', email);
         trackEvent('email_verified');
       } else {

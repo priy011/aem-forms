@@ -1067,47 +1067,43 @@ main .form form p.loan-api-error {
 
 /* ── Personal Info Page ────────────────────────────────────────────────────── */
 
-/* Page container: constrained card matching the OTP + offer pages */
-main .form form .field-personal-info-panel {
-  max-width: 720px;
-  margin: 1.5rem auto;
-  padding: 0;
-}
-
-/* Section panels — card-style with subtle shadow */
-main .form form .field-customer-details,
-main .form form .field-pan-name,
-main .form form .field-personal-details,
-main .form form .field-address-details,
-main .form form .field-employer-details,
-main .form form .field-income-details,
-main .form form .field-loan-type-details {
+/* Section panels — card-style with lavender header (AEM classes are all-lowercase) */
+main .form form .field-customerdetails,
+main .form form .field-panname,
+main .form form .field-personaldetails,
+main .form form .field-addressdetails,
+main .form form .field-employerdetails,
+main .form form .field-incomedetails,
+main .form form .field-loantypedetails {
   background: #fff;
-  border: 1px solid #e8eaf0;
+  border: 1px solid #e0e5f2;
   border-radius: 10px;
-  padding: 1.25rem 1.5rem;
+  padding: 0 1.25rem 1.25rem;
   margin-bottom: 1rem;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 5%);
 }
 
-/* Section legend / heading */
-main .form form .field-customer-details > legend,
-main .form form .field-pan-name > legend,
-main .form form .field-personal-details > legend,
-main .form form .field-address-details > legend,
-main .form form .field-employer-details > legend,
-main .form form .field-income-details > legend,
-main .form form .field-loan-type-details > legend {
-  font-size: 0.95rem !important;
+/* Section legend — full-width lavender header band */
+main .form form .field-customerdetails > legend,
+main .form form .field-panname > legend,
+main .form form .field-personaldetails > legend,
+main .form form .field-addressdetails > legend,
+main .form form .field-employerdetails > legend,
+main .form form .field-incomedetails > legend,
+main .form form .field-loantypedetails > legend {
+  width: calc(100% + 2.5rem) !important;
+  margin: 0 -1.25rem 1rem !important;
+  padding: 0.75rem 1.25rem !important;
+  background: #eef1fb !important;
+  border-bottom: 1px solid #dde2f5 !important;
+  border-radius: 10px 10px 0 0 !important;
+  font-size: 0.9rem !important;
   font-weight: 700 !important;
-  color: #1a1a1a !important;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid #eee;
-  width: 100%;
-  margin-bottom: 0.75rem;
+  color: #1a237e !important;
 }
 
 /* Full-name display (readonly, pre-filled from API) */
-main .form form .field-full-name-display input {
+main .form form .field-fullnamedisplay input {
   background: #f5f5f5;
   border-color: #e0e0e0 !important;
   color: #333;
@@ -1115,21 +1111,16 @@ main .form form .field-full-name-display input {
 }
 
 /* Address readonly textarea / input */
-main .form form .field-aadhaar-address input,
-main .form form .field-aadhaar-address textarea {
+main .form form .field-aadhaaraddress input,
+main .form form .field-aadhaaraddress textarea {
   background: #f5f5f5;
   border-color: #e0e0e0 !important;
   color: #555;
   resize: none;
 }
 
-/* Email row: field + Verify button side by side */
-main .form form .field-email-id {
-  position: relative;
-}
-
-/* Verify / Resend OTP / Verified button */
-main .form form .field-verify-email-btn button {
+/* Verify / Resend OTP button — text-style link */
+main .form form .field-verifyemailbtn button {
   background: none;
   border: none;
   color: #0056d2;
@@ -1140,14 +1131,14 @@ main .form form .field-verify-email-btn button {
   text-decoration: underline;
 }
 
-main .form form .field-verify-email-btn button:disabled {
+main .form form .field-verifyemailbtn button:disabled {
   color: #2e7d32;
   text-decoration: none;
   cursor: default;
 }
 
-/* Email OTP input row (hidden until Verify is clicked) */
-main .form form .field-email-otp-input input {
+/* Email OTP input (hidden until Verify is clicked) */
+main .form form .field-emailotpinput input {
   letter-spacing: 0.4rem;
   font-size: 1.1rem;
   font-weight: 600;
@@ -1155,7 +1146,7 @@ main .form form .field-email-otp-input input {
 }
 
 /* Submit OTP button */
-main .form form .field-submit-email-otp button {
+main .form form .field-submitemailotp button {
   background: #0056d2;
   color: #fff;
   border: none;
@@ -1166,29 +1157,63 @@ main .form form .field-submit-email-otp button {
 }
 
 /* Email verified confirmation message */
-main .form form .field-email-verified-msg p {
+main .form form .field-emailverifiedmsg p,
+main .form form .field-emailverifiedmsg span {
   color: #2e7d32;
   font-weight: 600;
   font-size: 0.875rem;
   margin: 0.25rem 0 0;
 }
 
-/* Confirm button — matches other page CTAs */
-main .form form .field-personal-info-panel ~ .button-wrapper button[type="submit"],
-main .form form .field-confirm-btn button[type="submit"] {
-  background: #0056d2;
+/* Collapsible panels: legend acts as toggle header */
+main .form form .field-employerdetails > legend,
+main .form form .field-incomedetails > legend,
+main .form form .field-loantypedetails > legend {
+  cursor: pointer;
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+}
+
+main .form form .field-employerdetails > legend::after,
+main .form form .field-incomedetails > legend::after,
+main .form form .field-loantypedetails > legend::after {
+  content: '▲';
+  font-size: 0.7rem;
+  flex-shrink: 0;
+}
+
+main .form form .field-employerdetails[data-collapsed="true"] > legend::after,
+main .form form .field-incomedetails[data-collapsed="true"] > legend::after,
+main .form form .field-loantypedetails[data-collapsed="true"] > legend::after {
+  content: '▼';
+}
+
+main .form form .field-employerdetails[data-collapsed="true"] > :not(legend),
+main .form form .field-incomedetails[data-collapsed="true"] > :not(legend),
+main .form form .field-loantypedetails[data-collapsed="true"] > :not(legend) {
+  display: none !important;
+}
+
+/* Confirm button */
+main .form form .field-confirmsubmit button,
+main .form form .field-confirm-submit button {
+  background: #1a237e;
   color: #fff;
   border: none;
   border-radius: 8px;
-  padding: 0.8rem 2.5rem;
+  padding: 0.9rem 2.5rem;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   min-width: 160px;
+  letter-spacing: 0.02em;
 }
 
-main .form form .field-confirm-btn button[type="submit"]:hover {
-  background: #004bb5;
+main .form form .field-confirmsubmit button:hover,
+main .form form .field-confirm-submit button:hover {
+  background: #283593;
 }
 
 /* ── OTP Page ──────────────────────────────────────────────────────────────── */
