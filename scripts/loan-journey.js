@@ -274,6 +274,17 @@ export async function initOtpPage() {
     globalThis.location.href = `${siblingPath('personal-loan-welcome')}.html`;
   });
 
+  // Password show/hide toggle for the eye icon added in authoring.
+  const toggleBtn = form.querySelector('#togglePassword');
+  const otpPasswordInput = form.querySelector('[name="otp_code"]');
+  toggleBtn?.addEventListener('click', () => {
+    if (!otpPasswordInput) return;
+    const isHidden = otpPasswordInput.type === 'password';
+    otpPasswordInput.type = isHidden ? 'text' : 'password';
+    toggleBtn.classList.toggle('bi-eye-slash', !isHidden);
+    toggleBtn.classList.toggle('bi-eye', isHidden);
+  });
+
   const handleOtpSubmit = async (e) => {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -281,7 +292,7 @@ export async function initOtpPage() {
     const otpInput = form.querySelector('[name="otp_code"]')
       ?? form.querySelector('[name="otpValue"]')
       ?? form.querySelector('[name="otp"]')
-      ?? form.querySelector('input[maxlength="6"]')
+      ?? form.querySelector('input[type="password"]')
       ?? form.querySelector('input[type="number"]');
 
     const otp = otpInput?.value?.trim();

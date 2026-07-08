@@ -1052,6 +1052,19 @@ main .form form .field-offer-card .field-customername {
   }
 }
 
+/* ── Inline API error banner (used by showError() across all form pages) ────── */
+main .form form p.loan-api-error {
+  grid-column: 1 / -1 !important;
+  color: #c62828;
+  font-size: 0.875rem;
+  font-weight: 500;
+  background: #ffebee;
+  border: 1px solid #ef9a9a;
+  border-radius: 6px;
+  padding: 0.6rem 0.9rem;
+  margin: 0 0 0.75rem;
+}
+
 /* ── OTP Page ──────────────────────────────────────────────────────────────── */
 
 /* OTP card panel */
@@ -1109,7 +1122,11 @@ main .form form .field-enter-otp-heading p {
   margin-bottom: 0 !important;
 }
 
-/* OTP text input — spaced characters to suggest 6 boxes */
+/* OTP password input + eye toggle wrapper */
+main .form form .text-wrapper.field-wrapper.field-otp-code {
+  position: relative;
+}
+
 main .form form .text-wrapper.field-wrapper.field-otp-code input {
   font-size: 1.4rem;
   letter-spacing: 0.75rem;
@@ -1117,7 +1134,21 @@ main .form form .text-wrapper.field-wrapper.field-otp-code input {
   font-weight: 600;
   border: 1.5px solid #ccc !important;
   border-radius: 8px !important;
-  padding: 0.75rem 1rem !important;
+  padding: 0.75rem 3rem 0.75rem 1rem !important;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Eye icon toggle — attribute selector avoids camelCase id lint rule */
+main .form form .field-otp-code [id="togglePassword"] {
+  position: absolute;
+  right: 0.85rem;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #888;
+  font-size: 1.1rem;
+  user-select: none;
 }
 
 /* Resend / attempts row — items already col-6, just align right side */
