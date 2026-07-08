@@ -1,6 +1,8 @@
 import {
   verifyOTPAndGetDemogDetails,
   submitLoanApplication,
+  generateEmailOTP,
+  validateEmailOTP,
 } from './api-service.js';
 import { calculateEMI, formatINR } from './emi-calculator.js';
 import { checkValidation } from '../blocks/form/util.js';
@@ -45,6 +47,22 @@ function siblingPath(pageName) {
   const clean = globalThis.location.pathname.replace(/\.html\/?$/, '').replace(/\/$/, '');
   const base = clean.replace(/\/[^/]+$/, '');
   return `${base}/${pageName}`;
+}
+
+// ── Analytics ─────────────────────────────────────────────────────────────────
+// Pushes structured events to window.dataLayer (GTM / Adobe Analytics).
+// Falls back to console.info for non-instrumented environments.
+function trackEvent(eventName, payload = {}) {
+  const jid = sessionStorage.getItem('partnerJourneyID') ?? 'unknown';
+  const event = {
+    event: eventName,
+    journeyId: jid,
+    timestamp: Date.now(),
+    ...payload,
+  };
+  if (globalThis.dataLayer) globalThis.dataLayer.push(event);
+  // eslint-disable-next-line no-console
+  console.info('[Analytics]', eventName, event);
 }
 
 function isAgeValid(dob) {
@@ -143,6 +161,8 @@ function startOtpTimer(form) {
 export async function initWelcomePage() {
   const form = await waitForForm();
   if (!form) return;
+
+  trackEvent('welcome_pageLoad');
 
   const mobileInput = form.querySelector('[name="mobileNo"]');
   const identifierRadios = form.querySelectorAll('[name="identifierType"]');
@@ -254,6 +274,8 @@ export async function initOtpPage() {
   const form = await waitForForm();
   if (!form) return;
 
+  trackEvent('otp_pageLoad');
+
   // Fill the dedicated otp_masked_mobile field with the masked number from sessionStorage
   // and move the "Edit mobile number" <a> from the instruction field to sit right after it.
   // Result: instruction shows static text, masked-mobile field shows "*****94837. [Edit link]".
@@ -307,8 +329,10 @@ export async function initOtpPage() {
     try {
       const result = await verifyOTPAndGetDemogDetails(otp);
       if (result.status.responseCode === '0') {
-        globalThis.location.href = `${siblingPath('personal-loan-offer')}.html`;
+        trackEvent('otp_success');
+        globalThis.location.href = `${siblingPath('personal-loan-personal-info')}.html`;
       } else {
+        trackEvent('otp_failure', { errorCode: result.status.errorCode });
         showOtpError(result.status.errorDesc || 'Invalid OTP. Please try again.');
         if (submitBtn) submitBtn.disabled = false;
       }
@@ -316,6 +340,7 @@ export async function initOtpPage() {
       const jid = sessionStorage.getItem('partnerJourneyID') ?? 'unknown';
       // eslint-disable-next-line no-console
       console.error(`[Journey: ${jid}] VerifyOTP failed:`, err.message);
+      trackEvent('otp_failure', { errorCode: 'EXCEPTION' });
       showOtpError('Something went wrong. Please try again.');
       if (submitBtn) submitBtn.disabled = false;
     }
@@ -328,6 +353,141 @@ export async function initOtpPage() {
   }, true);
 
   startOtpTimer(form);
+}
+
+// ── Personal Info page: pre-fill from API data, email verify, confirm ────────
+// Authored fields expected on this page (field names → AEM CSS class):
+//   fullNameDisplay   → .field-full-name-display    (readonly plain-text)
+//   firstName         → .field-first-name
+//   middleName        → .field-middle-name
+//   lastName          → .field-last-name
+//   gender            → .field-gender               (dropdown)
+//   emailId           → .field-email-id
+//   verifyEmailBtn    → .field-verify-email-btn      (button type="button")
+//   emailOtpInput     → .field-email-otp-input       (text, hidden initially)
+//   submitEmailOtp    → .field-submit-email-otp      (button type="button", hidden initially)
+//   emailVerifiedMsg  → .field-email-verified-msg    (plain-text, hidden initially)
+//   aadhaarAddress    → .field-aadhaar-address       (readonly)
+//   addressType       → .field-address-type          (radio group)
+//   employerNameText  → .field-employer-name-text
+//   industryType      → .field-industry-type
+//   monthlyIncome     → .field-monthly-income
+//   ongoingEmis       → .field-ongoing-emis
+//   loanType          → .field-loan-type             (dropdown)
+export async function initPersonalInfoPage() {
+  const stored = sessionStorage.getItem('offerDemogDetails');
+  if (!stored) {
+    globalThis.location.href = `${siblingPath('personal-loan-welcome')}.html`;
+    return;
+  }
+
+  const offer = JSON.parse(stored);
+  const form = await waitForForm();
+  if (!form) return;
+
+  trackEvent('personalInfo_pageLoad');
+
+  // ── Pre-fill from OTP API response ─────────────────────────────────────────
+  const fullName = [offer.customerFirstName, offer.customerMiddleName, offer.customerLastName]
+    .map((s) => (s || '').trim()).filter(Boolean).join(' ');
+  const address = [
+    offer.customerAddress1,
+    offer.customerAddress2,
+    offer.customerCity,
+    `${offer.customerState || ''} - ${offer.zipCode || ''}`,
+  ].filter(Boolean).join(', ');
+
+  setField(form, 'fullNameDisplay', fullName);
+  setField(form, 'firstName', (offer.customerFirstName || '').trim());
+  setField(form, 'middleName', (offer.customerMiddleName || '').trim());
+  setField(form, 'lastName', (offer.customerLastName || '').trim());
+  setField(form, 'aadhaarAddress', address);
+  setField(form, 'emailId', offer.emailAddress || '');
+  setField(form, 'employerNameText', offer.employerName || '');
+  setField(form, 'loanType', offer.typeOfLoan || 'Fresh Loan');
+
+  form.querySelector('[name="fullNameDisplay"]')?.setAttribute('readonly', '');
+  form.querySelector('[name="aadhaarAddress"]')?.setAttribute('readonly', '');
+
+  // ── Email OTP verification — toggling authored fields ──────────────────────
+  // Initially hide the OTP input row and the verified message.
+  const otpInputWrapper = form.querySelector('.field-email-otp-input');
+  const submitOtpWrapper = form.querySelector('.field-submit-email-otp');
+  const verifiedMsgWrapper = form.querySelector('.field-email-verified-msg');
+  otpInputWrapper?.setAttribute('data-visible', 'false');
+  submitOtpWrapper?.setAttribute('data-visible', 'false');
+  verifiedMsgWrapper?.setAttribute('data-visible', 'false');
+
+  form.addEventListener('click', async (e) => {
+    // ── Verify email button ──────────────────────────────────────────────────
+    const verifyBtn = e.target.closest('.field-verify-email-btn button');
+    if (verifyBtn) {
+      const email = form.querySelector('[name="emailId"]')?.value?.trim();
+      if (!email) { showError(form, 'Please enter your email address first.'); return; }
+      verifyBtn.disabled = true;
+      verifyBtn.textContent = 'Sending…';
+      const result = await generateEmailOTP(email);
+      if (result.status.responseCode === '0') {
+        otpInputWrapper?.setAttribute('data-visible', 'true');
+        submitOtpWrapper?.setAttribute('data-visible', 'true');
+        verifyBtn.textContent = 'Resend OTP';
+        verifyBtn.disabled = false;
+      } else {
+        showError(form, result.status.errorDesc || 'Could not send OTP to that address.');
+        verifyBtn.textContent = 'Verify';
+        verifyBtn.disabled = false;
+      }
+    }
+
+    // ── Submit email OTP button ──────────────────────────────────────────────
+    const submitOtpBtn = e.target.closest('.field-submit-email-otp button');
+    if (submitOtpBtn) {
+      const email = form.querySelector('[name="emailId"]')?.value?.trim();
+      const otp = form.querySelector('[name="emailOtpInput"]')?.value?.trim();
+      if (!otp || otp.length !== 6) return;
+      submitOtpBtn.disabled = true;
+      const otpResult = await validateEmailOTP(email, otp);
+      if (otpResult.status.responseCode === '0') {
+        otpInputWrapper?.setAttribute('data-visible', 'false');
+        submitOtpWrapper?.setAttribute('data-visible', 'false');
+        verifiedMsgWrapper?.setAttribute('data-visible', 'true');
+        form.querySelector('.field-verify-email-btn button')?.setAttribute('disabled', '');
+        sessionStorage.setItem('verifiedEmail', email);
+        trackEvent('email_verified');
+      } else {
+        showError(form, otpResult.status.errorDesc || 'Invalid email OTP. Please try again.');
+        submitOtpBtn.disabled = false;
+      }
+    }
+  });
+
+  // ── Confirm → persist personal info + navigate to offer ───────────────────
+  const handleConfirm = (e) => {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    const personalInfoData = {
+      firstName: form.querySelector('[name="firstName"]')?.value || '',
+      middleName: form.querySelector('[name="middleName"]')?.value || '',
+      lastName: form.querySelector('[name="lastName"]')?.value || '',
+      gender: form.querySelector('[name="gender"]')?.value || '',
+      emailId: form.querySelector('[name="emailId"]')?.value || '',
+      addressType: form.querySelector('[name="addressType"]:checked')?.value || 'Both',
+      employerName: form.querySelector('[name="employerNameText"]')?.value || '',
+      industryType: form.querySelector('[name="industryType"]')?.value || '',
+      monthlyIncome: form.querySelector('[name="monthlyIncome"]')?.value || '',
+      ongoingEmis: form.querySelector('[name="ongoingEmis"]')?.value || '',
+      loanType: form.querySelector('[name="loanType"]')?.value || 'Fresh Loan',
+    };
+    sessionStorage.setItem('personalInfoData', JSON.stringify(personalInfoData));
+    trackEvent('personalInfo_confirmed', { loanType: personalInfoData.loanType });
+    globalThis.location.href = `${siblingPath('personal-loan-offer')}.html`;
+  };
+
+  form.addEventListener('submit', handleConfirm, true);
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[type="submit"]');
+    if (btn && form.contains(btn)) handleConfirm(e);
+  }, true);
 }
 
 // ── Offer page: two-column layout, sliders, reactive EMI ─────────────────────
@@ -425,9 +585,16 @@ export async function initOfferPage() {
   tenureSlider?.addEventListener('input', updateOffer);
   tenureSlider?.addEventListener('change', updateOffer);
 
+  trackEvent('offer_pageLoad');
+
   const handleProceed = (e) => {
     e.preventDefault();
     e.stopImmediatePropagation();
+    trackEvent('offer_selected', {
+      amount: amountSlider?.value ?? offerAmount,
+      tenure: tenureSlider?.value ?? offerTenure,
+      rate,
+    });
     globalThis.location.href = `${siblingPath('personal-loan-preview')}.html`;
   };
 
@@ -552,6 +719,11 @@ export async function initThankYouPage() {
 
   const form = await waitForForm();
   if (!form) return;
+
+  trackEvent('submission_success', {
+    acknowledgementId: result.acknowledgementId,
+    amount: selectedAmount,
+  });
 
   setField(form, 'application_number', result.acknowledgementId || '—');
   setField(form, 'summary_loan_amount', formatINR(selectedAmount));

@@ -140,6 +140,9 @@ async function loadLazy(doc) {
   } else if (pathname.includes('personal-loan-preview')) {
     const { initPreviewPage } = await import('./loan-journey.js');
     initPreviewPage();
+  } else if (pathname.includes('personal-loan-personal-info')) {
+    const { initPersonalInfoPage } = await import('./loan-journey.js');
+    initPersonalInfoPage();
   } else if (pathname.includes('personal-loan-thankyou')) {
     const { initThankYouPage } = await import('./loan-journey.js');
     initThankYouPage();

@@ -1065,6 +1065,132 @@ main .form form p.loan-api-error {
   margin: 0 0 0.75rem;
 }
 
+/* ── Personal Info Page ────────────────────────────────────────────────────── */
+
+/* Page container: constrained card matching the OTP + offer pages */
+main .form form .field-personal-info-panel {
+  max-width: 720px;
+  margin: 1.5rem auto;
+  padding: 0;
+}
+
+/* Section panels — card-style with subtle shadow */
+main .form form .field-customer-details,
+main .form form .field-pan-name,
+main .form form .field-personal-details,
+main .form form .field-address-details,
+main .form form .field-employer-details,
+main .form form .field-income-details,
+main .form form .field-loan-type-details {
+  background: #fff;
+  border: 1px solid #e8eaf0;
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Section legend / heading */
+main .form form .field-customer-details > legend,
+main .form form .field-pan-name > legend,
+main .form form .field-personal-details > legend,
+main .form form .field-address-details > legend,
+main .form form .field-employer-details > legend,
+main .form form .field-income-details > legend,
+main .form form .field-loan-type-details > legend {
+  font-size: 0.95rem !important;
+  font-weight: 700 !important;
+  color: #1a1a1a !important;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #eee;
+  width: 100%;
+  margin-bottom: 0.75rem;
+}
+
+/* Full-name display (readonly, pre-filled from API) */
+main .form form .field-full-name-display input {
+  background: #f5f5f5;
+  border-color: #e0e0e0 !important;
+  color: #333;
+  font-weight: 600;
+}
+
+/* Address readonly textarea / input */
+main .form form .field-aadhaar-address input,
+main .form form .field-aadhaar-address textarea {
+  background: #f5f5f5;
+  border-color: #e0e0e0 !important;
+  color: #555;
+  resize: none;
+}
+
+/* Email row: field + Verify button side by side */
+main .form form .field-email-id {
+  position: relative;
+}
+
+/* Verify / Resend OTP / Verified button */
+main .form form .field-verify-email-btn button {
+  background: none;
+  border: none;
+  color: #0056d2;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+}
+
+main .form form .field-verify-email-btn button:disabled {
+  color: #2e7d32;
+  text-decoration: none;
+  cursor: default;
+}
+
+/* Email OTP input row (hidden until Verify is clicked) */
+main .form form .field-email-otp-input input {
+  letter-spacing: 0.4rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  max-width: 180px;
+}
+
+/* Submit OTP button */
+main .form form .field-submit-email-otp button {
+  background: #0056d2;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.45rem 1rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+/* Email verified confirmation message */
+main .form form .field-email-verified-msg p {
+  color: #2e7d32;
+  font-weight: 600;
+  font-size: 0.875rem;
+  margin: 0.25rem 0 0;
+}
+
+/* Confirm button — matches other page CTAs */
+main .form form .field-personal-info-panel ~ .button-wrapper button[type="submit"],
+main .form form .field-confirm-btn button[type="submit"] {
+  background: #0056d2;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.8rem 2.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  min-width: 160px;
+}
+
+main .form form .field-confirm-btn button[type="submit"]:hover {
+  background: #004bb5;
+}
+
 /* ── OTP Page ──────────────────────────────────────────────────────────────── */
 
 /* OTP card panel */

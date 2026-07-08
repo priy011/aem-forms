@@ -112,7 +112,66 @@ export async function verifyOTPAndGetDemogDetails(otp) {
 }
 
 /**
- * API 3: Submit Loan Application (mocked)
+ * API 3: Generate Email OTP (mocked)
+ * Sends OTP to the supplied email address.
+ */
+export async function generateEmailOTP(email) {
+  await new Promise((r) => setTimeout(r, 400));
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return { status: { responseCode: '1', errorCode: 'INVALID_EMAIL', errorDesc: 'Invalid email address.' } };
+  }
+  sessionStorage.setItem('pendingEmailOtpFor', email);
+  return { status: { responseCode: '0', errorCode: '', errorDesc: '' } };
+}
+
+/**
+ * API 4: Validate Email OTP (mocked)
+ * OTP "123456" always succeeds for any email.
+ */
+export async function validateEmailOTP(email, otp) {
+  await new Promise((r) => setTimeout(r, 400));
+  if (otp !== '123456') {
+    return { status: { responseCode: '1', errorCode: 'OTP_INVALID', errorDesc: 'Invalid email OTP. Please try again.' } };
+  }
+  return { status: { responseCode: '0', errorCode: '', errorDesc: '' } };
+}
+
+/**
+ * API 5: PAN Enquiry (mocked)
+ * Validates PAN and returns name on record.
+ */
+export async function performPANEnquiry(panNo) {
+  await new Promise((r) => setTimeout(r, 500));
+  if (!panNo || !/^[A-Z]{5}\d{4}[A-Z]$/.test(panNo)) {
+    return { status: { responseCode: '1', errorCode: 'INVALID_PAN', errorDesc: 'Invalid PAN format.' } };
+  }
+  return {
+    responseString: { firstName: 'Ankit', middleName: '', lastName: 'Enterprises', panStatus: 'VALID' },
+    status: { responseCode: '0', errorCode: '', errorDesc: '' },
+  };
+}
+
+/**
+ * API 6: Get Bureau Offer (mocked)
+ * Returns a bureau-sourced loan offer based on customer profile.
+ */
+export async function getBureauOffer(customerData) {
+  await new Promise((r) => setTimeout(r, 600));
+  const jid = sessionStorage.getItem('partnerJourneyID') ?? 'unknown';
+  sessionStorage.setItem('bureauOfferFetched', `${jid}:${Date.now()}`);
+  return {
+    responseString: {
+      offerAmount: '1000000.00',
+      tenure: '36',
+      rateOfInterest: '10.20',
+      processingFee: '3000.00',
+    },
+    status: { responseCode: '0', errorCode: '', errorDesc: '' },
+  };
+}
+
+/**
+ * API 7: Submit Loan Application (mocked)
  */
 export async function submitLoanApplication(loanData) {
   await new Promise((r) => setTimeout(r, 800));
