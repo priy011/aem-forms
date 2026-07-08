@@ -1149,6 +1149,8 @@ main .form form .field-otp-code [id="togglePassword"] {
   color: #888;
   font-size: 1.1rem;
   user-select: none;
+  z-index: 2;
+  pointer-events: auto;
 }
 
 /* Resend / attempts row — items already col-6, just align right side */

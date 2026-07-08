@@ -274,16 +274,30 @@ export async function initOtpPage() {
     globalThis.location.href = `${siblingPath('personal-loan-welcome')}.html`;
   });
 
-  // Password show/hide toggle for the eye icon added in authoring.
-  const toggleBtn = form.querySelector('#togglePassword');
-  const otpPasswordInput = form.querySelector('[name="otp_code"]');
-  toggleBtn?.addEventListener('click', () => {
-    if (!otpPasswordInput) return;
-    const isHidden = otpPasswordInput.type === 'password';
-    otpPasswordInput.type = isHidden ? 'text' : 'password';
-    toggleBtn.classList.toggle('bi-eye-slash', !isHidden);
-    toggleBtn.classList.toggle('bi-eye', isHidden);
+  // Delegated toggle so timing/re-render of the <i> element doesn't matter.
+  // Checks that the icon is inside THIS form to avoid cross-form interference.
+  document.addEventListener('click', (e) => {
+    const icon = e.target.closest('[id="togglePassword"]');
+    if (!icon || !form.contains(icon)) return;
+    e.stopPropagation();
+    const otpInput = form.querySelector('[name="otp_code"]') ?? form.querySelector('input[type="password"]');
+    if (!otpInput) return;
+    const show = otpInput.type === 'password';
+    otpInput.type = show ? 'text' : 'password';
+    icon.classList.toggle('bi-eye-slash', !show);
+    icon.classList.toggle('bi-eye', show);
   });
+
+  // Show errors inline, right below the OTP password field (not prepended to form).
+  const showOtpError = (msg) => {
+    form.querySelector('.otp-inline-error')?.remove();
+    const errEl = document.createElement('p');
+    errEl.className = 'loan-api-error otp-inline-error';
+    errEl.textContent = msg;
+    const anchor = form.querySelector('.field-otp-code');
+    if (anchor) anchor.after(errEl);
+    else form.prepend(errEl);
+  };
 
   const handleOtpSubmit = async (e) => {
     e.preventDefault();
@@ -297,7 +311,7 @@ export async function initOtpPage() {
 
     const otp = otpInput?.value?.trim();
     if (otp?.length !== 6) {
-      showError(form, 'Please enter the 6-digit OTP.');
+      showOtpError('Please enter the 6-digit OTP.');
       return;
     }
 
@@ -309,14 +323,14 @@ export async function initOtpPage() {
       if (result.status.responseCode === '0') {
         globalThis.location.href = `${siblingPath('personal-loan-offer')}.html`;
       } else {
-        showError(form, result.status.errorDesc || 'Invalid OTP. Please try again.');
+        showOtpError(result.status.errorDesc || 'Invalid OTP. Please try again.');
         if (submitBtn) submitBtn.disabled = false;
       }
     } catch (err) {
       const jid = sessionStorage.getItem('partnerJourneyID') ?? 'unknown';
       // eslint-disable-next-line no-console
       console.error(`[Journey: ${jid}] VerifyOTP failed:`, err.message);
-      showError(form, 'Something went wrong. Please try again.');
+      showOtpError('Something went wrong. Please try again.');
       if (submitBtn) submitBtn.disabled = false;
     }
   };
