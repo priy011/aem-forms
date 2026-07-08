@@ -237,9 +237,12 @@ export async function initWelcomePage() {
   }, true);
 
   // Disable on click to prevent stacked Invoke Service calls while the async request is in flight.
+  // Save masked mobile so the OTP page can display it in the instruction text.
   // 8-second safety re-enables the button if navigation never fires (e.g. Rule Editor failure).
   submitBtn?.addEventListener('click', () => {
     submitBtn.disabled = true;
+    const mobile = mobileInput?.value ?? '';
+    if (mobile) sessionStorage.setItem('maskedMobile', `*****${mobile.slice(5)}`);
     setTimeout(() => {
       if (document.contains(submitBtn)) submitBtn.disabled = !checkFormValid();
     }, 8000);
@@ -251,11 +254,25 @@ export async function initOtpPage() {
   const form = await waitForForm();
   if (!form) return;
 
+  // Fill the dedicated otp_masked_mobile field with the masked number from sessionStorage
+  // and move the "Edit mobile number" <a> from the instruction field to sit right after it.
+  // Result: instruction shows static text, masked-mobile field shows "*****94837. [Edit link]".
   const maskedMobile = sessionStorage.getItem('maskedMobile');
-  if (maskedMobile) {
-    const instrEl = form.querySelector('.field-otp-instruction p');
-    if (instrEl) instrEl.innerHTML = instrEl.innerHTML.replace(/\*+\d+/, maskedMobile);
+  const instrWrapper = form.querySelector('.field-otp-instruction');
+  const maskedFieldPara = form.querySelector('.field-otp-masked-mobile p');
+  const editLink = instrWrapper?.querySelector('a');
+
+  if (maskedMobile && maskedFieldPara) {
+    maskedFieldPara.textContent = `${maskedMobile} `;
+    if (editLink) maskedFieldPara.appendChild(editLink);
   }
+
+  // Intercept the Edit link wherever it lives after the DOM rearrangement above.
+  editLink?.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    globalThis.location.href = `${siblingPath('personal-loan-welcome')}.html`;
+  });
 
   const handleOtpSubmit = async (e) => {
     e.preventDefault();

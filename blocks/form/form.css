@@ -852,9 +852,9 @@ main .form form fieldset.panel-wrapper.field-panel1782916559529 .image-wrapper i
   width: 100%;
   height: auto;
   display: block;
-  border: none !important;
-  box-shadow: none !important;
-  margin: 0 !important;
+  border: none;
+  box-shadow: none;
+  margin: 0;
 }
 
 main .form form fieldset.panel-wrapper.field-panel1782916559529 .field-loan-offer-banner {
@@ -872,11 +872,11 @@ main .form form .field-loan-offer-banner p {
 /* Orange range slider */
 main .form form .field-offer-card input[type="range"] {
   accent-color: #f5870a;
-  height: 4px !important;
-  border: none !important;
-  box-shadow: none !important;
-  margin: 0.75rem 0 0.25rem !important;
-  padding: 0 !important;
+  height: 4px ;
+  border: none;
+  box-shadow: none;
+  margin: 0.75rem 0 0.25rem;
+  padding: 0;
   border-radius: 2px;
   cursor: pointer;
 }
@@ -934,11 +934,11 @@ main .form form fieldset.panel-wrapper.field-offer-summary > legend {
 
 /* Selected Amount — large bold display */
 main .form form .text-wrapper.field-wrapper.field-loanamountdisplay input {
-  border: none !important;
-  box-shadow: none !important;
-  background: transparent !important;
-  padding: 0 !important;
-  margin: 0 !important;
+  border: none;
+  box-shadow: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
   font-size: 2rem;
   font-weight: 700;
   color: #1a1a1a;
@@ -1072,10 +1072,33 @@ main .form form fieldset.panel-wrapper.field-help-us-confirm-this-is-you > legen
   margin-bottom: 0.5rem;
 }
 
-/* Instruction text */
+/* Instruction text — no bottom margin so it sits flush above the masked mobile line */
 main .form form .field-otp-instruction p {
   font-size: 0.9rem;
   color: #555;
+  margin-bottom: 0;
+}
+
+/* Masked mobile number — rendered in the dedicated otp_masked_mobile plain-text field.
+   The Edit mobile number <a> is moved here by JS so the line reads:
+   "*****94837. Edit mobile number" */
+main .form form .field-otp-masked-mobile p {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-top: 0.1rem;
+  margin-bottom: 1rem;
+}
+
+main .form form .field-otp-masked-mobile a {
+  color: #0056d2;
+  font-weight: 400;
+  margin-left: 0.35rem;
+  text-decoration: none;
+}
+
+main .form form .field-otp-masked-mobile a:hover {
+  text-decoration: underline;
 }
 
 /* "Enter OTP" sub-label */
@@ -1446,7 +1469,8 @@ main .form form .field-loan-panel {
   box-shadow: none !important;
   padding: 0 !important;
   margin-bottom: 0.5rem;
-  display: block !important;
+  display: flex;
+  flex-direction: row;        
 }
 
 main .form form .field-loan-panel > legend {
