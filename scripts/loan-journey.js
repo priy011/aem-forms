@@ -274,20 +274,6 @@ export async function initOtpPage() {
     globalThis.location.href = `${siblingPath('personal-loan-welcome')}.html`;
   });
 
-  // Delegated toggle so timing/re-render of the <i> element doesn't matter.
-  // Checks that the icon is inside THIS form to avoid cross-form interference.
-  document.addEventListener('click', (e) => {
-    const icon = e.target.closest('[id="togglePassword"]');
-    if (!icon || !form.contains(icon)) return;
-    e.stopPropagation();
-    const otpInput = form.querySelector('[name="otp_code"]') ?? form.querySelector('input[type="password"]');
-    if (!otpInput) return;
-    const show = otpInput.type === 'password';
-    otpInput.type = show ? 'text' : 'password';
-    icon.classList.toggle('bi-eye-slash', !show);
-    icon.classList.toggle('bi-eye', show);
-  });
-
   // Show errors inline, right below the OTP password field (not prepended to form).
   const showOtpError = (msg) => {
     form.querySelector('.otp-inline-error')?.remove();
@@ -574,22 +560,4 @@ export async function initThankYouPage() {
   form.querySelectorAll(
     '.field-application-number input, .field-summary-loan-amount input',
   ).forEach((el) => el.setAttribute('readonly', ''));
-
-  // Copy-to-clipboard button next to the application number
-  const appWrapper = form.querySelector('.field-application-number');
-  if (appWrapper && result.acknowledgementId) {
-    const copyBtn = document.createElement('button');
-    copyBtn.type = 'button';
-    copyBtn.className = 'thankyou-copy-btn';
-    copyBtn.setAttribute('aria-label', 'Copy application number');
-    copyBtn.textContent = '📋';
-    copyBtn.addEventListener('click', () => {
-      navigator.clipboard.writeText(result.acknowledgementId).then(() => {
-        copyBtn.textContent = '✓';
-        setTimeout(() => { copyBtn.textContent = '📋'; }, 2000);
-      });
-    });
-    const inputEl = appWrapper.querySelector('input');
-    if (inputEl) inputEl.after(copyBtn);
-  }
 }

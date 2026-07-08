@@ -947,9 +947,9 @@ main .form form .text-wrapper.field-wrapper.field-loanamountdisplay input {
 }
 
 main .form form .field-offer-summary .text-wrapper.field-wrapper.field-loanamountdisplay label {
-  font-size: 0.78rem !important;
-  color: #888 !important;
-  font-weight: 400 !important;
+  font-size: 0.78rem;
+  color: #888;
+  font-weight: 400;
 }
 
 /* EMI and Rate — side by side, each with left accent border */
@@ -964,11 +964,11 @@ main .form form fieldset.panel-wrapper.field-offer-summary .field-interestrate {
 
 main .form form .text-wrapper.field-wrapper.field-monthlyemi input,
 main .form form .text-wrapper.field-wrapper.field-interestrate input {
-  border: none !important;
-  box-shadow: none !important;
-  background: transparent !important;
-  padding: 0 !important;
-  margin: 0 !important;
+  border: none;
+  box-shadow: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
   font-size: 1rem;
   font-weight: 600;
   color: #1a1a1a;
@@ -978,9 +978,9 @@ main .form form .text-wrapper.field-wrapper.field-interestrate input {
 
 main .form form .field-offer-summary .text-wrapper.field-wrapper.field-monthlyemi label,
 main .form form .field-offer-summary .text-wrapper.field-wrapper.field-interestrate label {
-  font-size: 0.78rem !important;
-  color: #888 !important;
-  font-weight: 400 !important;
+  font-size: 0.78rem;
+  color: #888;
+  font-weight: 400;
 }
 
 /* Hide "Plus applicable taxes" static text — replaced by taxes field */
@@ -998,11 +998,11 @@ main .form form fieldset.panel-wrapper.field-offer-summary .field-taxes {
 }
 
 main .form form .text-wrapper.field-wrapper.field-taxes input {
-  border: none !important;
-  box-shadow: none !important;
-  background: transparent !important;
-  padding: 0 !important;
-  margin: 0 !important;
+  border: none;
+  box-shadow: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
   font-size: 1rem;
   font-weight: 600;
   color: #1a1a1a;
@@ -1079,9 +1079,9 @@ main .form form .field-help-us-confirm-this-is-you {
 
 /* Panel legend "Help us confirm this is you!" */
 main .form form fieldset.panel-wrapper.field-help-us-confirm-this-is-you > legend {
-  font-size: 1.2rem !important;
-  font-weight: 700 !important;
-  color: #1a1a1a !important;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1a1a1a;
   margin-bottom: 0.5rem;
 }
 
@@ -1119,39 +1119,18 @@ main .form form .field-enter-otp-heading p {
   font-size: 0.95rem;
   font-weight: 600;
   color: #1a1a1a;
-  margin-bottom: 0 !important;
+  margin-bottom: 0;
 }
 
-/* OTP password input + eye toggle wrapper */
-main .form form .text-wrapper.field-wrapper.field-otp-code {
-  position: relative;
-}
 
 main .form form .text-wrapper.field-wrapper.field-otp-code input {
   font-size: 1.4rem;
   letter-spacing: 0.75rem;
   text-align: left;
   font-weight: 600;
-  border: 1.5px solid #ccc !important;
-  border-radius: 8px !important;
-  padding: 0.75rem 3rem 0.75rem 1rem !important;
-  width: 100%;
-  box-sizing: border-box;
+  border: 1.5px solid #ccc;
 }
 
-/* Eye icon toggle — attribute selector avoids camelCase id lint rule */
-main .form form .field-otp-code [id="togglePassword"] {
-  position: absolute;
-  right: 0.85rem;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  color: #888;
-  font-size: 1.1rem;
-  user-select: none;
-  z-index: 2;
-  pointer-events: auto;
-}
 
 /* Resend / attempts row — items already col-6, just align right side */
 main .form form .field-attempts-left {
@@ -1167,8 +1146,8 @@ main .form form .field-attempts-left p {
 
 /* Submit button */
 main .form form .button-wrapper.field-submit-otp button {
-  background: #3c3cff !important;
-  border-radius: 30px !important;
+  background: #3c3cff;
+  border-radius: 30px;
   min-width: 160px;
   padding: 12px 36px;
 }
@@ -1180,12 +1159,12 @@ main .form form fieldset.panel-wrapper.field-loan-details,
 main .form form fieldset.panel-wrapper.field-personal-details {
   display: grid !important;
   grid-template-columns: repeat(4, 1fr) !important;
-  border: 1px solid #e2e6f3 !important;
+  border: 1px solid #e2e6f3;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 2px 12px rgb(0 0 0 / 6%);
   margin-bottom: 1.25rem;
-  padding: 0 !important;
+  padding: 0;
 }
 
 /* Section header legend */
@@ -1193,10 +1172,10 @@ main .form form fieldset.panel-wrapper.field-loan-details > legend,
 main .form form fieldset.panel-wrapper.field-personal-details > legend {
   grid-column: span 4;
   background: #eef0ff;
-  padding: 0.9rem 1.25rem !important;
-  font-size: 1rem !important;
-  font-weight: 600 !important;
-  color: #1a1a1a !important;
+  padding: 0.9rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1a1a1a;
   border-bottom: 1px solid #e2e6f3;
   margin: 0;
   width: 100%;
@@ -1208,7 +1187,7 @@ main .form form fieldset.panel-wrapper.field-personal-details .field-wrapper {
   grid-column: span 1 !important;
   border-right: 1px solid #e8eaf0;
   border-bottom: 1px solid #e8eaf0;
-  padding: 0.75rem 1rem !important;
+  padding: 0.75rem 1rem;
 }
 
 /* Address and residence span full width */
@@ -1222,16 +1201,16 @@ main .form form fieldset.panel-wrapper.field-personal-details .field-residence-d
 main .form form fieldset.panel-wrapper.field-loan-details .field-wrapper input,
 main .form form fieldset.panel-wrapper.field-personal-details .field-wrapper input,
 main .form form fieldset.panel-wrapper.field-personal-details .field-wrapper textarea {
-  border: none !important;
-  box-shadow: none !important;
-  background: transparent !important;
-  padding: 0 !important;
-  margin: 0 !important;
+  border: none;
+  box-shadow: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
   font-size: 0.95rem;
   font-weight: 600;
   color: #1a1a1a;
   pointer-events: none;
-  outline: none !important;
+  outline: none;
   resize: none;
   height: auto;
   min-height: unset;
@@ -1240,9 +1219,9 @@ main .form form fieldset.panel-wrapper.field-personal-details .field-wrapper tex
 /* Field label — small gray above the value */
 main .form form fieldset.panel-wrapper.field-loan-details .text-wrapper.field-wrapper label,
 main .form form fieldset.panel-wrapper.field-personal-details .text-wrapper.field-wrapper label {
-  font-size: 0.78rem !important;
-  color: #888 !important;
-  font-weight: 400 !important;
+  font-size: 0.78rem;
+  color: #888;
+  font-weight: 400;
   margin-bottom: 0.2rem;
 }
 
@@ -1259,8 +1238,8 @@ main .form form .button-wrapper.field-confirm-btn {
 }
 
 main .form form .button-wrapper.field-confirm-btn button {
-  background: #5b6ef5 !important;
-  border-radius: 30px !important;
+  background: #5b6ef5;
+  border-radius: 30px;
   min-width: 160px;
   padding: 12px 36px;
   font-size: 1rem;
@@ -1294,56 +1273,38 @@ main .form form .field-application-number {
 }
 
 main .form form .field-application-number label {
-  font-size: 0.85rem !important;
-  color: #888 !important;
-  font-weight: 400 !important;
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: 400;
   width: 100%;
 }
 
 main .form form .field-application-number input {
-  border: none !important;
-  box-shadow: none !important;
-  background: transparent !important;
-  padding: 0 !important;
+  border: none;
+  box-shadow: none;
+  background: transparent;
+  padding: 0;
   font-size: 2rem;
   font-weight: 700;
   color: #1a1a1a;
   pointer-events: none;
-  outline: none !important;
-  width: auto !important;
-  height: auto !important;
-  margin: 0 !important;
-  display: inline !important;
+  outline: none;
+  width: auto;
+  height: auto;
+  margin: 0;
+  display: inline;
 }
 
-/* Copy button — must override AEM's full-width form button styles */
-main .form form .thankyou-copy-btn {
-  background: none !important;
-  border: none !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  width: auto !important;
-  height: auto !important;
-  min-width: unset !important;
-  padding: 0 0.35rem !important;
-  margin: 0 !important;
-  font-size: 1rem;
-  cursor: pointer;
-  color: #888;
-  display: inline-block !important;
-  vertical-align: middle;
-  line-height: 1;
-}
 
 /* Confirmation card — styled panel wrapping app number + note text */
 main .form form fieldset.panel-wrapper.field-confirmation-card {
   background: #fff;
-  border: 1px solid #e2e6f3 !important;
+  border: 1px solid #e2e6f3;
   border-radius: 12px;
   box-shadow: 0 2px 12px rgb(0 0 0 / 6%);
-  padding: 1.25rem 1.5rem !important;
+  padding: 1.25rem 1.5rem;
   margin-bottom: 1.5rem;
-  display: block !important;
+  display: block;
 }
 
 main .form form fieldset.panel-wrapper.field-confirmation-card > legend {
@@ -1352,19 +1313,19 @@ main .form form fieldset.panel-wrapper.field-confirmation-card > legend {
 
 /* Loan summary panel */
 main .form form fieldset.panel-wrapper.field-loan-summary {
-  border: none !important;
-  box-shadow: none !important;
-  padding: 0 !important;
+  border: none;
+  box-shadow: none;
+  padding: 0;
   margin-top: 1rem;
-  display: block !important;
+  display: block;
 }
 
 main .form form fieldset.panel-wrapper.field-loan-summary > legend {
-  font-size: 1.1rem !important;
-  font-weight: 700 !important;
-  color: #1a1a1a !important;
-  border: none !important;
-  padding: 0 0 0.75rem !important;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  border: none;
+  padding: 0 0 0.75rem;
 }
 
 /* Loan amount — left-bordered display value */
@@ -1374,21 +1335,21 @@ main .form form .field-summary-loan-amount {
 }
 
 main .form form .field-summary-loan-amount label {
-  font-size: 0.8rem !important;
-  color: #888 !important;
-  font-weight: 400 !important;
+  font-size: 0.8rem;
+  color: #888;
+  font-weight: 400;
 }
 
 main .form form .field-summary-loan-amount input {
-  border: none !important;
-  box-shadow: none !important;
-  background: transparent !important;
-  padding: 0 !important;
+  border: none;
+  box-shadow: none;
+  background: transparent;
+  padding: 0;
   font-size: 1.2rem;
   font-weight: 700;
   color: #1a1a1a;
   pointer-events: none;
-  outline: none !important;
+  outline: none;
 }
 
 /* Hide wizard step indicator — not needed in the loan journey */
@@ -1449,11 +1410,11 @@ main .form form .field-info-note p {
 /* ── Thank You — For Easy Loan Management section ────────────────────────── */
 main .form form fieldset.panel-wrapper.field-loan-management {
   background: #e8edff;
-  border: none !important;
+  border: none;
   border-radius: 10px;
-  padding: 1rem 1.25rem !important;
+  padding: 1rem 1.25rem;
   margin-bottom: 1.25rem;
-  display: block !important;
+  display: block;
 }
 
 main .form form fieldset.panel-wrapper.field-loan-management > legend {
@@ -1498,9 +1459,9 @@ main .form form .field-download-app-link a {
 
 /* ── Thank You — inner loan-panel wrapper (extra panel inside confirmation-card) */
 main .form form .field-loan-panel {
-  border: none !important;
-  box-shadow: none !important;
-  padding: 0 !important;
+  border: none;
+  box-shadow: none;
+  padding: 0;
   margin-bottom: 0.5rem;
   display: flex;
   flex-direction: row;        
@@ -1578,10 +1539,10 @@ main .form form[data-formpath*="personal-loan-thankyou"] > :not([class*="field-f
 /* ── Thank You — promo cards section ─────────────────────────────────────── */
 main .form form .field-cards-section,
 main .form form .field-cards-block {
-  border: none !important;
-  box-shadow: none !important;
-  padding: 0 !important;
-  display: block !important;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  display: block;
 }
 
 main .form form .field-cards-section > legend,
@@ -1591,7 +1552,7 @@ main .form form .field-cards-block > legend {
 
 /* Cards stacked vertically in the sidebar — override col-6 side-by-side default */
 main .form form .field-cards-block {
-  display: flex !important;
+  display: flex;
   flex-direction: column;
   gap: 1rem;
 }
@@ -1603,10 +1564,10 @@ main .form form .field-card-2 {
   background: #f0ecff;
   border-radius: 14px;
   overflow: hidden;
-  border: none !important;
+  border: none ;
   box-shadow: 0 2px 8px rgb(0 0 0 / 8%);
-  padding: 0 !important;
-  display: block !important;
+  padding: 0;
+  display: block;
 }
 
 main .form form .field-card-2 {
@@ -1767,10 +1728,10 @@ main .form form .field-terms-privacy-text a:hover {
 
 /* View Loan Eligibility button — pill, not full width */
 main .form form .field-submitbtn button {
-  border-radius: 30px !important;
-  width: auto !important;
+  border-radius: 30px;
+  width: auto;
   min-width: 220px;
-  padding: 14px 36px !important;
+  padding: 14px 36px;
   font-size: 0.95rem;
 }
 
@@ -1811,7 +1772,7 @@ main .form form .field-essentials-panel {
 /* Each essential item card */
 main .form form .field-essentials-panel > fieldset.panel-wrapper {
   grid-column: span 1 !important;
-  display: flex !important;
+  display: flex;
   flex-direction: row;
   align-items: center;
   gap: 0.75rem;
@@ -1880,12 +1841,12 @@ main .form form .field-essentials-panel .plain-text-wrapper p {
 /* Header bar panel — wraps HDFC logo + safe badge, spans full form width */
 main .form form fieldset.panel-wrapper.field-header-bar {
   grid-column: span 12 !important;
-  display: flex !important;
-  flex-direction: row !important;
+  display: flex ;
+  flex-direction: row;
   align-items: center;
   justify-content: space-between;
   background: #0d1b3e;
-  padding: 10px 32px !important;
+  padding: 10px 32px;
   gap: 0;
 }
 
