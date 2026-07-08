@@ -368,14 +368,28 @@ export async function initOfferPage() {
     ['12m', '24m', '36m', '48m', '60m', '72m', '84m'],
   );
 
-  // Populate authored offer summary fields
+  // Populate authored offer summary fields.
+  // taxes = 18% GST on the processing fee returned by the API.
+  // The taxes field is not readonly in authoring, so the Rule Engine can reset it to
+  // empty when it restores form state (sync-complete). Re-apply it once loading is done.
   const fullName = [offer.customerFirstName, offer.customerLastName].filter(Boolean).join(' ');
   const processingFee = Number.parseFloat(offer.processingFee || '0');
+  const taxes = Math.round(processingFee * 0.18);
+  const applyTaxes = () => setField(form, 'taxes', formatINR(taxes));
+
   setField(form, 'customerName', fullName);
   setField(form, 'loanAmountDisplay', formatINR(offerAmount));
   setField(form, 'monthlyEMI', formatINR(calculateEMI(offerAmount, rate, offerTenure)));
   setField(form, 'interestRate', `${rate}%`);
-  setField(form, 'taxes', formatINR(processingFee));
+  applyTaxes();
+
+  // Re-apply once the Rule Engine finishes restoring form state (removes "loading" class).
+  if (form.classList.contains('loading')) {
+    const obs = new MutationObserver(() => {
+      if (!form.classList.contains('loading')) { obs.disconnect(); applyTaxes(); }
+    });
+    obs.observe(form, { attributes: true, attributeFilter: ['class'] });
+  }
 
   const updateOffer = () => {
     const principal = Number.parseFloat(amountSlider?.value ?? offerAmount);
@@ -384,6 +398,7 @@ export async function initOfferPage() {
 
     setField(form, 'loanAmountDisplay', formatINR(principal));
     setField(form, 'monthlyEMI', formatINR(emi));
+    applyTaxes();
     if (amountPill) amountPill.textContent = formatINR(principal);
     if (tenurePill) tenurePill.textContent = `${tenure} months`;
     syncSliderTrack(amountSlider);
