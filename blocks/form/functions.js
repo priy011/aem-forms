@@ -125,7 +125,8 @@ async function verifyOtpAndNavigate(otp, globals) {
 
 /**
  * Returns true if the applicant is at least 18 years old.
- * Use in Rule Editor condition to show/hide the DOB error field and enable/disable the submit button:
+ * Use in Rule Editor condition to show/hide the DOB error field and enable/disable 
+the submit button:
  *   When dobValue changes → If validateAge(dobValue) is false → Show dob-error-msg
  *   When dobValue changes → If validateAge(dobValue) is true  → Hide dob-error-msg
  * @name validateAge Checks if applicant is 18 or older
@@ -137,7 +138,7 @@ function validateAge(dob) {
   const parsed = new Date(dob);
   if (Number.isNaN(parsed.getTime())) return false;
   const age = (Date.now() - parsed) / (365.25 * 24 * 3600 * 1000);
-  return age >= 18;
+  return age >= 21;
 }
 
 // eslint-disable-next-line import/prefer-default-export

@@ -21,8 +21,8 @@ export async function initiateCustomerIdentification(mobileNo, identifierName, i
   }
   if (identifierName === 'DOB') {
     const age = (Date.now() - new Date(identifierValue)) / (365.25 * 24 * 3600 * 1000);
-    if (Number.isNaN(age) || age < 18) {
-      return { status: { responseCode: '1', errorCode: 'INVALID_DOB', errorDesc: 'Applicant must be at least 18 years old.' } };
+    if (Number.isNaN(age) || age < 21) {
+      return { status: { responseCode: '1', errorCode: 'INVALID_DOB', errorDesc: 'Applicant must be at least 21 years old.' } };
     }
   }
 
@@ -38,6 +38,10 @@ export async function initiateCustomerIdentification(mobileNo, identifierName, i
       },
     };
   }
+
+  // Generate a random OTP and store it so the OTP page can pre-fill and validate it
+  const mobileOtp = String(Math.floor(100000 + Math.random() * 900000));
+  sessionStorage.setItem('mobileOtp', mobileOtp);
 
   // Success scenario (happy path)
   const mockResponse = {
@@ -65,7 +69,8 @@ export async function initiateCustomerIdentification(mobileNo, identifierName, i
 export async function verifyOTPAndGetDemogDetails(otp) {
   await new Promise((r) => setTimeout(r, 500));
 
-  if (otp !== '123456') {
+  const expectedMobileOtp = sessionStorage.getItem('mobileOtp');
+  if (!expectedMobileOtp || otp !== expectedMobileOtp) {
     return {
       status: { responseCode: '1', errorCode: 'OTP_INVALID', errorDesc: 'Invalid OTP. Please try again.' },
     };
@@ -120,6 +125,8 @@ export async function generateEmailOTP(email) {
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return { status: { responseCode: '1', errorCode: 'INVALID_EMAIL', errorDesc: 'Invalid email address.' } };
   }
+  const emailOtp = String(Math.floor(100000 + Math.random() * 900000));
+  sessionStorage.setItem('emailOtp', emailOtp);
   sessionStorage.setItem('pendingEmailOtpFor', email);
   return { status: { responseCode: '0', errorCode: '', errorDesc: '' } };
 }
@@ -130,7 +137,8 @@ export async function generateEmailOTP(email) {
  */
 export async function validateEmailOTP(email, otp) {
   await new Promise((r) => setTimeout(r, 400));
-  if (otp !== '123456') {
+  const expectedEmailOtp = sessionStorage.getItem('emailOtp');
+  if (!expectedEmailOtp || otp !== expectedEmailOtp) {
     return { status: { responseCode: '1', errorCode: 'OTP_INVALID', errorDesc: 'Invalid email OTP. Please try again.' } };
   }
   return { status: { responseCode: '0', errorCode: '', errorDesc: '' } };
