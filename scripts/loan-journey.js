@@ -521,7 +521,7 @@ export async function initPersonalInfoPage() {
         otpInputWrapper?.setAttribute('data-visible', 'false');
         submitOtpWrapper?.setAttribute('data-visible', 'false');
         verifiedMsgWrapper?.setAttribute('data-visible', 'true');
-        form.querySelector('.field-verifyemailbtn button')?.setAttribute('disabled', '');
+        form.querySelector('.field-verifyemailbtn')?.setAttribute('data-visible', 'false');
         sessionStorage.setItem('verifiedEmail', email);
         trackEvent('email_verified');
       } else {
