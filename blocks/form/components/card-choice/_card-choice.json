@@ -47,6 +47,18 @@
               "description": "One DAM path per option in the same order as the enum values, e.g. /content/dam/capstone-aem-forms/hdfc.png,/content/dam/capstone-aem-forms/icici.png"
             },
             {
+              "component": "text",
+              "name": "descriptions",
+              "label": "Option Descriptions (pipe-separated)",
+              "description": "One description per option, separated by | in the same order as the enum values, e.g. Instant & secure|Quick & hassle-free|Processed via upload"
+            },
+            {
+              "component": "text",
+              "name": "badge",
+              "label": "Option Badges (pipe-separated)",
+              "description": "Badge label per option separated by | — leave empty to show no badge, e.g. Recommended|| (only first option gets a badge)"
+            },
+            {
               "component": "select",
               "name": "variant",
               "label": "Variant",

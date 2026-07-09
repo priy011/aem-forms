@@ -1879,40 +1879,42 @@ main .form form .field-selectedbank .radio-wrapper input[type="radio"] {
   pointer-events: none !important;
 }
 
-/* Card face */
+/* Card face — label is just a flex column; border lives on the image only */
 main .form form .field-selectedbank .radio-wrapper label {
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
-  justify-content: center !important;
+  justify-content: flex-start !important;
   gap: 0.45rem !important;
-  padding: 0.85rem 0.4rem 0.65rem !important;
-  border-radius: 12px !important;
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
   cursor: pointer !important;
   text-align: center !important;
   font-size: 0.72rem !important;
   font-weight: 500 !important;
   color: #333 !important;
-  min-height: 110px !important;
+  position: relative !important;
   line-height: 1.3 !important;
 }
 
-main .form form .field-selectedbank .radio-wrapper label:hover {
-  box-shadow: 0 3px 10px rgb(92 107 192 / 18%) !important;
-}
-
-/* Selected card — blue border + checkmark badge */
+/* Selected card — bold name only; border goes on the image */
 main .form form .field-selectedbank .radio-wrapper input[type="radio"]:checked + label {
-  border-color: #3d5af1 !important;
-  border-width: 2px !important;
   color: #1a237e !important;
   font-weight: 600 !important;
 }
 
+/* Blue border on image when selected */
+main .form form .field-selectedbank .radio-wrapper input[type="radio"]:checked + label .card-bank-logo {
+  border-color: #3d5af1 !important;
+  border-width: 2px !important;
+}
+
+/* Checkmark — anchored to bottom-center of the 64px image box */
 main .form form .field-selectedbank .radio-wrapper input[type="radio"]:checked + label::after {
   content: '✓' !important;
   position: absolute !important;
-  bottom: 6px !important;
+  top: calc(64px - 9px) !important;
   left: 50% !important;
   transform: translateX(-50%) !important;
   width: 18px !important;
@@ -1923,16 +1925,23 @@ main .form form .field-selectedbank .radio-wrapper input[type="radio"]:checked +
   font-size: 0.65rem !important;
   line-height: 18px !important;
   text-align: center !important;
+  border: 2px solid #fff !important;
 }
 
-/* Bank logo image (inserted by card-choice.js) */
+/* Bank logo image — this is the bordered "card" element */
 main .form form .field-selectedbank .radio-wrapper label .card-bank-logo {
   width: 64px !important;
   height: 64px !important;
   object-fit: contain !important;
   object-position: center !important;
-  border-radius: 10px !important;
+  border-radius: 12px !important;
   display: block !important;
+  border: 1.5px solid #dde0f0 !important;
+  transition: border-color 0.18s !important;
+}
+
+main .form form .field-selectedbank .radio-wrapper label:hover .card-bank-logo {
+  box-shadow: 0 2px 8px rgb(92 107 192 / 15%) !important;
 }
 
 /* "Other Bank" dropdown — compact card inline with bank row */
@@ -2040,37 +2049,25 @@ main .form form .field-incomemethod .radio-wrapper label {
   position: static !important;
 }
 
-/* Description text injected via CSS per-option */
-main .form form .field-incomemethod .radio-wrapper label::after {
+/* Option description span (created by card-choice.js from authored property) */
+main .form form .field-incomemethod .radio-wrapper label .card-desc {
   display: block !important;
   font-size: 0.78rem !important;
   font-weight: 400 !important;
   color: #666 !important;
-  margin-top: 0.25rem !important;
+  margin-top: 0.3rem !important;
   line-height: 1.4 !important;
 }
 
-main .form form .field-incomemethod .radio-wrapper:has(input[value="account-aggregator"]) label::after {
-  content: "Instant & secure, processed via RBI-regulated partner." !important;
-}
-
-main .form form .field-incomemethod .radio-wrapper:has(input[value="salary-login"]) label::after {
-  content: "Quick & hassle-free, processed via NetBanking." !important;
-}
-
-main .form form .field-incomemethod .radio-wrapper:has(input[value="upload-statement"]) label::after {
-  content: "Processed via uploading bank statement of the last 6 months." !important;
-}
-
-/* Selected income method — blue border */
+/* Selected income method — blue border + light bg on the card only */
 main .form form .field-incomemethod .radio-wrapper:has(input[type="radio"]:checked) {
   border-color: #3d5af1 !important;
   border-width: 2px !important;
+  background: #eef1fb !important;
 }
 
-/* Recommended badge — Account Aggregator */
-main .form form .field-incomemethod .radio-wrapper:has(input[value="account-aggregator"])::after {
-  content: "Recommended" !important;
+/* Badge element (created by card-choice.js from authored 'badge' property) */
+main .form form .field-incomemethod .radio-wrapper .card-badge {
   position: absolute !important;
   bottom: 0 !important;
   left: 0 !important;
@@ -2082,6 +2079,37 @@ main .form form .field-incomemethod .radio-wrapper:has(input[value="account-aggr
   font-weight: 600 !important;
   padding: 0.3rem !important;
   border-radius: 0 0 8px 8px !important;
+}
+
+/* ── Submit / Continue button ── */
+main .form form .submit-wrapper button[type="submit"] {
+  background: #3d5af1 !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 0.85rem 2.5rem !important;
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
+  width: auto !important;
+  min-width: 200px !important;
+  cursor: pointer !important;
+  letter-spacing: 0.01em;
+  transition: background 0.18s !important;
+}
+
+main .form form .submit-wrapper button[type="submit"]::after {
+  content: ' ›' !important;
+  font-size: 1.1rem !important;
+  margin-left: 0.25rem !important;
+}
+
+main .form form .submit-wrapper button[type="submit"]:hover {
+  background: #2d48d8 !important;
+}
+
+main .form form .submit-wrapper button[type="submit"]:disabled {
+  background: #9aa5e8 !important;
+  cursor: not-allowed !important;
 }
 
 @media (width <= 700px) {
