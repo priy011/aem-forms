@@ -92,12 +92,13 @@ form:not(.edit-mode) [data-visible="false"] {
 
 main .form-container {
     background-color: var(--form-background-color);
-    padding: var(--form-padding);
+    /* padding: var(--form-padding); */
     width: var(--form-width);
 }
 
 main .form {
     background-color: var(--form-background-color);
+    overflow-x: hidden;
 }
 
 main .form > div:not(:first-child) {
@@ -247,7 +248,7 @@ main .form label.required::after {
 main .form form p,
 main .form form .repeat-wrapper,
 main .form form .field-wrapper {
-    margin: var(--form-field-gap);
+    /* margin: var(--form-field-gap); */
     color: var(--form-label-color);
     grid-column: span 12;
 }
@@ -539,7 +540,7 @@ main .form form .wizard  {
   border: var(--form-wizard-border) solid var(--form-wizard-border-color);
   background-color: var( --form-wizard-background-color);
   gap: unset;
-  padding: 20px var(--form-wizard-padding);
+  /* padding: 20px var(--form-wizard-padding); */
 }
 
 main .form form .wizard > fieldset > legend{
@@ -1064,15 +1065,15 @@ main .form form p.loan-api-error {
   margin: 0 0 0.75rem;
 }
 
-/* ── Personal Info Page ────────────────────────────────────────────────────── */
 
-main .form form .field-personal-panel {
+main .form form .field-personal-panel,
+main .form form .field-loan-preview-panel,
+main .form form .field-bureau-offers-panel,
+main .form form .field-thankyou-panel {
   padding-inline: 64px;
 }
 
-main .form form .field-bureau-offers-panel{
-  padding-inline: 64px;
-}
+
 
 
 
@@ -1111,9 +1112,6 @@ main .form form .field-loantypedetails > legend {
   color: #131313;
 }
 
-main .form form .field-addressdetails > legend{
-    background: #f2e7f9d9;
-}
 
 /* Full-name display (readonly, pre-filled from API) */
 main .form form .field-fullnamedisplay input {
@@ -1121,6 +1119,12 @@ main .form form .field-fullnamedisplay input {
   border-color: #e0e0e0;
   color: #333;
   font-weight: 600;
+}
+
+fieldset#fragment-93a2cb52dd,
+fieldset#fragment-fc65022d7b {
+    padding-inline: 64px;
+    box-sizing: border-box;
 }
 
 /* Address readonly textarea / input */
@@ -1367,6 +1371,7 @@ main .form form .field-addressdetails > legend {
   display: flex !important;
   align-items: center;
   gap: 0.5rem;
+  background: #f2e7f9d9;
 }
 
 main .form form .field-addressdetails > legend::before {
@@ -2745,25 +2750,35 @@ main .form form .field-essentials-panel > fieldset.panel-wrapper {
   gap: 0.75rem;
 }
 
-/* Emoji icons per card */
+/* SVG icons per essential card */
+main .form form .field-essential-mobile::before,
+main .form form .field-essential-pan::before,
+main .form form .field-essential-dob::before,
+main .form form .field-essential-cheque::before {
+  content: '' !important;
+  display: inline-block;
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
 main .form form .field-essential-mobile::before {
-  content: "📱";
-  font-size: 1.4rem;
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'><rect x='5' y='2' width='14' height='20' rx='2'/><circle cx='12' cy='17' r='1' fill='%23000'/></svg>") !important;
 }
 
 main .form form .field-essential-pan::before {
-  content: "🪪";
-  font-size: 1.4rem;
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'><rect x='2' y='5' width='20' height='14' rx='2'/><line x1='2' y1='10' x2='22' y2='10'/><line x1='6' y1='15' x2='10' y2='15'/><line x1='14' y1='15' x2='18' y2='15'/></svg>") !important;
 }
 
 main .form form .field-essential-dob::before {
-  content: "📅";
-  font-size: 1.4rem;
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='18' rx='2'/><line x1='16' y1='2' x2='16' y2='6'/><line x1='8' y1='2' x2='8' y2='6'/><line x1='3' y1='10' x2='21' y2='10'/><rect x='7' y='14' width='3' height='3' rx='0.5' fill='%23000' stroke='none'/></svg>") !important;
 }
 
 main .form form .field-essential-cheque::before {
-  content: "🏦";
-  font-size: 1.4rem;
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'><rect x='2' y='6' width='20' height='14' rx='2'/><path d='M2 11h20'/><path d='M6 16h3'/><path d='M13 16h5'/><path d='M6 8V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2'/></svg>") !important;
 }
 
 /* Item label text */
