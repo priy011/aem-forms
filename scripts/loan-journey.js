@@ -426,7 +426,16 @@ export async function initOtpPage() {
 //   ongoingEmis      → .field-ongoingemis
 //   loanType         → .field-loantype          (dropdown)
 export async function initPersonalInfoPage() {
-  const stored = sessionStorage.getItem('offerDemogDetails');
+  let stored = sessionStorage.getItem('offerDemogDetails');
+  if (!stored) {
+    let demoOtp = sessionStorage.getItem('mobileOtp');
+    if (!demoOtp) {
+      demoOtp = String(Math.floor(100000 + Math.random() * 900000));
+      sessionStorage.setItem('mobileOtp', demoOtp);
+    }
+    await verifyOTPAndGetDemogDetails(demoOtp);
+    stored = sessionStorage.getItem('offerDemogDetails');
+  }
   if (!stored) {
     globalThis.location.href = `${siblingPath('personal-loan-welcome')}.html`;
     return;
