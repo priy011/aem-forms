@@ -1825,123 +1825,240 @@ main .form form .button-wrapper.field-confirm-btn button {
 
 /* ── GetBureauOffer Page ─────────────────────────────────────────────────── */
 
-/* Bank selection — radio options rendered as card grid */
-main .form form fieldset.field-selectedbank {
+/* ── Bank selection panel ── */
+main .form form .field-selectedbank {
+  background: #fff !important;
+  border: 1px solid #e0e4f5 !important;
+  border-radius: 12px !important;
+  padding: 0 1.25rem 1.25rem !important;
+  margin-bottom: 1.25rem !important;
   display: grid !important;
-  grid-template-columns: repeat(4, 1fr) !important;
-  gap: 0.75rem !important;
-  border: none !important;
-  padding: 0 !important;
-  margin: 0 !important;
+  grid-template-columns: repeat(8, minmax(80px, 1fr)) !important;
+  gap: 0.6rem !important;
 }
 
-main .form form fieldset.field-selectedbank > legend {
-  grid-column: 1 / -1;
-  font-size: 0.95rem !important;
+/* Panel header legend — lavender strip with bank icon */
+main .form form .field-selectedbank > legend {
+  grid-column: 1 / -1 !important;
+  width: calc(100% + 2.5rem) !important;
+  margin: 0 -1.25rem 1rem !important;
+  padding: 0.85rem 1.25rem !important;
+  background: #eef1fb !important;
+  border-bottom: 1px solid #dde2f5 !important;
+  border-radius: 12px 12px 0 0 !important;
+  font-size: 0.9rem !important;
   font-weight: 700 !important;
   color: #1a237e !important;
-  padding: 0 0 0.75rem !important;
-  border-bottom: 1px solid #e0e4f5 !important;
-  margin-bottom: 0.25rem !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.6rem !important;
 }
 
-main .form form fieldset.field-selectedbank > div {
+main .form form .field-selectedbank > legend::before {
+  content: '' !important;
+  flex-shrink: 0 !important;
+  width: 1.4rem !important;
+  height: 1.4rem !important;
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%235c6bc0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><line x1='3' y1='22' x2='21' y2='22'/><rect x='3' y='10' width='4' height='12'/><rect x='10' y='10' width='4' height='12'/><rect x='17' y='10' width='4' height='12'/><path d='M12 2L3 9h18z'/></svg>") !important;
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+}
+
+/* Each bank card wrapper */
+main .form form .field-selectedbank .radio-wrapper {
   position: relative !important;
 }
 
-main .form form fieldset.field-selectedbank > div input[type="radio"] {
+/* Hide radio input — entire label is the clickable card */
+main .form form .field-selectedbank .radio-wrapper input[type="radio"] {
   position: absolute !important;
   opacity: 0 !important;
   width: 1px !important;
   height: 1px !important;
+  pointer-events: none !important;
 }
 
-main .form form fieldset.field-selectedbank > div label {
+/* Card face */
+main .form form .field-selectedbank .radio-wrapper label {
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 0.4rem !important;
-  padding: 0.75rem 0.5rem !important;
-  border: 2px solid #e0e4f5 !important;
-  border-radius: 8px !important;
+  gap: 0.5rem !important;
+  padding: 0.85rem 0.5rem !important;
+  border: 1.5px solid transparent !important;
+  border-radius: 10px !important;
   cursor: pointer !important;
   text-align: center !important;
-  font-size: 0.78rem !important;
+  font-size: 0.75rem !important;
   font-weight: 500 !important;
   color: #444 !important;
   background: #fff !important;
-  min-height: 88px !important;
-  transition: border-color 0.2s, background 0.2s !important;
+  min-height: 90px !important;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 10%) !important;
+  transition: border-color 0.18s, box-shadow 0.18s !important;
+  line-height: 1.2 !important;
 }
 
-main .form form fieldset.field-selectedbank > div input[type="radio"]:checked + label {
-  border-color: #5c6bc0 !important;
-  background: #eef1fb !important;
+main .form form .field-selectedbank .radio-wrapper label:hover {
+  box-shadow: 0 3px 10px rgb(92 107 192 / 18%) !important;
+}
+
+/* Selected card — blue border + checkmark badge */
+main .form form .field-selectedbank .radio-wrapper input[type="radio"]:checked + label {
+  border-color: #3d5af1 !important;
+  border-width: 2px !important;
   color: #1a237e !important;
-  font-weight: 700 !important;
+  font-weight: 600 !important;
 }
 
-main .form form fieldset.field-selectedbank > div label:hover {
-  border-color: #9fa8da !important;
-  background: #f5f7ff !important;
-}
-
-/* Income verification method — radio options as stacked cards */
-main .form form fieldset.field-incomemethod {
-  border: none !important;
-  padding: 0 !important;
-  margin-top: 1.5rem !important;
-}
-
-main .form form fieldset.field-incomemethod > legend {
-  font-size: 0.95rem !important;
-  font-weight: 700 !important;
-  color: #1a237e !important;
-  padding: 0 0 0.75rem !important;
-  border-bottom: 1px solid #e0e4f5 !important;
-  margin-bottom: 0.75rem !important;
-  display: block !important;
-  width: 100% !important;
-}
-
-main .form form fieldset.field-incomemethod > div {
-  display: flex !important;
-  align-items: center !important;
-  gap: 1rem !important;
-  padding: 0.9rem 1rem !important;
-  border: 1.5px solid #e0e4f5 !important;
-  border-radius: 8px !important;
-  margin-bottom: 0.6rem !important;
-  cursor: pointer !important;
-  transition: border-color 0.2s, background 0.2s !important;
-}
-
-main .form form fieldset.field-incomemethod > div input[type="radio"] {
-  flex-shrink: 0 !important;
-  accent-color: #5c6bc0 !important;
+main .form form .field-selectedbank .radio-wrapper input[type="radio"]:checked + label::after {
+  content: '✓' !important;
+  position: absolute !important;
+  bottom: 6px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
   width: 18px !important;
   height: 18px !important;
+  background: #3d5af1 !important;
+  border-radius: 50% !important;
+  color: #fff !important;
+  font-size: 0.65rem !important;
+  line-height: 18px !important;
+  text-align: center !important;
+}
+
+/* Bank logo image (inserted by card-choice.js) */
+main .form form .field-selectedbank .radio-wrapper label .card-bank-logo {
+  width: 52px !important;
+  height: 52px !important;
+  object-fit: contain !important;
+  border-radius: 8px !important;
+}
+
+/* ── Income verification method panel ── */
+main .form form .field-incomemethod {
+  background: #fff !important;
+  border: 1px solid #e0e4f5 !important;
+  border-radius: 12px !important;
+  padding: 0 1.25rem 1.25rem !important;
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 0.75rem !important;
+}
+
+/* Panel header legend — lighter strip with method icon */
+main .form form .field-incomemethod > legend {
+  grid-column: 1 / -1 !important;
+  width: calc(100% + 2.5rem) !important;
+  margin: 0 -1.25rem 1.25rem !important;
+  padding: 0.85rem 1.25rem !important;
+  background: #f3f4ff !important;
+  border-bottom: 1px solid #e0e4f5 !important;
+  border-radius: 12px 12px 0 0 !important;
+  font-size: 0.9rem !important;
+  font-weight: 700 !important;
+  color: #1a237e !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.6rem !important;
+}
+
+main .form form .field-incomemethod > legend::before {
+  content: '' !important;
+  flex-shrink: 0 !important;
+  width: 1.4rem !important;
+  height: 1.4rem !important;
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%235c6bc0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='8' r='4'/><path d='M4 20c0-4 3.6-7 8-7s8 3 8 7'/><circle cx='18' cy='8' r='3'/><path d='M22 20c0-3-2-5-4-6'/></svg>") !important;
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+}
+
+/* Each income method card */
+main .form form .field-incomemethod .radio-wrapper {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 0.85rem !important;
+  padding: 1rem 1.1rem 2.75rem !important;
+  border: 1.5px solid #e0e4f5 !important;
+  border-radius: 10px !important;
+  cursor: pointer !important;
+  transition: border-color 0.18s !important;
+  position: relative !important;
+  background: #fff !important;
+}
+
+main .form form .field-incomemethod .radio-wrapper input[type="radio"] {
+  flex-shrink: 0 !important;
+  accent-color: #3d5af1 !important;
+  width: 20px !important;
+  height: 20px !important;
+  margin-top: 0.1rem !important;
   cursor: pointer !important;
 }
 
-main .form form fieldset.field-incomemethod > div label {
+main .form form .field-incomemethod .radio-wrapper label {
   font-size: 0.9rem !important;
-  font-weight: 500 !important;
-  color: #333 !important;
+  font-weight: 600 !important;
+  color: #1a1a2e !important;
   cursor: pointer !important;
   line-height: 1.3 !important;
   position: static !important;
 }
 
-main .form form fieldset.field-incomemethod > div:has(input[type="radio"]:checked) {
-  border-color: #5c6bc0 !important;
-  background: #f5f7ff !important;
+/* Description text injected via CSS per-option */
+main .form form .field-incomemethod .radio-wrapper label::after {
+  display: block !important;
+  font-size: 0.78rem !important;
+  font-weight: 400 !important;
+  color: #666 !important;
+  margin-top: 0.25rem !important;
+  line-height: 1.4 !important;
 }
 
-@media (width <= 600px) {
-  main .form form fieldset.field-selectedbank {
-    grid-template-columns: repeat(2, 1fr) !important;
+main .form form .field-incomemethod .radio-wrapper:has(input[value="account-aggregator"]) label::after {
+  content: "Instant & secure, processed via RBI-regulated partner." !important;
+}
+
+main .form form .field-incomemethod .radio-wrapper:has(input[value="salary-login"]) label::after {
+  content: "Quick & hassle-free, processed via NetBanking." !important;
+}
+
+main .form form .field-incomemethod .radio-wrapper:has(input[value="upload-statement"]) label::after {
+  content: "Processed via uploading bank statement of the last 6 months." !important;
+}
+
+/* Selected income method — blue border */
+main .form form .field-incomemethod .radio-wrapper:has(input[type="radio"]:checked) {
+  border-color: #3d5af1 !important;
+  border-width: 2px !important;
+}
+
+/* Recommended badge — Account Aggregator */
+main .form form .field-incomemethod .radio-wrapper:has(input[value="account-aggregator"])::after {
+  content: "Recommended" !important;
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  background: #2e7d32 !important;
+  color: #fff !important;
+  text-align: center !important;
+  font-size: 0.72rem !important;
+  font-weight: 600 !important;
+  padding: 0.3rem !important;
+  border-radius: 0 0 8px 8px !important;
+}
+
+@media (width <= 700px) {
+  main .form form .field-selectedbank {
+    grid-template-columns: repeat(4, minmax(72px, 1fr)) !important;
+  }
+
+  main .form form .field-incomemethod {
+    grid-template-columns: 1fr !important;
   }
 }
 

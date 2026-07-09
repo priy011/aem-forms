@@ -606,10 +606,13 @@ export async function initBureauOfferPage() {
     }
 
     try {
+      const selectedBank = form.querySelector('[name="selectedBank"]:checked')?.value
+        || form.querySelector('[name="otherBankName"]')?.value
+        || '';
       const result = await getBureauOffer({
         customerID: offer.customerID,
         bankJourneyID: sessionStorage.getItem('bankJourneyID'),
-        selectedBank: form.querySelector('[name="selectedBank"]:checked')?.value || '',
+        selectedBank,
         incomeMethod: form.querySelector('[name="incomeMethod"]:checked')?.value || '',
       });
 
