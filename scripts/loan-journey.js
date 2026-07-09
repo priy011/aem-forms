@@ -3,6 +3,7 @@ import {
   submitLoanApplication,
   generateEmailOTP,
   validateEmailOTP,
+  getBureauOffer,
 } from './api-service.js';
 import { calculateEMI, formatINR } from './emi-calculator.js';
 import { checkValidation } from '../blocks/form/util.js';
@@ -463,11 +464,13 @@ export async function initPersonalInfoPage() {
   setField(form, 'lastName', (offer.customerLastName || '').trim());
   setField(form, 'aadhaarAddress', address);
   setField(form, 'emailId', offer.emailAddress || '');
+  setField(form, 'pan_number', offer.maskedPan || '');
   setField(form, 'employerNameText', offer.employerName || '');
   setField(form, 'loanType', offer.typeOfLoan || 'Fresh Loan');
 
   form.querySelector('[name="fullNameDisplay"]')?.setAttribute('readonly', '');
   form.querySelector('[name="aadhaarAddress"]')?.setAttribute('readonly', '');
+  form.querySelector('[name="pan_number"]')?.setAttribute('readonly', '');
 
   // ── Email OTP verification — toggling authored fields ──────────────────────
   const otpInputWrapper = form.querySelector('.field-emailotpinput');
@@ -535,6 +538,14 @@ export async function initPersonalInfoPage() {
   const handleConfirm = (e) => {
     e.preventDefault();
     e.stopImmediatePropagation();
+
+    const emailValue = form.querySelector('[name="emailId"]')?.value?.trim();
+    if (emailValue && !sessionStorage.getItem('verifiedEmail')) {
+      showError(form, 'Please verify your email address before proceeding.');
+      form.querySelector('.field-emailid input')?.focus();
+      return;
+    }
+
     const personalInfoData = {
       firstName: form.querySelector('[name="firstName"]')?.value || '',
       middleName: form.querySelector('[name="middleName"]')?.value || '',
@@ -547,16 +558,77 @@ export async function initPersonalInfoPage() {
       monthlyIncome: form.querySelector('[name="monthlyIncome"]')?.value || '',
       ongoingEmis: form.querySelector('[name="ongoingEmis"]')?.value || '',
       loanType: form.querySelector('[name="loanType"]')?.value || 'Fresh Loan',
+      officeAddress: form.querySelector('[name="officeAddress"]')?.value || '',
+      referenceFullName: form.querySelector('[name="referenceFullName"]')?.value || '',
+      referenceMobile: form.querySelector('[name="referenceMobile"]')?.value || '',
     };
     sessionStorage.setItem('personalInfoData', JSON.stringify(personalInfoData));
     trackEvent('personalInfo_confirmed', { loanType: personalInfoData.loanType });
-    globalThis.location.href = `${siblingPath('personal-loan-offer')}.html`;
+    globalThis.location.href = `${siblingPath('personal-loan-get-bureau-offer')}.html`;
   };
 
   form.addEventListener('submit', handleConfirm, true);
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('button[type="submit"]');
     if (btn && form.contains(btn)) handleConfirm(e);
+  }, true);
+}
+
+// ── GetBureauOffer page: bank selection + income verification ─────────────────
+export async function initBureauOfferPage() {
+  const stored = sessionStorage.getItem('offerDemogDetails');
+  if (!stored) {
+    globalThis.location.href = `${siblingPath('personal-loan-welcome')}.html`;
+    return;
+  }
+
+  const offer = JSON.parse(stored);
+  const form = await waitForForm();
+  if (!form) return;
+
+  const handleContinue = async (e) => {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    const continueBtn = form.querySelector('button[type="submit"]');
+    if (continueBtn) {
+      continueBtn.disabled = true;
+      continueBtn.textContent = 'Processing…';
+    }
+
+    try {
+      const result = await getBureauOffer({
+        customerID: offer.customerID,
+        bankJourneyID: sessionStorage.getItem('bankJourneyID'),
+        selectedBank: form.querySelector('[name="selectedBank"]:checked')?.value || '',
+        incomeMethod: form.querySelector('[name="incomeMethod"]:checked')?.value || '',
+      });
+
+      if (result.status.responseCode === '0') {
+        sessionStorage.setItem('offerDemogDetails', JSON.stringify({ ...offer, ...result.responseString }));
+        globalThis.location.href = `${siblingPath('personal-loan-offer')}.html`;
+      } else {
+        showError(form, result.status.errorDesc || 'Failed to fetch bureau offer. Please try again.');
+        if (continueBtn) {
+          continueBtn.disabled = false;
+          continueBtn.textContent = 'Continue';
+        }
+      }
+    } catch (err) {
+      const jid = sessionStorage.getItem('partnerJourneyID') ?? 'unknown';
+      console.error(`[Journey: ${jid}] GetBureauOffer failed:`, err.message);
+      showError(form, 'Something went wrong. Please try again.');
+      if (continueBtn) {
+        continueBtn.disabled = false;
+        continueBtn.textContent = 'Continue';
+      }
+    }
+  };
+
+  form.addEventListener('submit', handleContinue, true);
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[type="submit"]');
+    if (btn && form.contains(btn)) handleContinue(e);
   }, true);
 }
 
@@ -739,10 +811,24 @@ export async function initPreviewPage() {
   setField(form, 'address_display', address || '—');
   setField(form, 'residence_display', offer.residenceType || '—');
 
+  // Populate salary account details (from bureau offer merged into offerDemogDetails)
+  setField(form, 'salary_account_number', offer.salaryAccountNumber || '—');
+  setField(form, 'salary_ifsc_display', offer.ifscCode || '—');
+  setField(form, 'salary_bank_display', offer.bankName || '—');
+
+  // Populate office address and reference details from personal info form
+  const personalInfo = JSON.parse(sessionStorage.getItem('personalInfoData') || '{}');
+  setField(form, 'office_address_display', personalInfo.officeAddress || offer.employerName || '—');
+  setField(form, 'reference_name_display', personalInfo.referenceFullName || '—');
+  setField(form, 'reference_mobile_display', personalInfo.referenceMobile || '—');
+
   // Make all display fields read-only
   form.querySelectorAll(
     '.field-loan-details input, .field-loan-details textarea,'
-    + '.field-personal-details input, .field-personal-details textarea',
+    + '.field-personal-details input, .field-personal-details textarea,'
+    + '.field-salary-details input, .field-salary-details textarea,'
+    + '.field-office-address input, .field-office-address textarea,'
+    + '.field-reference-details input, .field-reference-details textarea',
   ).forEach((el) => el.setAttribute('readonly', ''));
 
   const handleConfirm = async (e) => {

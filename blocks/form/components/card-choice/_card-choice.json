@@ -41,6 +41,12 @@
               "...": "../../models/form-common/_basic-select-fields.json#/fields"
             },
             {
+              "component": "text",
+              "name": "images",
+              "label": "Card Images (comma-separated DAM paths)",
+              "description": "One DAM path per option in the same order as the enum values, e.g. /content/dam/capstone-aem-forms/hdfc.png,/content/dam/capstone-aem-forms/icici.png"
+            },
+            {
               "component": "select",
               "name": "variant",
               "label": "Variant",

@@ -173,6 +173,9 @@ export async function getBureauOffer(customerData) {
       tenure: '36',
       rateOfInterest: '10.20',
       processingFee: '3000.00',
+      salaryAccountNumber: '123456789011',
+      ifscCode: 'ICIC10000001',
+      bankName: 'ICICI Bank',
     },
     status: { responseCode: '0', errorCode: '', errorDesc: '' },
   };

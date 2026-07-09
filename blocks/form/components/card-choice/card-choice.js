@@ -1,22 +1,31 @@
 /**
- * Custom cards component
- * Based on: Radio Group
+ * Card Choice component — radio group rendered as image cards.
+ * Authors set per-option image paths in the "Card Images" property in UE
+ * (comma-separated DAM paths, one per enum value in order).
  */
+export default async function decorate(fieldDiv, fieldJson) {
+  const imagesStr = fieldJson.properties?.images || '';
+  const images = imagesStr.split(',').map((s) => s.trim()).filter(Boolean);
 
-/**
- * Decorates a custom form field component
- * @param {HTMLElement} fieldDiv - The DOM element containing the field wrapper.
- * @param {Object} fieldJson - The form json object for the component.
- * @param {HTMLElement} parentElement - The parent container element of the field.
- * @param {string} formId - The unique identifier of the form.
- */
-export default async function decorate(fieldDiv, fieldJson, parentElement, formId) {
-  console.log('⚙️ Decorating cards component:', fieldDiv, fieldJson, parentElement, formId);
+  if (images.length === 0) return fieldDiv;
 
-  // TODO: Implement your custom component logic here
-  // You can access the field properties via fieldJson.properties
-  // You can access the parent container via parentElement
-  // You can access the form ID via formId
+  // Direct <div> children of the fieldset are the radio option wrappers
+  // (field-wrapper classes are stripped by createRadioOrCheckboxUsingEnum)
+  const optionDivs = [...fieldDiv.children].filter((el) => el.tagName === 'DIV');
+
+  optionDivs.forEach((div, index) => {
+    const imageSrc = images[index];
+    if (!imageSrc) return;
+
+    const label = div.querySelector('label');
+    if (!label) return;
+
+    const img = document.createElement('img');
+    img.src = imageSrc;
+    img.alt = '';
+    img.className = 'card-bank-logo';
+    label.prepend(img);
+  });
 
   return fieldDiv;
 }

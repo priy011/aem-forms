@@ -1823,6 +1823,212 @@ main .form form .button-wrapper.field-confirm-btn button {
   }
 }
 
+/* ── GetBureauOffer Page ─────────────────────────────────────────────────── */
+
+/* Bank selection — radio options rendered as card grid */
+main .form form fieldset.field-selectedbank {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 0.75rem !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+main .form form fieldset.field-selectedbank > legend {
+  grid-column: 1 / -1;
+  font-size: 0.95rem !important;
+  font-weight: 700 !important;
+  color: #1a237e !important;
+  padding: 0 0 0.75rem !important;
+  border-bottom: 1px solid #e0e4f5 !important;
+  margin-bottom: 0.25rem !important;
+}
+
+main .form form fieldset.field-selectedbank > div {
+  position: relative !important;
+}
+
+main .form form fieldset.field-selectedbank > div input[type="radio"] {
+  position: absolute !important;
+  opacity: 0 !important;
+  width: 1px !important;
+  height: 1px !important;
+}
+
+main .form form fieldset.field-selectedbank > div label {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.4rem !important;
+  padding: 0.75rem 0.5rem !important;
+  border: 2px solid #e0e4f5 !important;
+  border-radius: 8px !important;
+  cursor: pointer !important;
+  text-align: center !important;
+  font-size: 0.78rem !important;
+  font-weight: 500 !important;
+  color: #444 !important;
+  background: #fff !important;
+  min-height: 88px !important;
+  transition: border-color 0.2s, background 0.2s !important;
+}
+
+main .form form fieldset.field-selectedbank > div input[type="radio"]:checked + label {
+  border-color: #5c6bc0 !important;
+  background: #eef1fb !important;
+  color: #1a237e !important;
+  font-weight: 700 !important;
+}
+
+main .form form fieldset.field-selectedbank > div label:hover {
+  border-color: #9fa8da !important;
+  background: #f5f7ff !important;
+}
+
+/* Income verification method — radio options as stacked cards */
+main .form form fieldset.field-incomemethod {
+  border: none !important;
+  padding: 0 !important;
+  margin-top: 1.5rem !important;
+}
+
+main .form form fieldset.field-incomemethod > legend {
+  font-size: 0.95rem !important;
+  font-weight: 700 !important;
+  color: #1a237e !important;
+  padding: 0 0 0.75rem !important;
+  border-bottom: 1px solid #e0e4f5 !important;
+  margin-bottom: 0.75rem !important;
+  display: block !important;
+  width: 100% !important;
+}
+
+main .form form fieldset.field-incomemethod > div {
+  display: flex !important;
+  align-items: center !important;
+  gap: 1rem !important;
+  padding: 0.9rem 1rem !important;
+  border: 1.5px solid #e0e4f5 !important;
+  border-radius: 8px !important;
+  margin-bottom: 0.6rem !important;
+  cursor: pointer !important;
+  transition: border-color 0.2s, background 0.2s !important;
+}
+
+main .form form fieldset.field-incomemethod > div input[type="radio"] {
+  flex-shrink: 0 !important;
+  accent-color: #5c6bc0 !important;
+  width: 18px !important;
+  height: 18px !important;
+  cursor: pointer !important;
+}
+
+main .form form fieldset.field-incomemethod > div label {
+  font-size: 0.9rem !important;
+  font-weight: 500 !important;
+  color: #333 !important;
+  cursor: pointer !important;
+  line-height: 1.3 !important;
+  position: static !important;
+}
+
+main .form form fieldset.field-incomemethod > div:has(input[type="radio"]:checked) {
+  border-color: #5c6bc0 !important;
+  background: #f5f7ff !important;
+}
+
+@media (width <= 600px) {
+  main .form form fieldset.field-selectedbank {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* ── Preview Page — Salary Account, Office Address, Reference Details ──────── */
+
+main .form form fieldset.panel-wrapper.field-salary-details,
+main .form form fieldset.panel-wrapper.field-office-address,
+main .form form fieldset.panel-wrapper.field-reference-details {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 0 1rem !important;
+  background: #fff !important;
+  border: 1px solid #e8eaf0 !important;
+  border-radius: 10px !important;
+  padding: 0 0 1rem !important;
+  margin-top: 1rem !important;
+}
+
+main .form form fieldset.panel-wrapper.field-salary-details > legend,
+main .form form fieldset.panel-wrapper.field-office-address > legend,
+main .form form fieldset.panel-wrapper.field-reference-details > legend {
+  grid-column: span 4;
+  background: #eef0ff !important;
+  border-bottom: 1px solid #dde2f5 !important;
+  border-radius: 10px 10px 0 0 !important;
+  padding: 0.75rem 1.25rem !important;
+  font-size: 0.85rem !important;
+  font-weight: 700 !important;
+  color: #1a237e !important;
+  margin: 0 !important;
+  width: 100% !important;
+}
+
+main .form form fieldset.panel-wrapper.field-salary-details .field-wrapper,
+main .form form fieldset.panel-wrapper.field-office-address .field-wrapper,
+main .form form fieldset.panel-wrapper.field-reference-details .field-wrapper {
+  grid-column: span 1 !important;
+  border-right: 1px solid #e8eaf0;
+  padding: 0.75rem 1rem 0 !important;
+}
+
+main .form form fieldset.panel-wrapper.field-office-address .field-office-address-display,
+main .form form fieldset.panel-wrapper.field-reference-details .field-reference-name-display {
+  grid-column: span 2 !important;
+  border-right: 1px solid #e8eaf0;
+}
+
+main .form form fieldset.panel-wrapper.field-salary-details .field-wrapper input,
+main .form form fieldset.panel-wrapper.field-salary-details .field-wrapper textarea,
+main .form form fieldset.panel-wrapper.field-office-address .field-wrapper input,
+main .form form fieldset.panel-wrapper.field-office-address .field-wrapper textarea,
+main .form form fieldset.panel-wrapper.field-reference-details .field-wrapper input,
+main .form form fieldset.panel-wrapper.field-reference-details .field-wrapper textarea {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  padding: 0.25rem 0 !important;
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
+  color: #1a1a2e !important;
+  height: auto !important;
+}
+
+main .form form fieldset.panel-wrapper.field-salary-details .text-wrapper.field-wrapper label,
+main .form form fieldset.panel-wrapper.field-office-address .text-wrapper.field-wrapper label,
+main .form form fieldset.panel-wrapper.field-reference-details .text-wrapper.field-wrapper label {
+  font-size: 0.78rem !important;
+  color: #888 !important;
+  font-weight: 400 !important;
+  display: block !important;
+  margin-bottom: 0.15rem !important;
+}
+
+@media (width <= 600px) {
+  main .form form fieldset.panel-wrapper.field-salary-details,
+  main .form form fieldset.panel-wrapper.field-office-address,
+  main .form form fieldset.panel-wrapper.field-reference-details {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  main .form form fieldset.panel-wrapper.field-salary-details > legend,
+  main .form form fieldset.panel-wrapper.field-office-address > legend,
+  main .form form fieldset.panel-wrapper.field-reference-details > legend {
+    grid-column: span 2;
+  }
+}
+
 /* ── Thank You Page ──────────────────────────────────────────────────────── */
 
 /* Application number — large bold display */
