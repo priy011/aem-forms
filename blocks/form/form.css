@@ -167,8 +167,6 @@ main .form select {
     padding: var(--form-input-padding);
     font-size: var(--form-input-font-size);
     max-width: unset;
-    margin-top: .5rem;
-    margin-bottom: 1rem;
     border-radius: 0.25rem;
 }
 
@@ -1214,6 +1212,75 @@ main .form form .field-confirm-submit button {
 main .form form .field-confirmsubmit button:hover,
 main .form form .field-confirm-submit button:hover {
   background: #283593;
+}
+
+/* ── Personal Info — authored panel variant (underscore field names → kebab CSS) */
+
+/* Outer card */
+main .form form .field-customer-details-panel {
+  grid-template-columns: 1.75rem 1fr;
+  gap: 0.75rem 0.5rem;
+}
+
+main .form form .field-customer-details-panel > legend {
+  display: none !important;
+}
+
+/* Icon — column 1, row 1 */
+main .form form .field-customer-image {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+}
+
+main .form form .field-customer-image img {
+  width: 1.5rem;
+  height: 1.5rem;
+  object-fit: contain;
+  display: block;
+}
+
+/* "Customer Details" heading — column 2, row 1 */
+main .form form .field-customer-details-text {
+  grid-column: 2;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+}
+
+main .form form .field-customer-details-text p {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1a237e;
+}
+
+/* Full Name field — spans both columns, row 2 */
+main .form form .field-customer-details-panel .field-fullnamedisplay {
+  background: #f2e7f9;
+  border-radius: 8px;
+  border-left: 3px solid #5c6bc0;
+  padding: 0.65rem 0.9rem;
+}
+
+main .form form .field-customer-details-panel .field-fullnamedisplay .field-label {
+  display: block;
+  font-size: 0.72rem;
+  color: #666;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+main .form form .field-customer-details-panel .field-fullnamedisplay input {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1a237e;
+  width: 100%;
 }
 
 /* ── OTP Page ──────────────────────────────────────────────────────────────── */
