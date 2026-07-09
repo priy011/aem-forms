@@ -595,11 +595,6 @@ export async function initBureauOfferPage() {
   const form = await waitForForm();
   if (!form) return;
 
-  // Move Other Bank dropdown inside the bank panel so it sits in the same grid row
-  const bankFieldset = form.querySelector('.field-selectedbank');
-  const otherBankDiv = form.querySelector('.field-otherbankname');
-  if (bankFieldset && otherBankDiv) bankFieldset.appendChild(otherBankDiv);
-
   // Default: pre-select Account Aggregator if nothing is checked yet
   const defaultMethod = form.querySelector('[name="incomeMethod"][value="account-aggregator"]');
   if (defaultMethod && !form.querySelector('[name="incomeMethod"]:checked')) {
