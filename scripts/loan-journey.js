@@ -41,11 +41,12 @@ function showError(form, message) {
 }
 
 // Derives sibling page path: .../personal-loan-welcome → .../personal-loan-otp
-// Strips .html (and optional trailing slash) before removing the last segment
-// so the path works whether the browser URL ends in .html, .html/, or nothing.
+// Strips from the first /personal-loan-* segment to end so it works on both EDS
+// (e.g. /personal-loan-offer.html) and AEM authoring paths that have extra segments
+// after the form name (e.g. /content/dam/.../personal-loan-offer/jcr:content).
 function siblingPath(pageName) {
   const clean = globalThis.location.pathname.replace(/\.html\/?$/, '').replace(/\/$/, '');
-  const base = clean.replace(/\/[^/]+$/, '');
+  const base = clean.replace(/\/personal-loan-[^/].*$/, '');
   return `${base}/${pageName}`;
 }
 
@@ -554,7 +555,14 @@ export async function initPersonalInfoPage() {
 export async function initOfferPage() {
   let stored = sessionStorage.getItem('offerDemogDetails');
   if (!stored) {
-    await verifyOTPAndGetDemogDetails('123456');
+    // Fallback for authoring / direct navigation: ensure a valid OTP exists so the
+    // mock API validation passes and demo data is loaded without triggering a redirect.
+    let demoOtp = sessionStorage.getItem('mobileOtp');
+    if (!demoOtp) {
+      demoOtp = String(Math.floor(100000 + Math.random() * 900000));
+      sessionStorage.setItem('mobileOtp', demoOtp);
+    }
+    await verifyOTPAndGetDemogDetails(demoOtp);
     stored = sessionStorage.getItem('offerDemogDetails');
   }
   if (!stored) {
@@ -669,7 +677,12 @@ export async function initOfferPage() {
 export async function initPreviewPage() {
   let stored = sessionStorage.getItem('offerDemogDetails');
   if (!stored) {
-    await verifyOTPAndGetDemogDetails('123456');
+    let demoOtp = sessionStorage.getItem('mobileOtp');
+    if (!demoOtp) {
+      demoOtp = String(Math.floor(100000 + Math.random() * 900000));
+      sessionStorage.setItem('mobileOtp', demoOtp);
+    }
+    await verifyOTPAndGetDemogDetails(demoOtp);
     stored = sessionStorage.getItem('offerDemogDetails');
   }
   if (!stored) {
