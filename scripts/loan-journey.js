@@ -595,6 +595,28 @@ export async function initBureauOfferPage() {
   const form = await waitForForm();
   if (!form) return;
 
+  // Move Other Bank dropdown inside the bank panel so it sits in the same grid row
+  const bankFieldset = form.querySelector('.field-selectedbank');
+  const otherBankDiv = form.querySelector('.field-otherbankname');
+  if (bankFieldset && otherBankDiv) bankFieldset.appendChild(otherBankDiv);
+
+  // Default: pre-select Account Aggregator if nothing is checked yet
+  const defaultMethod = form.querySelector('[name="incomeMethod"][value="account-aggregator"]');
+  if (defaultMethod && !form.querySelector('[name="incomeMethod"]:checked')) {
+    defaultMethod.checked = true;
+    defaultMethod.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+
+  // Mutual exclusivity: Other Bank dropdown ↔ bank cards
+  const otherBankSelect = form.querySelector('[name="otherBankName"]');
+  const bankRadios = form.querySelectorAll('[name="selectedBank"]');
+  otherBankSelect?.addEventListener('change', () => {
+    if (otherBankSelect.value) bankRadios.forEach((r) => { r.checked = false; });
+  });
+  bankRadios.forEach((radio) => {
+    radio.addEventListener('change', () => { if (otherBankSelect) otherBankSelect.value = ''; });
+  });
+
   const handleContinue = async (e) => {
     e.preventDefault();
     e.stopImmediatePropagation();

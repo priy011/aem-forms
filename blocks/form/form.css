@@ -1875,7 +1875,7 @@ main .form form .field-selectedbank .radio-wrapper input[type="radio"] {
   position: absolute !important;
   opacity: 0 !important;
   width: 1px !important;
-  height: 1px !important;
+  height: 1px !important; 
   pointer-events: none !important;
 }
 
@@ -1944,38 +1944,45 @@ main .form form .field-selectedbank .radio-wrapper label:hover .card-bank-logo {
   box-shadow: 0 2px 8px rgb(92 107 192 / 15%) !important;
 }
 
-/* "Other Bank" dropdown — compact card inline with bank row */
-main .form form .field-otherbankname {
+/* "Other Bank" — card slot inside the bank grid (moved there by JS) */
+main .form form .field-selectedbank .field-otherbankname {
   display: flex !important;
+  flex-direction: column !important;
   align-items: center !important;
-  gap: 0.5rem !important;
-  max-width: 260px !important;
-  margin: -0.5rem 0 1rem !important;
+  gap: 0.45rem !important;
+  margin: 0 !important;
+  max-width: none !important;
 }
 
-main .form form .field-otherbankname label {
-  font-size: 0.82rem !important;
-  font-weight: 600 !important;
-  color: #1a237e !important;
-  white-space: nowrap !important;
-  flex-shrink: 0 !important;
+/* Hide the authored label — the select placeholder text acts as the label */
+main .form form .field-selectedbank .field-otherbankname label {
+  display: none !important;
 }
 
-main .form form .field-otherbankname select {
-  flex: 1 !important;
-  height: 38px !important;
-  border: 1.5px solid #e0e4f5 !important;
-  border-radius: 8px !important;
-  padding: 0 0.75rem !important;
-  font-size: 0.82rem !important;
+/* Style the select to look like a bank card image slot */
+main .form form .field-selectedbank .field-otherbankname select {
+  width: 100% !important;
+  height: 64px !important;
+  border: 1.5px solid #dde0f0 !important;
+  border-radius: 12px !important;
+  padding: 0 0.6rem !important;
+  font-size: 0.72rem !important;
+  font-weight: 500 !important;
+  color: #333 !important;
   background: #fff !important;
   cursor: pointer !important;
-  box-shadow: 0 1px 4px rgb(0 0 0 / 8%) !important;
+  transition: border-color 0.18s !important;
 }
 
-main .form form .field-otherbankname select:focus {
-  border-color: #5c6bc0 !important;
+main .form form .field-selectedbank .field-otherbankname select:focus {
+  border-color: #3d5af1 !important;
   outline: none !important;
+}
+
+/* When a bank is chosen from the dropdown, highlight the card slot */
+main .form form .field-selectedbank .field-otherbankname select:not([value=""]):valid {
+  border-color: #3d5af1 !important;
+  border-width: 2px !important;
 }
 
 /* ── Income verification method panel ── */
@@ -2097,11 +2104,7 @@ main .form form .submit-wrapper button[type="submit"] {
   transition: background 0.18s !important;
 }
 
-main .form form .submit-wrapper button[type="submit"]::after {
-  content: ' ›' !important;
-  font-size: 1.1rem !important;
-  margin-left: 0.25rem !important;
-}
+
 
 main .form form .submit-wrapper button[type="submit"]:hover {
   background: #2d48d8 !important;
