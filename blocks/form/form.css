@@ -1196,7 +1196,7 @@ main .form form .field-loantypedetails > legend {
 main .form form .field-employerdetails > legend::after,
 main .form form .field-incomedetails > legend::after,
 main .form form .field-loantypedetails > legend::after {
-  content: '▲';
+  content: '∧';
   font-size: 0.7rem;
   flex-shrink: 0;
 }
@@ -1204,7 +1204,7 @@ main .form form .field-loantypedetails > legend::after {
 main .form form .field-employerdetails[data-collapsed="true"] > legend::after,
 main .form form .field-incomedetails[data-collapsed="true"] > legend::after,
 main .form form .field-loantypedetails[data-collapsed="true"] > legend::after {
-  content: '▼';
+  content: '∨';
 }
 
 main .form form .field-employerdetails[data-collapsed="true"] > :not(legend),
@@ -1743,6 +1743,9 @@ main .form form fieldset.panel-wrapper.field-personal-details {
 main .form form fieldset.panel-wrapper.field-loan-details > legend,
 main .form form fieldset.panel-wrapper.field-personal-details > legend {
   grid-column: span 4;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   background: #eef0ff;
   padding: 0.9rem 1.25rem;
   font-size: 1rem;
@@ -1751,15 +1754,83 @@ main .form form fieldset.panel-wrapper.field-personal-details > legend {
   border-bottom: 1px solid #e2e6f3;
   margin: 0;
   width: 100%;
+  cursor: pointer;
+  user-select: none;
+}
+
+main .form form fieldset.panel-wrapper.field-loan-details > legend::before,
+main .form form fieldset.panel-wrapper.field-personal-details > legend::before {
+  content: '';
+  width: 1.4rem;
+  height: 1.4rem;
+  flex-shrink: 0;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+main .form form fieldset.panel-wrapper.field-loan-details > legend::after,
+main .form form fieldset.panel-wrapper.field-personal-details > legend::after {
+  content: '∧';
+  font-size: 0.7rem;
+  margin-left: auto;
+}
+
+main .form form fieldset.panel-wrapper.field-loan-details[data-collapsed="true"] > legend::after,
+main .form form fieldset.panel-wrapper.field-personal-details[data-collapsed="true"] > legend::after {
+  content: '∨';
+}
+
+main .form form fieldset.panel-wrapper.field-loan-details[data-collapsed="true"] > :not(legend),
+main .form form fieldset.panel-wrapper.field-personal-details[data-collapsed="true"] > :not(legend) {
+  display: none !important;
+}
+
+main .form form fieldset.panel-wrapper.field-loan-details > legend::before {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%231a237e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5z'/><path d='M14 2v6h6'/><line x1='9' y1='13' x2='15' y2='13'/><line x1='9' y1='17' x2='13' y2='17'/></svg>");
+}
+
+main .form form fieldset.panel-wrapper.field-personal-details > legend::before {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%231a237e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/><circle cx='12' cy='7' r='4'/></svg>");
 }
 
 /* Every field defaults to 1 column */
 main .form form fieldset.panel-wrapper.field-loan-details .field-wrapper,
 main .form form fieldset.panel-wrapper.field-personal-details .field-wrapper {
   grid-column: span 1 !important;
-  border-right: 1px solid #e8eaf0;
-  border-bottom: 1px solid #e8eaf0;
+  position: relative;
   padding: 0.75rem 1rem;
+}
+
+/* Per-field inset accent bar (replaces the flush border-left above) */
+.form form fieldset.panel-wrapper.field-loan-details div.text-wrapper.field-loan-amount-display::before,
+.form form fieldset.panel-wrapper.field-loan-details div.text-wrapper.field-emi-amount-display::before,
+.form form fieldset.panel-wrapper.field-loan-details div.text-wrapper.field-tenure-display::before,
+.form form fieldset.panel-wrapper.field-loan-details div.text-wrapper.field-processing-fee-display::before,
+.form form fieldset.panel-wrapper.field-loan-details div.text-wrapper.field-rate-display::before,
+.form form fieldset.panel-wrapper.field-loan-details div.text-wrapper.field-employer-display::before,
+.form form fieldset.panel-wrapper.field-loan-details div.text-wrapper.field-type-of-loan-display::before,
+.form form fieldset.panel-wrapper.field-loan-details div.text-wrapper.field-schedule-charges::before,
+.form form fieldset.panel-wrapper.field-personal-details div.text-wrapper.field-full-name-display::before,
+.form form fieldset.panel-wrapper.field-personal-details div.text-wrapper.field-mobile-display::before,
+.form form fieldset.panel-wrapper.field-personal-details div.text-wrapper.field-dob-display::before,
+.form form fieldset.panel-wrapper.field-personal-details div.text-wrapper.field-pan-display::before,
+.form form fieldset.panel-wrapper.field-personal-details div.text-wrapper.field-residence-display::before,
+.form form fieldset.panel-wrapper.field-personal-details div.text-wrapper.field-address-display::before,
+.form form fieldset.panel-wrapper.field-salary-details div.text-wrapper.field-salary-account-number::before,
+.form form fieldset.panel-wrapper.field-salary-details div.text-wrapper.field-salary-ifsc-display::before,
+.form form fieldset.panel-wrapper.field-salary-details div.text-wrapper.field-salary-bank-display::before,
+.form form fieldset.panel-wrapper.field-office-address div.text-wrapper.field-office-address-display::before,
+.form form fieldset.panel-wrapper.field-reference-details div.text-wrapper.field-reference-name-display::before,
+.form form fieldset.panel-wrapper.field-reference-details div.text-wrapper.field-reference-mobile-display::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 0.4rem;
+  bottom: 0.4rem;
+  width: 2px;
+  background: #b8c2e8;
+  border-radius: 2px;
 }
 
 /* Address and residence span full width */
@@ -1844,8 +1915,9 @@ main .form form .field-selectedbank {
   padding: 0 1.25rem 1.25rem !important;
   margin-bottom: 1.25rem !important;
   display: grid !important;
-  grid-template-columns: repeat(8, minmax(80px, 1fr)) !important;
-  gap: 0.6rem !important;
+  grid-template-columns: repeat(10, minmax(72px, 1fr)) !important;
+  gap: 0.35rem !important;
+  align-items: start !important;
 }
 
 /* Panel header legend — lavender strip with bank icon */
@@ -1955,31 +2027,33 @@ main .form form .field-selectedbank .radio-wrapper label:hover .card-bank-logo {
   box-shadow: 0 2px 8px rgb(92 107 192 / 15%) !important;
 }
 
-/* "Other Bank" dropdown — compact card inline with bank row */
-main .form form .field-otherbankname {
+/* "Other Bank" dropdown — moved into the bank-cards grid (see loan-journey.js
+   initBureauOfferPage), so it sits inline as the 8th card slot in the row. */
+main .form form .field-selectedbank .field-otherbankname {
+  grid-column: span 1 !important;
   display: flex !important;
-  align-items: center !important;
-  gap: 0.5rem !important;
-  max-width: 260px !important;
-  margin: -0.5rem 0 1rem !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  gap: 0.3rem !important;
+  max-width: none !important;
+  margin: 0 !important;
 }
 
 main .form form .field-otherbankname label {
-  font-size: 0.82rem !important;
+  font-size: 0.68rem !important;
   font-weight: 600 !important;
   color: #1a237e !important;
   white-space: nowrap !important;
-  flex-shrink: 0 !important;
 }
 
 /* Style the select to look like a bank card image slot */
 main .form form .field-otherbankname select {
-  flex: 1 !important;
-  height: 38px !important;
+  width: 100% !important;
+  height: 40px !important;
   border: 1.5px solid #e0e4f5 !important;
   border-radius: 8px !important;
-  padding: 0 0.75rem !important;
-  font-size: 0.82rem !important;
+  padding: 0 0.5rem !important;
+  font-size: 0.75rem !important;
   background: #fff !important;
   cursor: pointer !important;
   transition: border-color 0.18s !important;
@@ -2162,6 +2236,9 @@ main .form form fieldset.panel-wrapper.field-office-address > legend,
 main .form form fieldset.panel-wrapper.field-reference-details > legend,
 main .form form fieldset.panel-wrapper.field-verifyemail > legend {
   grid-column: span 4;
+  display: flex !important;
+  align-items: center;
+  gap: 0.5rem;
   background: #eef0ff !important;
   border-bottom: 1px solid #dde2f5 !important;
   border-radius: 10px 10px 0 0 !important;
@@ -2171,21 +2248,70 @@ main .form form fieldset.panel-wrapper.field-verifyemail > legend {
   color: #1a237e !important;
   margin: 0 !important;
   width: 100% !important;
+  cursor: pointer;
+  user-select: none;
+}
+
+main .form form fieldset.panel-wrapper.field-salary-details > legend::after,
+main .form form fieldset.panel-wrapper.field-office-address > legend::after,
+main .form form fieldset.panel-wrapper.field-reference-details > legend::after {
+  content: '∧';
+  font-size: 0.7rem;
+  margin-left: auto;
+}
+
+main .form form fieldset.panel-wrapper.field-salary-details[data-collapsed="true"] > legend::after,
+main .form form fieldset.panel-wrapper.field-office-address[data-collapsed="true"] > legend::after,
+main .form form fieldset.panel-wrapper.field-reference-details[data-collapsed="true"] > legend::after {
+  content: '∨';
+}
+
+main .form form fieldset.panel-wrapper.field-salary-details[data-collapsed="true"] > :not(legend),
+main .form form fieldset.panel-wrapper.field-office-address[data-collapsed="true"] > :not(legend),
+main .form form fieldset.panel-wrapper.field-reference-details[data-collapsed="true"] > :not(legend) {
+  display: none !important;
+}
+
+main .form form fieldset.panel-wrapper.field-salary-details > legend::before,
+main .form form fieldset.panel-wrapper.field-office-address > legend::before,
+main .form form fieldset.panel-wrapper.field-reference-details > legend::before {
+  content: '';
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+main .form form fieldset.panel-wrapper.field-salary-details > legend::before {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%231a237e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polygon points='12 2 21 7 3 7'/><line x1='6' y1='11' x2='6' y2='18'/><line x1='10' y1='11' x2='10' y2='18'/><line x1='14' y1='11' x2='14' y2='18'/><line x1='18' y1='11' x2='18' y2='18'/><line x1='3' y1='22' x2='21' y2='22'/></svg>");
+}
+
+main .form form fieldset.panel-wrapper.field-office-address > legend::before {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%231a237e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M21 10c0 6.5-9 12-9 12s-9-5.5-9-12a9 9 0 0 1 18 0z'/><circle cx='12' cy='10' r='3'/></svg>");
+}
+
+main .form form fieldset.panel-wrapper.field-reference-details > legend::before {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%231a237e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2'/><circle cx='9' cy='7' r='4'/><path d='M23 21v-2a4 4 0 0 0-3-3.87'/><path d='M16 3.13a4 4 0 0 1 0 7.75'/></svg>");
 }
 
 main .form form fieldset.panel-wrapper.field-salary-details .field-wrapper,
 main .form form fieldset.panel-wrapper.field-office-address .field-wrapper,
 main .form form fieldset.panel-wrapper.field-reference-details .field-wrapper {
   grid-column: span 1 !important;
-  border-right: 1px solid #e8eaf0;
+  position: relative;
   padding: 0.75rem 1rem 0 !important;
 }
 
-main .form form fieldset.panel-wrapper.field-office-address .field-office-address-display,
+main .form form fieldset.panel-wrapper.field-office-address .field-office-address-display {
+  grid-column: span 3 !important;
+}
+
 main .form form fieldset.panel-wrapper.field-reference-details .field-reference-name-display {
   grid-column: span 2 !important;
-  border-right: 1px solid #e8eaf0;
 }
+
 
 main .form form fieldset.panel-wrapper.field-salary-details .field-wrapper input,
 main .form form fieldset.panel-wrapper.field-salary-details .field-wrapper textarea,
@@ -2224,6 +2350,183 @@ main .form form fieldset.panel-wrapper.field-reference-details .text-wrapper.fie
   main .form form fieldset.panel-wrapper.field-office-address > legend,
   main .form form fieldset.panel-wrapper.field-reference-details > legend {
     grid-column: span 2;
+  }
+}
+
+/* ── Verify Email ID panel (Preview page) ───────────────────────────────────
+   Two email fields (Personal — mandatory, Work — optional), each OTP-gated by
+   a Verify button injected via JS (loan-journey.js: setupEmailVerification). */
+main .form form fieldset.panel-wrapper.field-verifyemail {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: 0 1.75rem !important;
+  background: #fff !important;
+  border: 1px solid #e8eaf0 !important;
+  border-radius: 10px !important;
+  padding: 0 1.25rem 1.35rem !important;
+  margin-top: 1rem !important;
+}
+
+main .form form fieldset.panel-wrapper.field-verifyemail > legend {
+  cursor: pointer;
+  user-select: none;
+  display: flex !important;
+  align-items: center;
+  gap: 0.5rem;
+  margin-inline: -1.25rem !important;
+  width: calc(100% + 2.5rem) !important;
+}
+
+main .form form fieldset.panel-wrapper.field-verifyemail > legend::before {
+  content: '';
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%231a237e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 2 4 5v6c0 5 3.5 9 8 11 4.5-2 8-6 8-11V5z'/><path d='M9 12l2 2 4-4'/></svg>");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+main .form form fieldset.panel-wrapper.field-verifyemail > legend::after {
+  content: '∧';
+  font-size: 0.7rem;
+  margin-left: auto;
+}
+
+main .form form fieldset.panel-wrapper.field-verifyemail[data-collapsed="true"] > legend::after {
+  content: '∨';
+}
+
+main .form form fieldset.panel-wrapper.field-verifyemail[data-collapsed="true"] > :not(legend) {
+  display: none !important;
+}
+
+main .form form fieldset.panel-wrapper.field-verifyemail .field-personal-email,
+main .form form fieldset.panel-wrapper.field-verifyemail .field-work-email {
+  grid-column: span 1 !important;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  column-gap: 0.6rem;
+  position: relative;
+  margin-top: 1.6rem;
+  border-left: 1px solid #e8eaf0;
+  padding-left: 0.75rem;
+}
+
+main .form form fieldset.panel-wrapper.field-verifyemail .field-personal-email > label,
+main .form form fieldset.panel-wrapper.field-verifyemail .field-work-email > label {
+  position: absolute;
+  top: -0.6rem;
+  left: 0.75rem;
+  background: #fff;
+  padding: 0 0.35rem;
+  font-size: 0.75rem;
+  color: #666;
+  z-index: 1;
+}
+
+main .form form fieldset.panel-wrapper.field-verifyemail .field-personal-email input,
+main .form form fieldset.panel-wrapper.field-verifyemail .field-work-email input {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: 1px solid #c9cfe0 !important;
+  border-radius: 8px !important;
+  padding: 0.65rem 0.85rem !important;
+  font-size: 0.9rem !important;
+  height: auto !important;
+  box-shadow: none !important;
+  background: #fff !important;
+}
+
+main .form form fieldset.panel-wrapper.field-verifyemail .field-personal-email input[readonly],
+main .form form fieldset.panel-wrapper.field-verifyemail .field-work-email input[readonly] {
+  background: #f5f7ff !important;
+  color: #555;
+}
+
+main .form form fieldset.panel-wrapper.field-verifyemail .field-description {
+  flex: 0 0 100%;
+  font-size: 0.72rem;
+  line-height: 1.3;
+  color: #888;
+  margin-top: 0.4rem;
+}
+
+main .form form fieldset.panel-wrapper.field-verifyemail .verify-email-btn {
+  flex: 0 0 auto;
+  margin-top: 0.5rem;
+  background: #fff;
+  border: 1px solid #4159e8;
+  color: #4159e8;
+  font-weight: 600;
+  font-size: 0.8rem;
+  border-radius: 20px;
+  padding: 0.55rem 1.1rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+main .form form fieldset.panel-wrapper.field-verifyemail .verify-email-btn:disabled {
+  opacity: 0.65;
+  cursor: default;
+}
+
+main .form form fieldset.panel-wrapper.field-verifyemail .email-verified-badge {
+  flex: 0 0 auto;
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  color: #2e7d32;
+  font-weight: 600;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+main .form form fieldset.panel-wrapper.field-verifyemail .email-otp-row {
+  flex: 0 0 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+}
+
+main .form form fieldset.panel-wrapper.field-verifyemail .email-otp-row input {
+  max-width: 130px;
+  letter-spacing: 0.3rem;
+  font-weight: 600;
+}
+
+main .form form fieldset.panel-wrapper.field-verifyemail .email-otp-row button {
+  background: #1a237e;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.55rem 0.9rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+main .form form fieldset.panel-wrapper.field-verifyemail .email-otp-row button:disabled {
+  opacity: 0.65;
+  cursor: default;
+}
+
+/* [hidden] must win over the explicit `display` set above — author rules that
+   declare `display` otherwise beat the UA stylesheet's `[hidden]` regardless
+   of specificity, since author-normal outranks user-agent-normal in the
+   cascade. Without this, .hidden = true silently stops hiding these. */
+main .form form fieldset.panel-wrapper.field-verifyemail .email-otp-row[hidden],
+main .form form fieldset.panel-wrapper.field-verifyemail .verify-email-btn[hidden],
+main .form form fieldset.panel-wrapper.field-verifyemail .email-verified-badge[hidden] {
+  display: none !important;
+}
+
+@media (width <= 600px) {
+  main .form form fieldset.panel-wrapper.field-verifyemail {
+    grid-template-columns: 1fr !important;
   }
 }
 
@@ -2861,3 +3164,4 @@ main .form form fieldset.panel-wrapper.field-header-bar .field-safe-badge img {
   height: 80px;
   width: auto;
 }
+

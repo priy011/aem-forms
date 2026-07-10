@@ -73,6 +73,113 @@ function isAgeValid(dob) {
   return !Number.isNaN(years) && years >= 21;
 }
 
+// Injects a Verify button + OTP row into a plain text-input field wrapper and
+// OTP-gates it via the generateEmailOTP/validateEmailOTP mock APIs. Used for
+// panels (e.g. the Preview page's Verify Email ID panel) whose fields are
+// authored as bare inputs, with no separate verify/otp/submit fields.
+function setupEmailVerification(form, wrapperClass) {
+  const wrapper = form.querySelector(`.${wrapperClass}`);
+  const input = wrapper?.querySelector('input');
+  if (!wrapper || !input) return null;
+
+  const descriptionEl = wrapper.querySelector('.field-description');
+
+  // Insertion order matters: the description must always render directly
+  // below the input, so verify/OTP/badge all go after it (not between input
+  // and description) regardless of whether the Verify button ends up sharing
+  // the input's row or wrapping to its own.
+  const verifyBtn = document.createElement('button');
+  verifyBtn.type = 'button';
+  verifyBtn.className = 'verify-email-btn';
+  verifyBtn.textContent = 'Verify';
+  (descriptionEl || input).after(verifyBtn);
+
+  const otpRow = document.createElement('div');
+  otpRow.className = 'email-otp-row';
+  otpRow.hidden = true;
+  const otpInput = document.createElement('input');
+  otpInput.type = 'text';
+  otpInput.inputMode = 'numeric';
+  otpInput.maxLength = 6;
+  otpInput.placeholder = 'Enter OTP';
+  otpInput.setAttribute('aria-label', `OTP for ${wrapper.querySelector('label')?.textContent || 'email'}`);
+  // otpInput lives inside the email field's own .field-wrapper (there's nowhere
+  // else authored to put it), but it isn't part of the AEM Forms field model.
+  // The rule engine's form-wide 'change' delegate (blocks/form/rules/index.js
+  // applyRuleEngine) resolves the target field via closest('.field-wrapper'),
+  // which would resolve to *this* email field and overwrite its model value
+  // with the OTP text. Stop it from bubbling so that never happens.
+  otpInput.addEventListener('change', (e) => e.stopPropagation());
+  const otpSubmit = document.createElement('button');
+  otpSubmit.type = 'button';
+  otpSubmit.textContent = 'Submit';
+  otpRow.append(otpInput, otpSubmit);
+  verifyBtn.after(otpRow);
+
+  const badge = document.createElement('span');
+  badge.className = 'email-verified-badge';
+  badge.textContent = '✓ Verified';
+  badge.hidden = true;
+  otpRow.after(badge);
+
+  const storageKey = `verifiedEmail:${wrapperClass}`;
+  let verified = false;
+
+  const markVerified = (email) => {
+    verified = true;
+    sessionStorage.setItem(storageKey, email);
+    input.value = email;
+    input.setAttribute('readonly', '');
+    otpRow.hidden = true;
+    verifyBtn.hidden = true;
+    badge.hidden = false;
+  };
+
+  const storedEmail = sessionStorage.getItem(storageKey);
+  if (storedEmail) {
+    input.value = storedEmail;
+    markVerified(storedEmail);
+  }
+
+  verifyBtn.addEventListener('click', async () => {
+    const email = input.value.trim();
+    if (!email) { showError(form, 'Please enter an email address first.'); return; }
+    const resending = verifyBtn.textContent === 'Resend OTP';
+    verifyBtn.disabled = true;
+    verifyBtn.textContent = 'Sending…';
+    const result = await generateEmailOTP(email);
+    if (result.status.responseCode === '0') {
+      otpRow.hidden = false;
+      const demoOtp = sessionStorage.getItem('emailOtp');
+      if (demoOtp) otpInput.value = demoOtp;
+      otpInput.focus();
+      verifyBtn.textContent = 'Resend OTP';
+      verifyBtn.disabled = false;
+    } else {
+      showError(form, result.status.errorDesc || 'Could not send OTP to that address.');
+      verifyBtn.textContent = resending ? 'Resend OTP' : 'Verify';
+      verifyBtn.disabled = false;
+    }
+  });
+
+  otpSubmit.addEventListener('click', async () => {
+    const email = input.value.trim();
+    const otp = otpInput.value.trim();
+    if (!otp || otp.length !== 6) { showError(form, 'Please enter the 6-digit OTP.'); return; }
+    otpSubmit.disabled = true;
+    const result = await validateEmailOTP(email, otp);
+    if (result.status.responseCode === '0') {
+      markVerified(email);
+      trackEvent('email_verified', { field: wrapperClass });
+    } else {
+      showError(form, result.status.errorDesc || 'Invalid OTP. Please try again.');
+      otpSubmit.disabled = false;
+    }
+  });
+
+  return { isVerified: () => verified };
+}
+
 // AEM slider uses --current-steps CSS var to draw the filled track.
 // Setting .value via JS moves the thumb but NOT the track — sync it manually.
 function syncSliderTrack(slider) {
@@ -860,9 +967,29 @@ export async function initPreviewPage() {
     + '.field-reference-details input, .field-reference-details textarea',
   ).forEach((el) => el.setAttribute('readonly', ''));
 
+  // ── Collapsible panel headers (accordion) ──────────────────────────────────
+  form.querySelectorAll(
+    '.field-loan-details, .field-personal-details, .field-salary-details,'
+    + '.field-office-address, .field-reference-details, .field-verifyemail',
+  ).forEach((panel) => {
+    panel.querySelector('legend')?.addEventListener('click', () => {
+      const collapsed = panel.getAttribute('data-collapsed') === 'true';
+      panel.setAttribute('data-collapsed', String(!collapsed));
+    });
+  });
+
+  const personalEmailVerification = setupEmailVerification(form, 'field-personal-email');
+  setupEmailVerification(form, 'field-work-email');
+
   const handleConfirm = async (e) => {
     e.preventDefault();
     e.stopImmediatePropagation();
+
+    if (personalEmailVerification && !personalEmailVerification.isVerified()) {
+      showError(form, 'Please verify your Personal Email ID before proceeding.');
+      form.querySelector('.field-personal-email input')?.focus();
+      return;
+    }
 
     const confirmBtn = form.querySelector('button[type="submit"]');
     if (confirmBtn) {
