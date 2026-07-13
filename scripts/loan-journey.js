@@ -394,7 +394,14 @@ export async function initWelcomePage() {
   submitBtn?.addEventListener('click', () => {
     submitBtn.disabled = true;
     const mobile = mobileInput?.value ?? '';
-    if (mobile) sessionStorage.setItem('maskedMobile', `*****${mobile.slice(5)}`);
+    if (mobile) {
+      sessionStorage.setItem('maskedMobile', `******${mobile.slice(-4)}`);
+      sessionStorage.setItem('welcomeMobile', mobile);
+    }
+    const pan = panInput?.value?.trim() ?? '';
+    if (pan) sessionStorage.setItem('welcomePan', pan);
+    const dob = dobInput?.value ?? '';
+    if (dob) sessionStorage.setItem('welcomeDob', dob);
     setTimeout(() => {
       if (document.contains(submitBtn)) submitBtn.disabled = !checkFormValid();
     }, 8000);
@@ -435,20 +442,22 @@ export async function initOtpPage() {
     otpPrefillObs.observe(form, { attributes: true, attributeFilter: ['class'] });
   }
 
-  // Fill the dedicated otp_masked_mobile field with the masked number from sessionStorage
-  // and move the "Edit mobile number" <a> from the instruction field to sit right after it.
-  // Result: instruction shows static text, masked-mobile field shows "*****94837. [Edit link]".
+  // Replace the authored placeholder (e.g. ******6458) with the real masked number
+  // from sessionStorage by walking text nodes — no DOM node rearrangement.
   const maskedMobile = sessionStorage.getItem('maskedMobile');
   const instrWrapper = form.querySelector('.field-otp-instruction');
-  const maskedFieldPara = form.querySelector('.field-otp-masked-mobile p');
-  const editLink = instrWrapper?.querySelector('a');
-
-  if (maskedMobile && maskedFieldPara) {
-    maskedFieldPara.textContent = `${maskedMobile} `;
-    if (editLink) maskedFieldPara.appendChild(editLink);
+  if (maskedMobile && instrWrapper) {
+    instrWrapper.querySelectorAll('p').forEach((p) => {
+      p.childNodes.forEach((node) => {
+        if (node.nodeType === Node.TEXT_NODE) {
+          node.textContent = node.textContent.replace(/\*+\d+/, maskedMobile);
+        }
+      });
+    });
   }
 
-  // Intercept the Edit link wherever it lives after the DOM rearrangement above.
+  // Intercept the "Edit mobile number" link to navigate back to the welcome page.
+  const editLink = instrWrapper?.querySelector('a');
   editLink?.addEventListener('click', (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -565,13 +574,19 @@ export async function initPersonalInfoPage() {
     `${offer.customerState || ''} - ${offer.zipCode || ''}`,
   ].filter(Boolean).join(', ');
 
+  const welcomePan = sessionStorage.getItem('welcomePan');
+  const welcomeMobile = sessionStorage.getItem('welcomeMobile');
+  const welcomeDob = sessionStorage.getItem('welcomeDob');
+
   setField(form, 'fullNameDisplay', fullName);
   setField(form, 'firstName', (offer.customerFirstName || '').trim());
   setField(form, 'middleName', (offer.customerMiddleName || '').trim());
   setField(form, 'lastName', (offer.customerLastName || '').trim());
   setField(form, 'aadhaarAddress', address);
   setField(form, 'emailId', offer.emailAddress || '');
-  setField(form, 'pan_number', offer.maskedPan || '');
+  setField(form, 'pan_number', welcomePan || offer.maskedPan || '');
+  setField(form, 'mobile_display', welcomeMobile ? `+91 ${welcomeMobile}` : `+91 ${offer.customerMobileNo || ''}`);
+  setField(form, 'dob_display', welcomeDob || offer.dateOfBirth || '');
   setField(form, 'employerNameText', offer.employerName || '');
   setField(form, 'loanType', offer.typeOfLoan || 'Fresh Loan');
 
@@ -587,8 +602,26 @@ export async function initPersonalInfoPage() {
   submitOtpWrapper?.setAttribute('data-visible', 'false');
   verifiedMsgWrapper?.setAttribute('data-visible', 'false');
 
+  // Move Verify button inside the email field wrapper so CSS can position it inline.
+  const emailFieldWrapper = form.querySelector('.field-emailid');
+  const verifyBtnWrapper = form.querySelector('.field-verifyemailbtn');
+  if (emailFieldWrapper && verifyBtnWrapper) emailFieldWrapper.appendChild(verifyBtnWrapper);
+
+  // Show errors inside the personalDetails panel (below email field), not at form top.
+  const showEmailError = (msg) => {
+    form.querySelector('.email-field-error')?.remove();
+    if (!msg) return;
+    const err = document.createElement('p');
+    err.className = 'email-field-error';
+    err.textContent = msg;
+    emailFieldWrapper?.after(err);
+  };
+
   // ── Accordion toggle for collapsible panels ────────────────────────────────
-  form.querySelectorAll('.field-employerdetails, .field-incomedetails, .field-loantypedetails')
+  form.querySelectorAll(
+    '.field-panname, .field-personaldetails, .field-addressdetails,'
+    + '.field-employerdetails, .field-incomedetails, .field-loantypedetails',
+  )
     .forEach((panel) => {
       panel.querySelector('legend')?.addEventListener('click', () => {
         const collapsed = panel.getAttribute('data-collapsed') === 'true';
@@ -601,7 +634,8 @@ export async function initPersonalInfoPage() {
     const verifyBtn = e.target.closest('.field-verifyemailbtn button');
     if (verifyBtn) {
       const email = form.querySelector('[name="emailId"]')?.value?.trim();
-      if (!email) { showError(form, 'Please enter your email address first.'); return; }
+      if (!email) { showEmailError('Please enter your email address first.'); return; }
+      showEmailError('');
       verifyBtn.disabled = true;
       verifyBtn.textContent = 'Sending…';
       const result = await generateEmailOTP(email);
@@ -613,7 +647,7 @@ export async function initPersonalInfoPage() {
         verifyBtn.textContent = 'Resend OTP';
         verifyBtn.disabled = false;
       } else {
-        showError(form, result.status.errorDesc || 'Could not send OTP to that address.');
+        showEmailError(result.status.errorDesc || 'Could not send OTP to that address.');
         verifyBtn.textContent = 'Verify';
         verifyBtn.disabled = false;
       }
@@ -625,6 +659,7 @@ export async function initPersonalInfoPage() {
       const email = form.querySelector('[name="emailId"]')?.value?.trim();
       const otp = form.querySelector('[name="emailOtpInput"]')?.value?.trim();
       if (!otp || otp.length !== 6) return;
+      showEmailError('');
       submitOtpBtn.disabled = true;
       const otpResult = await validateEmailOTP(email, otp);
       if (otpResult.status.responseCode === '0') {
@@ -635,7 +670,7 @@ export async function initPersonalInfoPage() {
         sessionStorage.setItem('verifiedEmail', email);
         trackEvent('email_verified');
       } else {
-        showError(form, otpResult.status.errorDesc || 'Invalid email OTP. Please try again.');
+        showEmailError(otpResult.status.errorDesc || 'Invalid email OTP. Please try again.');
         submitOtpBtn.disabled = false;
       }
     }
@@ -648,7 +683,7 @@ export async function initPersonalInfoPage() {
 
     const emailValue = form.querySelector('[name="emailId"]')?.value?.trim();
     if (emailValue && !sessionStorage.getItem('verifiedEmail')) {
-      showError(form, 'Please verify your email address before proceeding.');
+      showEmailError('Please verify your email address before proceeding.');
       form.querySelector('.field-emailid input')?.focus();
       return;
     }
@@ -939,11 +974,15 @@ export async function initPreviewPage() {
   setField(form, 'schedule_charges', 'Click here');
   setField(form, 'type_of_loan_display', offer.typeOfLoan || 'Fresh Loan');
 
-  // Populate personal details fields authored in AEM
+  // Populate personal details fields — prefer values the user entered on the Welcome page
+  const previewMobile = sessionStorage.getItem('welcomeMobile');
+  const previewDob = sessionStorage.getItem('welcomeDob');
+  const previewPan = sessionStorage.getItem('welcomePan');
+
   setField(form, 'full_name_display', fullName || '—');
-  setField(form, 'mobile_display', `+91 ${offer.customerMobileNo || ''}`);
-  setField(form, 'dob_display', offer.dateOfBirth || '—');
-  setField(form, 'pan_display', offer.maskedPan || '—');
+  setField(form, 'mobile_display', previewMobile ? `+91 ${previewMobile}` : `+91 ${offer.customerMobileNo || ''}`);
+  setField(form, 'dob_display', previewDob || offer.dateOfBirth || '—');
+  setField(form, 'pan_display', previewPan || offer.maskedPan || '—');
   setField(form, 'address_display', address || '—');
   setField(form, 'residence_display', offer.residenceType || '—');
 

@@ -254,7 +254,7 @@ main .form form .field-wrapper {
 }
 
 main .form form p {
-    font-size: var(--form-columns);
+    font-size: 12px;
     font-style: var(--form-paragraph-font-style);
     color: var(--form-paragraph-color);
     margin: var(--form-paragraph-margin);
@@ -1183,6 +1183,9 @@ main .form form .field-emailverifiedmsg span {
 }
 
 /* Collapsible panels: legend acts as toggle header */
+main .form form .field-panname > legend,
+main .form form .field-personaldetails > legend,
+main .form form .field-addressdetails > legend,
 main .form form .field-employerdetails > legend,
 main .form form .field-incomedetails > legend,
 main .form form .field-loantypedetails > legend {
@@ -1193,6 +1196,9 @@ main .form form .field-loantypedetails > legend {
   user-select: none;
 }
 
+main .form form .field-panname > legend::after,
+main .form form .field-personaldetails > legend::after,
+main .form form .field-addressdetails > legend::after,
 main .form form .field-employerdetails > legend::after,
 main .form form .field-incomedetails > legend::after,
 main .form form .field-loantypedetails > legend::after {
@@ -1201,12 +1207,18 @@ main .form form .field-loantypedetails > legend::after {
   flex-shrink: 0;
 }
 
+main .form form .field-panname[data-collapsed="true"] > legend::after,
+main .form form .field-personaldetails[data-collapsed="true"] > legend::after,
+main .form form .field-addressdetails[data-collapsed="true"] > legend::after,
 main .form form .field-employerdetails[data-collapsed="true"] > legend::after,
 main .form form .field-incomedetails[data-collapsed="true"] > legend::after,
 main .form form .field-loantypedetails[data-collapsed="true"] > legend::after {
   content: '∨';
 }
 
+main .form form .field-panname[data-collapsed="true"] > :not(legend),
+main .form form .field-personaldetails[data-collapsed="true"] > :not(legend),
+main .form form .field-addressdetails[data-collapsed="true"] > :not(legend),
 main .form form .field-employerdetails[data-collapsed="true"] > :not(legend),
 main .form form .field-incomedetails[data-collapsed="true"] > :not(legend),
 main .form form .field-loantypedetails[data-collapsed="true"] > :not(legend) {
@@ -1295,7 +1307,9 @@ main .form form .field-personaldetails > legend::before {
   background-position: center;
 }
 
-/* Floating label — small label at the top-inside of every input/select border */
+/* Floating label — notched into the top of the input/select border (outlined
+   style): label sits half on the border line, masked by its own background,
+   rather than floating inside the box above the value. */
 main .form form .field-panname .field-wrapper,
 main .form form .field-personaldetails .field-wrapper {
   position: relative;
@@ -1304,11 +1318,13 @@ main .form form .field-personaldetails .field-wrapper {
 main .form form .field-panname .field-wrapper > label,
 main .form form .field-personaldetails .field-wrapper > label {
   position: absolute;
-  top: 0.45rem;
-  left: 0.65rem;
-  font-size: 0.7rem;
+  top: -0.40rem;
+  left: 0.75rem;
+  background: #fff;
+  padding: 0 0.35rem;
+  font-size: 0.75rem;
   font-weight: 400;
-  color: #888;
+  color: #666;
   line-height: 1;
   z-index: 1;
   pointer-events: none;
@@ -1318,8 +1334,10 @@ main .form form .field-panname .field-wrapper input,
 main .form form .field-panname .field-wrapper select,
 main .form form .field-personaldetails .field-wrapper input,
 main .form form .field-personaldetails .field-wrapper select {
-  padding-top: 1.4rem;
-  height: 58px;
+  border: 1px solid #c9cfe0;
+  border-radius: 8px;
+  padding: 0 0.85rem;
+  height: 48px;
 }
 
 /* Email input: extra right-side clearance for the inline Verify button */
@@ -1327,14 +1345,14 @@ main .form form .field-personaldetails .field-emailid input {
   padding-right: 5rem;
 }
 
-/* Verify button: pulled up to overlap the email input row (58px height) */
+/* Verify button: pulled up to overlap the email input row (48px height) */
 main .form form .field-personaldetails .field-verifyemailbtn {
-  margin-top: calc(-58px - var(--form-field-vert-gap, 20px));
+  margin-top: calc(-48px - var(--form-field-vert-gap, 20px));
   display: flex;
   align-items: center;
   justify-content: flex-end;
   padding-right: 1rem;
-  height: 58px;
+  height: 48px;
   position: relative;
   z-index: 2;
 }
@@ -1447,18 +1465,20 @@ main .form form .field-employerdetails .field-industrytype {
   grid-column: span 6;
 }
 
-/* Floating labels — same inset pattern as panname / personaldetails */
+/* Floating labels — same notched-border pattern as panname / personaldetails */
 main .form form .field-employerdetails .field-wrapper {
   position: relative;
 }
 
 main .form form .field-employerdetails .field-wrapper > label {
   position: absolute;
-  top: 0.45rem;
-  left: 0.65rem;
-  font-size: 0.7rem;
+  top: -0.40rem;
+  left: 0.75rem;
+  background: #fff;
+  padding: 0 0.35rem;
+  font-size: 0.75rem;
   font-weight: 400;
-  color: #888;
+  color: #666;
   line-height: 1;
   z-index: 1;
   pointer-events: none;
@@ -1466,8 +1486,10 @@ main .form form .field-employerdetails .field-wrapper > label {
 
 main .form form .field-employerdetails .field-wrapper input,
 main .form form .field-employerdetails .field-wrapper select {
-  padding-top: 1.4rem;
-  height: 58px;
+  border: 1px solid #c9cfe0;
+  border-radius: 8px;
+  padding: 0 0.85rem;
+  height: 48px;
 }
 
 /* ── field-incomedetails: icon + 2-col layout + floating labels ── */
@@ -1506,19 +1528,23 @@ main .form form .field-incomedetails .field-wrapper {
 
 main .form form .field-incomedetails .field-wrapper > label {
   position: absolute;
-  top: 0.45rem;
-  left: 0.65rem;
-  font-size: 0.7rem;
+  top: -0.40rem;
+  left: 0.75rem;
+  background: #fff;
+  padding: 0 0.35rem;
+  font-size: 0.75rem;
   font-weight: 400;
-  color: #888;
+  color: #666;
   line-height: 1;
   z-index: 1;
   pointer-events: none;
 }
 
 main .form form .field-incomedetails .field-wrapper input {
-  padding-top: 1.4rem;
-  height: 58px;
+  border: 1px solid #c9cfe0;
+  border-radius: 8px;
+  padding: 0 0.85rem;
+  height: 48px;
 }
 
 /* ── field-loantypedetails: icon + floating label ── */
@@ -1553,19 +1579,23 @@ main .form form .field-loantypedetails .field-wrapper {
 
 main .form form .field-loantypedetails .field-wrapper > label {
   position: absolute;
-  top: 0.45rem;
-  left: 0.65rem;
-  font-size: 0.7rem;
+  top: -0.40rem;
+  left: 0.75rem;
+  background: #fff;
+  padding: 0 0.35rem;
+  font-size: 0.75rem;
   font-weight: 400;
-  color: #888;
+  color: #666;
   line-height: 1;
   z-index: 1;
   pointer-events: none;
 }
 
 main .form form .field-loantypedetails .field-wrapper select {
-  padding-top: 1.4rem;
-  height: 58px;
+  border: 1px solid #c9cfe0;
+  border-radius: 8px;
+  padding: 0 0.85rem;
+  height: 48px;
 }
 
 /* ── Personal Info — authored panel variant (underscore field names → kebab CSS) */
@@ -1913,7 +1943,6 @@ main .form form .field-selectedbank {
   border: 1px solid #e0e4f5 !important;
   border-radius: 12px !important;
   padding: 0 1.25rem 1.25rem !important;
-  margin-bottom: 1.25rem !important;
   display: grid !important;
   grid-template-columns: repeat(10, minmax(72px, 1fr)) !important;
   gap: 0.35rem !important;
@@ -2411,8 +2440,6 @@ main .form form fieldset.panel-wrapper.field-verifyemail .field-work-email {
   column-gap: 0.6rem;
   position: relative;
   margin-top: 1.6rem;
-  border-left: 1px solid #e8eaf0;
-  padding-left: 0.75rem;
 }
 
 main .form form fieldset.panel-wrapper.field-verifyemail .field-personal-email > label,
