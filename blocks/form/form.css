@@ -1065,16 +1065,12 @@ main .form form p.loan-api-error {
   margin: 0 0 0.75rem;
 }
 
-
 main .form form .field-personal-panel,
 main .form form .field-loan-preview-panel,
 main .form form .field-bureau-offers-panel,
 main .form form .field-thankyou-panel {
   padding-inline: 64px;
 }
-
-
-
 
 
 /* Section panels — card-style with lavender header (AEM classes are all-lowercase) */
@@ -1145,7 +1141,6 @@ main .form form .field-verifyemailbtn button {
   font-size: 0.875rem;
   cursor: pointer;
   padding: 0;
-  text-decoration: underline;
 }
 
 main .form form .field-verifyemailbtn button:disabled {
@@ -1190,7 +1185,7 @@ main .form form .field-employerdetails > legend,
 main .form form .field-incomedetails > legend,
 main .form form .field-loantypedetails > legend {
   cursor: pointer;
-  display: flex !important;
+  display: flex;
   align-items: center;
   justify-content: space-between;
   user-select: none;
@@ -1205,6 +1200,7 @@ main .form form .field-loantypedetails > legend::after {
   content: '∧';
   font-size: 0.7rem;
   flex-shrink: 0;
+  margin-left: auto;
 }
 
 main .form form .field-panname[data-collapsed="true"] > legend::after,
@@ -1222,7 +1218,7 @@ main .form form .field-addressdetails[data-collapsed="true"] > :not(legend),
 main .form form .field-employerdetails[data-collapsed="true"] > :not(legend),
 main .form form .field-incomedetails[data-collapsed="true"] > :not(legend),
 main .form form .field-loantypedetails[data-collapsed="true"] > :not(legend) {
-  display: none !important;
+  display: none;
 }
 
 /* Confirm button */
@@ -1264,7 +1260,7 @@ main .form form .field-personaldetails .field-emailid {
 
 /* Header icon — ID card SVG injected via legend::before, no authoring needed */
 main .form form .field-panname > legend {
-  display: flex !important;
+  display: flex;
   align-items: center;
   gap: 0.5rem;
 }
@@ -1280,7 +1276,6 @@ main .form form .field-panname > legend::before {
   background-position: center;
 }
 
-/* ── field-personaldetails: 2-column layout + inline Verify + header icon ── */
 main .form form .field-personaldetails .field-gender {
   grid-column: span 6;
 }
@@ -1291,7 +1286,7 @@ main .form form .field-personaldetails .field-pan-number {
 
 /* Header icon — briefcase SVG */
 main .form form .field-personaldetails > legend {
-  display: flex !important;
+  display: flex;
   align-items: center;
   gap: 0.5rem;
 }
@@ -1307,9 +1302,6 @@ main .form form .field-personaldetails > legend::before {
   background-position: center;
 }
 
-/* Floating label — notched into the top of the input/select border (outlined
-   style): label sits half on the border line, masked by its own background,
-   rather than floating inside the box above the value. */
 main .form form .field-panname .field-wrapper,
 main .form form .field-personaldetails .field-wrapper {
   position: relative;
@@ -1386,7 +1378,7 @@ main .form form .field-addressdetails {
 
 /* Header icon — home SVG */
 main .form form .field-addressdetails > legend {
-  display: flex !important;
+  display: flex;
   align-items: center;
   gap: 0.5rem;
   background: #f2e7f9d9;
@@ -1411,9 +1403,9 @@ main .form form .field-addressdetails .field-aadhaaraddress > label {
 }
 
 main .form form .field-addressdetails .field-aadhaaraddress input {
-  background: transparent !important;
-  border: none !important;
-  border-left: 3px solid #5c6bc0 !important;
+  background: transparent;
+  border: none;
+  border-left: 3px solid #5c6bc0;
   border-radius: 0;
   padding: 0.35rem 0.75rem;
   height: auto;
@@ -1438,7 +1430,7 @@ main .form form .field-addressdetails .field-addresstype > legend {
 /* Collapsible legend: icon left, text, chevron pushed to right */
 main .form form .field-employerdetails > legend {
   gap: 0.5rem;
-  justify-content: flex-start !important;
+  justify-content: flex-start;
 }
 
 main .form form .field-employerdetails > legend::before {
@@ -1496,7 +1488,7 @@ main .form form .field-employerdetails .field-wrapper select {
 
 main .form form .field-incomedetails > legend {
   gap: 0.5rem;
-  justify-content: flex-start !important;
+  justify-content: flex-start;
 }
 
 main .form form .field-incomedetails > legend::before {
@@ -1551,7 +1543,7 @@ main .form form .field-incomedetails .field-wrapper input {
 
 main .form form .field-loantypedetails > legend {
   gap: 0.5rem;
-  justify-content: flex-start !important;
+  justify-content: flex-start;
 }
 
 main .form form .field-loantypedetails > legend::before {
@@ -1607,7 +1599,7 @@ main .form form .field-customer-details-panel {
 }
 
 main .form form .field-customer-details-panel > legend {
-  display: none !important;
+  display: none;
 }
 
 /* Icon — column 1, row 1 */
@@ -1657,10 +1649,10 @@ main .form form .field-customer-details-panel .field-fullnamedisplay .field-labe
 }
 
 main .form form .field-customer-details-panel .field-fullnamedisplay input {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  padding: 0 !important;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
   font-size: 0.95rem;
   font-weight: 700;
   color: #131313;
@@ -1939,203 +1931,203 @@ main .form form .button-wrapper.field-confirm-btn button {
 
 /* ── Bank selection panel ── */
 main .form form .field-selectedbank {
-  background: #fff !important;
-  border: 1px solid #e0e4f5 !important;
-  border-radius: 12px !important;
-  padding: 0 1.25rem 1.25rem !important;
-  display: grid !important;
+  background: #fff;
+  border: 1px solid #e0e4f5;
+  border-radius: 12px;
+  padding: 0 1.25rem 1.25rem;
+  display: grid;
   grid-template-columns: repeat(10, minmax(72px, 1fr)) !important;
-  gap: 0.35rem !important;
-  align-items: start !important;
+  gap: 0.35rem;
+  align-items: start;
 }
 
 /* Panel header legend — lavender strip with bank icon */
 main .form form .field-selectedbank > legend {
   grid-column: 1 / -1 !important;
   width: calc(100% + 2.5rem) !important;
-  margin: 0 -1.25rem 1rem !important;
-  padding: 0.85rem 1.25rem !important;
-  background: #eef1fb !important;
-  border-bottom: 1px solid #dde2f5 !important;
-  border-radius: 12px 12px 0 0 !important;
-  font-size: 0.9rem !important;
-  font-weight: 700 !important;
-  color: #1a237e !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 0.6rem !important;
+  margin: 0 -1.25rem 1rem;
+  padding: 0.85rem 1.25rem;
+  background: #eef1fb;
+  border-bottom: 1px solid #dde2f5;
+  border-radius: 12px 12px 0 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #1a237e;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
 }
 
 main .form form .field-selectedbank > legend::before {
-  content: '' !important;
-  flex-shrink: 0 !important;
-  width: 1.4rem !important;
-  height: 1.4rem !important;
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%235c6bc0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><line x1='3' y1='22' x2='21' y2='22'/><rect x='3' y='10' width='4' height='12'/><rect x='10' y='10' width='4' height='12'/><rect x='17' y='10' width='4' height='12'/><path d='M12 2L3 9h18z'/></svg>") !important;
-  background-size: contain !important;
-  background-repeat: no-repeat !important;
-  background-position: center !important;
+  content: '';
+  flex-shrink: 0;
+  width: 1.4rem;
+  height: 1.4rem;
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%235c6bc0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><line x1='3' y1='22' x2='21' y2='22'/><rect x='3' y='10' width='4' height='12'/><rect x='10' y='10' width='4' height='12'/><rect x='17' y='10' width='4' height='12'/><path d='M12 2L3 9h18z'/></svg>");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 /* Each bank card wrapper */
 main .form form .field-selectedbank .radio-wrapper {
-  position: relative !important;
+  position: relative;
 }
 
 /* Hide radio input — entire label is the clickable card */
 main .form form .field-selectedbank .radio-wrapper input[type="radio"] {
-  position: absolute !important;
-  opacity: 0 !important;
-  width: 1px !important;
-  height: 1px !important; 
-  pointer-events: none !important;
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px; 
+  pointer-events: none;
 }
 
 /* Card face — label is just a flex column; border lives on the image only */
 main .form form .field-selectedbank .radio-wrapper label {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: flex-start !important;
-  gap: 0.45rem !important;
-  padding: 0 !important;
-  border: none !important;
-  background: transparent !important;
-  cursor: pointer !important;
-  text-align: center !important;
-  font-size: 0.72rem !important;
-  font-weight: 500 !important;
-  color: #333 !important;
-  position: relative !important;
-  line-height: 1.3 !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.45rem;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: #333;
+  position: relative;
+  line-height: 1.3;
 }
 
 /* Selected card — bold name only; border goes on the image */
 main .form form .field-selectedbank .radio-wrapper input[type="radio"]:checked + label {
-  color: #1a237e !important;
-  font-weight: 600 !important;
+  color: #1a237e;
+  font-weight: 600;
 }
 
 /* Blue border on image when selected */
 main .form form .field-selectedbank .radio-wrapper input[type="radio"]:checked + label .card-bank-logo {
-  border-color: #3d5af1 !important;
-  border-width: 2px !important;
+  border-color: #3d5af1;
+  border-width: 2px;
 }
 
 /* Checkmark — anchored to bottom-center of the 64px image box */
 main .form form .field-selectedbank .radio-wrapper input[type="radio"]:checked + label::after {
-  content: '✓' !important;
-  position: absolute !important;
-  top: calc(64px - 9px) !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-  width: 18px !important;
-  height: 18px !important;
-  background: #3d5af1 !important;
-  border-radius: 50% !important;
-  color: #fff !important;
-  font-size: 0.65rem !important;
-  line-height: 18px !important;
-  text-align: center !important;
-  border: 2px solid #fff !important;
+  content: '✓';
+  position: absolute;
+  top: calc(64px - 9px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 18px;
+  height: 18px;
+  background: #3d5af1;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 0.65rem;
+  line-height: 18px;
+  text-align: center;
+  border: 2px solid #fff;
 }
 
 /* Bank logo image — this is the bordered "card" element */
 main .form form .field-selectedbank .radio-wrapper label .card-bank-logo {
-  width: 64px !important;
-  height: 64px !important;
-  object-fit: contain !important;
-  object-position: center !important;
-  border-radius: 12px !important;
-  display: block !important;
-  border: 1.5px solid #dde0f0 !important;
-  transition: border-color 0.18s !important;
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  object-position: center;
+  border-radius: 12px;
+  display: block;
+  border: 1.5px solid #dde0f0;
+  transition: border-color 0.18s;
 }
 
 main .form form .field-selectedbank .radio-wrapper label:hover .card-bank-logo {
-  box-shadow: 0 2px 8px rgb(92 107 192 / 15%) !important;
+  box-shadow: 0 2px 8px rgb(92 107 192 / 15%);
 }
 
 /* "Other Bank" dropdown — moved into the bank-cards grid (see loan-journey.js
    initBureauOfferPage), so it sits inline as the 8th card slot in the row. */
 main .form form .field-selectedbank .field-otherbankname {
   grid-column: span 1 !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: stretch !important;
-  gap: 0.3rem !important;
-  max-width: none !important;
-  margin: 0 !important;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.3rem;
+  max-width: none;
+  margin: 0;
 }
 
 main .form form .field-otherbankname label {
-  font-size: 0.68rem !important;
-  font-weight: 600 !important;
-  color: #1a237e !important;
-  white-space: nowrap !important;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #1a237e;
+  white-space: nowrap;
 }
 
 /* Style the select to look like a bank card image slot */
 main .form form .field-otherbankname select {
-  width: 100% !important;
-  height: 40px !important;
-  border: 1.5px solid #e0e4f5 !important;
-  border-radius: 8px !important;
-  padding: 0 0.5rem !important;
-  font-size: 0.75rem !important;
-  background: #fff !important;
-  cursor: pointer !important;
-  transition: border-color 0.18s !important;
+  width: 100%;
+  height: 40px;
+  border: 1.5px solid #e0e4f5;
+  border-radius: 8px;
+  padding: 0 0.5rem;
+  font-size: 0.75rem;
+  background: #fff;
+  cursor: pointer;
+  transition: border-color 0.18s;
 }
 
 main .form form .field-selectedbank .field-otherbankname select:focus {
-  border-color: #3d5af1 !important;
-  outline: none !important;
+  border-color: #3d5af1;
+  outline: none;
 }
 
 /* When a bank is chosen from the dropdown, highlight the card slot */
 main .form form .field-selectedbank .field-otherbankname select:not([value=""]):valid {
-  border-color: #3d5af1 !important;
-  border-width: 2px !important;
+  border-color: #3d5af1;
+  border-width: 2px;
 }
 
 /* ── Income verification method panel ── */
 main .form form .field-incomemethod {
-  background: #fff !important;
-  border: 1px solid #e0e4f5 !important;
-  border-radius: 12px !important;
-  padding: 0 1.25rem 1.25rem !important;
-  display: grid !important;
+  background: #fff;
+  border: 1px solid #e0e4f5;
+  border-radius: 12px;
+  padding: 0 1.25rem 1.25rem;
+  display: grid;
   grid-template-columns: repeat(3, 1fr) !important;
-  gap: 0.75rem !important;
+  gap: 0.75rem;
 }
 
 /* Panel header legend — lighter strip with method icon */
 main .form form .field-incomemethod > legend {
   grid-column: 1 / -1 !important;
   width: calc(100% + 2.5rem) !important;
-  margin: 0 -1.25rem 1.25rem !important;
-  padding: 0.85rem 1.25rem !important;
-  background: #f3f4ff !important;
-  border-bottom: 1px solid #e0e4f5 !important;
-  border-radius: 12px 12px 0 0 !important;
-  font-size: 0.9rem !important;
-  font-weight: 700 !important;
-  color: #1a237e !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 0.6rem !important;
+  margin: 0 -1.25rem 1.25rem;
+  padding: 0.85rem 1.25rem;
+  background: #f3f4ff;
+  border-bottom: 1px solid #e0e4f5;
+  border-radius: 12px 12px 0 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #1a237e;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
 }
 
 main .form form .field-incomemethod > legend::before {
-  content: '' !important;
-  flex-shrink: 0 !important;
-  width: 1.4rem !important;
-  height: 1.4rem !important;
+  content: '';
+  flex-shrink: 0;
+  width: 1.4rem;
+  height: 1.4rem;
   background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%235c6bc0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='8' r='4'/><path d='M4 20c0-4 3.6-7 8-7s8 3 8 7'/><circle cx='18' cy='8' r='3'/><path d='M22 20c0-3-2-5-4-6'/></svg>") !important;
-  background-size: contain !important;
-  background-repeat: no-repeat !important;
-  background-position: center !important;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 /* Each income method card — grid: [radio | label] then [badge full-width] */
@@ -2143,96 +2135,96 @@ main .form form .field-incomemethod .radio-wrapper {
   display: grid !important;
   grid-template-columns: 20px 1fr !important;
   grid-template-rows: auto auto !important;
-  column-gap: 0.75rem !important;
-  padding: 1rem 1.1rem 0 !important;
-  border: 1.5px solid #e0e4f5 !important;
-  border-radius: 10px !important;
-  cursor: pointer !important;
-  transition: border-color 0.18s !important;
-  background: #fff !important;
-  overflow: hidden !important;
+  column-gap: 0.75rem;
+  padding: 1rem 1.1rem 0;
+  border: 1.5px solid #e0e4f5;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color 0.18s;
+  background: #fff;
+  overflow: hidden;
 }
 
 main .form form .field-incomemethod .radio-wrapper input[type="radio"] {
   grid-column: 1 !important;
   grid-row: 1 !important;
-  accent-color: #3d5af1 !important;
-  width: 20px !important;
-  height: 20px !important;
-  margin-top: 0.15rem !important;
-  cursor: pointer !important;
-  align-self: start !important;
+  accent-color: #3d5af1;
+  width: 20px;
+  height: 20px;
+  margin-top: 0.15rem;
+  cursor: pointer;
+  align-self: start;
 }
 
 main .form form .field-incomemethod .radio-wrapper label {
   grid-column: 2 !important;
   grid-row: 1 !important;
-  font-size: 0.9rem !important;
-  font-weight: 600 !important;
-  color: #1a1a2e !important;
-  cursor: pointer !important;
-  line-height: 1.3 !important;
-  padding: 0 0 1rem !important;
-  margin: 0 !important;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1a1a2e;
+  cursor: pointer;
+  line-height: 1.3;
+  padding: 0 0 1rem;
+  margin: 0;
 }
 
 /* Option description span (created by card-choice.js from authored property) */
 main .form form .field-incomemethod .radio-wrapper label .card-desc {
-  display: block !important;
-  font-size: 0.78rem !important;
-  font-weight: 400 !important;
-  color: #555 !important;
-  margin-top: 0.3rem !important;
-  line-height: 1.4 !important;
-  font-style: normal !important;
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: #555;
+  margin-top: 0.3rem;
+  line-height: 1.4;
+  font-style: normal;
 }
 
 /* Selected income method — blue border + light bg on the card only */
 main .form form .field-incomemethod .radio-wrapper:has(input[type="radio"]:checked) {
-  border-color: #3d5af1 !important;
-  border-width: 2px !important;
-  background: #eef1fb !important;
+  border-color: #3d5af1;
+  border-width: 2px;
+  background: #eef1fb;
 }
 
 /* Badge — spans full width in row 2, negative margins cancel the wrapper's side padding */
 main .form form .field-incomemethod .radio-wrapper .card-badge {
   grid-column: 1 / -1 !important;
   grid-row: 2 !important;
-  background: #2e7d32 !important;
-  color: #fff !important;
-  text-align: center !important;
-  font-size: 0.72rem !important;
-  font-weight: 600 !important;
-  padding: 0.35rem 0 !important;
-  border-radius: 0 0 8px 8px !important;
-  margin: 0 -1.1rem !important;
+  background: #2e7d32;
+  color: #fff;
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.35rem 0;
+  border-radius: 0 0 8px 8px;
+  margin: 0 -1.1rem;
 }
 
 /* ── Submit / Continue button ── */
 main .form form .submit-wrapper button[type="submit"] {
-  background: #3d5af1 !important;
-  color: #fff !important;
-  border: none !important;
-  border-radius: 8px !important;
-  padding: 0.85rem 2.5rem !important;
-  font-size: 0.95rem !important;
-  font-weight: 600 !important;
-  width: auto !important;
-  min-width: 200px !important;
-  cursor: pointer !important;
+  background: #3d5af1;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.85rem 2.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  width: auto;
+  min-width: 200px;
+  cursor: pointer;
   letter-spacing: 0.01em;
-  transition: background 0.18s !important;
+  transition: background 0.18s;
 }
 
 
 
 main .form form .submit-wrapper button[type="submit"]:hover {
-  background: #2d48d8 !important;
+  background: #2d48d8;
 }
 
 main .form form .submit-wrapper button[type="submit"]:disabled {
-  background: #9aa5e8 !important;
-  cursor: not-allowed !important;
+  background: #9aa5e8;
+  cursor: not-allowed;
 }
 
 @media (width <= 700px) {
@@ -2252,12 +2244,12 @@ main .form form fieldset.panel-wrapper.field-office-address,
 main .form form fieldset.panel-wrapper.field-reference-details {
   display: grid !important;
   grid-template-columns: repeat(3, 1fr) !important;
-  gap: 0 1rem !important;
-  background: #fff !important;
-  border: 1px solid #e8eaf0 !important;
-  border-radius: 10px !important;
-  padding: 0 0 1rem !important;
-  margin-top: 1rem !important;
+  gap: 0 1rem;
+  background: #fff;
+  border: 1px solid #e8eaf0;
+  border-radius: 10px;
+  padding: 0 0 1rem;
+  margin-top: 1rem;
 }
 
 main .form form fieldset.panel-wrapper.field-salary-details > legend,
@@ -2265,18 +2257,18 @@ main .form form fieldset.panel-wrapper.field-office-address > legend,
 main .form form fieldset.panel-wrapper.field-reference-details > legend,
 main .form form fieldset.panel-wrapper.field-verifyemail > legend {
   grid-column: span 4;
-  display: flex !important;
+  display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: #eef0ff !important;
-  border-bottom: 1px solid #dde2f5 !important;
-  border-radius: 10px 10px 0 0 !important;
-  padding: 0.75rem 1.25rem !important;
-  font-size: 0.85rem !important;
-  font-weight: 700 !important;
-  color: #1a237e !important;
-  margin: 0 !important;
-  width: 100% !important;
+  background: #eef0ff;
+  border-bottom: 1px solid #dde2f5;
+  border-radius: 10px 10px 0 0;
+  padding: 0.75rem 1.25rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1a237e;
+  margin: 0;
+  width: 100%;
   cursor: pointer;
   user-select: none;
 }
@@ -2348,24 +2340,24 @@ main .form form fieldset.panel-wrapper.field-office-address .field-wrapper input
 main .form form fieldset.panel-wrapper.field-office-address .field-wrapper textarea,
 main .form form fieldset.panel-wrapper.field-reference-details .field-wrapper input,
 main .form form fieldset.panel-wrapper.field-reference-details .field-wrapper textarea {
-  border: none !important;
-  box-shadow: none !important;
-  background: transparent !important;
-  padding: 0.25rem 0 !important;
-  font-size: 0.95rem !important;
-  font-weight: 600 !important;
-  color: #1a1a2e !important;
-  height: auto !important;
+  border: none;
+  box-shadow: none;
+  background: transparent;
+  padding: 0.25rem 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1a1a2e;
+  height: auto;
 }
 
 main .form form fieldset.panel-wrapper.field-salary-details .text-wrapper.field-wrapper label,
 main .form form fieldset.panel-wrapper.field-office-address .text-wrapper.field-wrapper label,
 main .form form fieldset.panel-wrapper.field-reference-details .text-wrapper.field-wrapper label {
-  font-size: 0.78rem !important;
-  color: #888 !important;
-  font-weight: 400 !important;
-  display: block !important;
-  margin-bottom: 0.15rem !important;
+  font-size: 0.78rem;
+  color: #888;
+  font-weight: 400;
+  display: block;
+  margin-bottom: 0.15rem;
 }
 
 @media (width <= 600px) {
@@ -2388,21 +2380,21 @@ main .form form fieldset.panel-wrapper.field-reference-details .text-wrapper.fie
 main .form form fieldset.panel-wrapper.field-verifyemail {
   display: grid !important;
   grid-template-columns: repeat(2, 1fr) !important;
-  gap: 0 1.75rem !important;
-  background: #fff !important;
-  border: 1px solid #e8eaf0 !important;
-  border-radius: 10px !important;
-  padding: 0 1.25rem 1.35rem !important;
-  margin-top: 1rem !important;
+  gap: 0 1.75rem;
+  background: #fff;
+  border: 1px solid #e8eaf0;
+  border-radius: 10px;
+  padding: 0 1.25rem 1.35rem;
+  margin-top: 1rem;
 }
 
 main .form form fieldset.panel-wrapper.field-verifyemail > legend {
   cursor: pointer;
   user-select: none;
-  display: flex !important;
+  display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin-inline: -1.25rem !important;
+  margin-inline: -1.25rem;
   width: calc(100% + 2.5rem) !important;
 }
 
@@ -2428,7 +2420,7 @@ main .form form fieldset.panel-wrapper.field-verifyemail[data-collapsed="true"] 
 }
 
 main .form form fieldset.panel-wrapper.field-verifyemail[data-collapsed="true"] > :not(legend) {
-  display: none !important;
+  display: none;
 }
 
 main .form form fieldset.panel-wrapper.field-verifyemail .field-personal-email,
@@ -2458,18 +2450,18 @@ main .form form fieldset.panel-wrapper.field-verifyemail .field-personal-email i
 main .form form fieldset.panel-wrapper.field-verifyemail .field-work-email input {
   flex: 1 1 auto;
   min-width: 0;
-  border: 1px solid #c9cfe0 !important;
-  border-radius: 8px !important;
-  padding: 0.65rem 0.85rem !important;
-  font-size: 0.9rem !important;
-  height: auto !important;
-  box-shadow: none !important;
-  background: #fff !important;
+  border: 1px solid #c9cfe0;
+  border-radius: 8px;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.9rem;
+  height: auto;
+  box-shadow: none;
+  background: #fff;
 }
 
 main .form form fieldset.panel-wrapper.field-verifyemail .field-personal-email input[readonly],
 main .form form fieldset.panel-wrapper.field-verifyemail .field-work-email input[readonly] {
-  background: #f5f7ff !important;
+  background: #f5f7ff;
   color: #555;
 }
 
@@ -2956,7 +2948,7 @@ main .form form .field-radio-panel .field-incometype {
   grid-column: 9 / span 4 !important;
   grid-row: 3;
   align-self: start;
-  display: flex !important;
+  display: flex;
   flex-direction: column;
   gap: 0.4rem;
 }
@@ -3010,8 +3002,16 @@ main .form form .field-consentmarketing input[type="checkbox"] {
   margin-top: 2px;
   flex-shrink: 0;
 }
-main .form form .field-terms-privacy-text { grid-column: 1 / span 12; grid-row: 7; }
-main .form form .field-submitbtn { grid-column: 1 / span 12; grid-row: 8; }
+
+main .form form .field-terms-privacy-text { 
+    grid-column: 1 / span 12; 
+    grid-row: 7; 
+}
+
+main .form form .field-submitbtn { 
+    grid-column: 1 / span 12; 
+    grid-row: 8; 
+}
 
 /* Terms text — links styled */
 main .form form .field-terms-privacy-text p {
@@ -3154,13 +3154,19 @@ main .form form .field-essentials-panel .plain-text-wrapper p {
 /* Header bar panel — wraps HDFC logo + safe badge, spans full form width */
 main .form form fieldset.panel-wrapper.field-header-bar {
   grid-column: span 12 !important;
-  display: flex ;
+  display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   background: #0d1b3e;
   padding: 10px 32px;
   gap: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 200;
 }
 
 main .form form fieldset.panel-wrapper.field-header-bar > legend {
@@ -3194,55 +3200,53 @@ main .form form fieldset.panel-wrapper.field-header-bar .field-safe-badge img {
 
 /* ── Personal Info: Inline Verify button inside email field ──────────────── */
 
-/* Email wrapper becomes a relative container for absolute-positioned button */
 main .form form .field-personaldetails .field-emailid {
-  position: relative !important;
+  position: relative;
 }
 
-/* Email input gets right padding so text doesn't run under the Verify button */
 main .form form .field-personaldetails .field-emailid input[type="email"] {
-  padding-right: 5.5rem !important;
+  padding-right: 5.5rem;
 }
 
 /* Verify button wrapper — absolute, right-inside the input */
 main .form form .field-personaldetails .field-emailid .field-verifyemailbtn {
-  position: absolute !important;
-  right: 0.75rem !important;
-  bottom: 0.55rem !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  background: none !important;
-  border: none !important;
-  box-shadow: none !important;
-  grid-column: unset !important;
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.1rem;
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: none;
+  box-shadow: none;
+  grid-column: unset;
 }
 
 /* Verify button itself: text-only blue link style */
 main .form form .field-personaldetails .field-emailid .field-verifyemailbtn button {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  color: #3d5af1 !important;
-  font-size: 0.9rem !important;
-  font-weight: 700 !important;
-  cursor: pointer !important;
-  padding: 0 !important;
-  min-width: unset !important;
-  width: auto !important;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  color: #3d5af1;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+  min-width: unset;
+  width: auto;
 }
 
 main .form form .field-personaldetails .field-emailid .field-verifyemailbtn button:disabled {
-  color: #8fa3f7 !important;
-  cursor: default !important;
+  color: #8fa3f7;
+  cursor: default;
 }
 
 /* Inline error — shown below the email field, inside the panel */
 main .form form .email-field-error {
   grid-column: 1 / -1 !important;
-  color: #d32f2f !important;
-  font-size: 0.8rem !important;
-  margin: 0.1rem 0 0 !important;
-  padding: 0 !important;
+  color: #d32f2f;
+  font-size: 0.8rem;
+  margin: 0.1rem 0 0;
+  padding: 0;
 }
 
 /* ── Email Verification (Preview page) ───────────────────────────────────── */
@@ -3302,8 +3306,15 @@ main .form form .email-otp-resend-btn {
   transition: background 0.18s;
 }
 
-main .form form .email-otp-confirm-btn { background: #3d5af1; color: #fff; }
-main .form form .email-otp-confirm-btn:disabled { background: #8fa3f7; cursor: default; }
+main .form form .email-otp-confirm-btn { 
+    background: #3d5af1; 
+    color: #fff; 
+}
+
+main .form form .email-otp-confirm-btn:disabled { 
+    background: #8fa3f7; 
+    cursor: default; 
+}
 
 main .form form .email-otp-resend-btn {
   background: transparent;
@@ -3311,11 +3322,23 @@ main .form form .email-otp-resend-btn {
   border: 1.5px solid #3d5af1;
 }
 
-main .form form .email-otp-resend-btn:disabled { opacity: 0.5; cursor: default; }
+main .form form .email-otp-resend-btn:disabled { 
+    opacity: 0.5; 
+    cursor: default; 
+}
 
-main .form form .email-otp-msg { width: 100%; font-size: 0.8rem; }
-main .form form .email-otp-msg.email-otp-error { color: #d32f2f; }
-main .form form .email-otp-msg.email-otp-success { color: #2e7d32; }
+main .form form .email-otp-msg { 
+    width: 100%; 
+    font-size: 0.8rem; 
+}
+
+main .form form .email-otp-msg.email-otp-error { 
+    color: #d32f2f; 
+}
+
+main .form form .email-otp-msg.email-otp-success { 
+    color: #2e7d32; 
+}
 
 /* Verified badge */
 main .form form .email-verified-badge {
@@ -3334,31 +3357,49 @@ main .form form .email-verified-badge {
 /* ── Footer ──────────────────────────────────────────────────────────────── */
 
 main .form form .field-footer-panel {
-  display: block !important;
-  width: 100% !important;
-  background: #0d1b3e !important;
-  border: none !important;
-  border-radius: 0 !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  box-shadow: none !important;
+  display: block;
+  width: 100%;
+  background: #0d1b3e;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  margin: 0;
+  box-shadow: none;
 }
 
 main .form form .field-footer-panel > legend {
-  display: none !important;
+  display: none;
 }
 
 main .form form .field-footer-panel .field-footer {
-  display: block !important;
-  width: 100% !important;
-  padding: 0.6rem 1rem !important;
-  text-align: center !important;
+  display: block;
+  width: 100%;
+  padding: 0.6rem 1rem;
+  text-align: center;
 }
 
 main .form form .field-footer-panel .field-footer p {
-  margin: 0 !important;
-  color: #c8d0e8 !important;
-  font-size: 0.72rem !important;
-  font-weight: 400 !important;
-  letter-spacing: 0.02em !important;
+  margin: 0;
+  color: #c8d0e8;
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+/* ── Footer: fixed at viewport bottom, never moves on scroll ─────────────── */
+
+/* Footer is locked to the viewport — taken out of normal flow */
+main .form form .field-footer-panel {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0 ;
+  width: 100%;
+  z-index: 200;
+}
+
+/* Prevent page content from being hidden behind the fixed header and footer */
+main .form form {
+  padding-top: 110px ;
+  padding-bottom: 2.5rem ;
 }

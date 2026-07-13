@@ -103,6 +103,8 @@ export async function verifyOTPAndGetDemogDetails(otp) {
         kycFlag: 'Y',
         accountNumber: 'XX50151',
         customerID: 'XX12345',
+        referenceFullName: 'Rajesh Kumar',
+        referenceMobile: '9876543210',
       }],
     },
     status: { responseCode: '0', errorCode: '', errorDesc: '' },

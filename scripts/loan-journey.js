@@ -753,16 +753,44 @@ export async function initBureauOfferPage() {
   // Mutual exclusivity: Other Bank dropdown ↔ bank cards
   const otherBankSelect = form.querySelector('[name="otherBankName"]');
   const bankRadios = form.querySelectorAll('[name="selectedBank"]');
+
+  // Inline error shown below the Other Bank dropdown
+  const bankErrorAnchor = otherBankSelect?.closest('.field-wrapper') ?? null;
+  const showBankError = (msg) => {
+    form.querySelector('.bank-select-error')?.remove();
+    if (!msg || !bankErrorAnchor) return;
+    const err = document.createElement('p');
+    err.className = 'bank-select-error loan-api-error';
+    err.textContent = msg;
+    bankErrorAnchor.after(err);
+  };
+
+  // Clear error as soon as user makes any bank selection
   otherBankSelect?.addEventListener('change', () => {
-    if (otherBankSelect.value) bankRadios.forEach((r) => { r.checked = false; });
+    if (otherBankSelect.value) {
+      bankRadios.forEach((r) => { r.checked = false; });
+      showBankError('');
+    }
   });
   bankRadios.forEach((radio) => {
-    radio.addEventListener('change', () => { if (otherBankSelect) otherBankSelect.value = ''; });
+    radio.addEventListener('change', () => {
+      if (otherBankSelect) otherBankSelect.value = '';
+      showBankError('');
+    });
   });
 
   const handleContinue = async (e) => {
     e.preventDefault();
     e.stopImmediatePropagation();
+
+    const selectedBank = form.querySelector('[name="selectedBank"]:checked')?.value
+      || form.querySelector('[name="otherBankName"]')?.value?.trim()
+      || '';
+
+    if (!selectedBank) {
+      showBankError('Please select your salary account bank before proceeding.');
+      return;
+    }
 
     const continueBtn = form.querySelector('button[type="submit"]');
     if (continueBtn) {
@@ -771,13 +799,10 @@ export async function initBureauOfferPage() {
     }
 
     try {
-      const selectedBank = form.querySelector('[name="selectedBank"]:checked')?.value
-        || form.querySelector('[name="otherBankName"]')?.value
-        || '';
       const result = await getBureauOffer({
         customerID: offer.customerID,
         bankJourneyID: sessionStorage.getItem('bankJourneyID'),
-        selectedBank,
+        selectedBank, // validated non-empty above
         incomeMethod: form.querySelector('[name="incomeMethod"]:checked')?.value || '',
       });
 
@@ -1014,10 +1039,12 @@ export async function initPreviewPage() {
   setField(form, 'salary_ifsc_display', offer.ifscCode || '—'); // cspell:disable-line
   setField(form, 'salary_bank_display', offer.bankName || '—');
 
-  // Populate office address and reference details from personal info form
+  // Populate office address from personal info form
   setField(form, 'office_address_display', personalInfo.officeAddress || offer.employerName || '—');
-  setField(form, 'reference_name_display', personalInfo.referenceFullName || '—');
-  setField(form, 'reference_mobile_display', personalInfo.referenceMobile || '—');
+
+  // Reference details from API response
+  setField(form, 'reference_name_display', offer.referenceFullName || '—');
+  setField(form, 'reference_mobile_display', offer.referenceMobile || '—');
 
   // Make all display fields read-only
   form.querySelectorAll(
