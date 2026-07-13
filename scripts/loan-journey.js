@@ -982,6 +982,9 @@ export async function initPreviewPage() {
   const form = await waitForForm();
   if (!form) return;
 
+  // Read personalInfoData early so it can override API values throughout
+  const personalInfo = JSON.parse(sessionStorage.getItem('personalInfoData') || '{}');
+
   // Populate loan details fields authored in AEM
   setField(form, 'loan_amount_display', formatINR(selectedAmount));
   setField(form, 'emi_amount_display', formatINR(selectedEMI));
@@ -989,9 +992,10 @@ export async function initPreviewPage() {
   setField(form, 'processing_fee_display', formatINR(processingFee));
   setField(form, 'taxes_display', formatINR(Math.round(processingFee * 0.18)));
   setField(form, 'rate_display', `${offer.rateOfInterest}%`);
-  setField(form, 'employer_display', offer.employerName || '—');
+  setField(form, 'employer_display', personalInfo.employerName || offer.employerName || '—');
   setField(form, 'schedule_charges', 'Click here');
-  setField(form, 'type_of_loan_display', offer.typeOfLoan || 'Fresh Loan');
+  // Prefer what the user selected on personal-info over the API default
+  setField(form, 'type_of_loan_display', personalInfo.loanType || offer.typeOfLoan || 'Fresh Loan');
 
   // Populate personal details fields — prefer values the user entered on the Welcome page
   const previewMobile = sessionStorage.getItem('welcomeMobile');
@@ -1005,13 +1009,12 @@ export async function initPreviewPage() {
   setField(form, 'address_display', address || '—');
   setField(form, 'residence_display', offer.residenceType || '—');
 
-  // Populate salary account details (from bureau offer merged into offerDemogDetails)
+  // Populate salary account details (merged from bureau offer API response)
   setField(form, 'salary_account_number', offer.salaryAccountNumber || '—');
-  setField(form, 'salary_ifsc_display', offer.ifscCode || '—');
+  setField(form, 'salary_ifsc_display', offer.ifscCode || '—'); // cspell:disable-line
   setField(form, 'salary_bank_display', offer.bankName || '—');
 
   // Populate office address and reference details from personal info form
-  const personalInfo = JSON.parse(sessionStorage.getItem('personalInfoData') || '{}');
   setField(form, 'office_address_display', personalInfo.officeAddress || offer.employerName || '—');
   setField(form, 'reference_name_display', personalInfo.referenceFullName || '—');
   setField(form, 'reference_mobile_display', personalInfo.referenceMobile || '—');
