@@ -688,21 +688,27 @@ export async function initPersonalInfoPage() {
       return;
     }
 
+    // Try multiple authored name variants for fields that may differ across form versions.
+    // Uses find+querySelector pair to avoid a for loop (linter requires array iterations).
+    const pick = (...names) => {
+      const hit = names.find((n) => form.querySelector(`[name="${n}"]`)?.value?.trim());
+      return hit ? (form.querySelector(`[name="${hit}"]`).value.trim()) : '';
+    };
     const personalInfoData = {
-      firstName: form.querySelector('[name="firstName"]')?.value || '',
-      middleName: form.querySelector('[name="middleName"]')?.value || '',
-      lastName: form.querySelector('[name="lastName"]')?.value || '',
+      firstName: pick('firstName', 'first_name'),
+      middleName: pick('middleName', 'middle_name'),
+      lastName: pick('lastName', 'last_name'),
       gender: form.querySelector('[name="gender"]')?.value || '',
-      emailId: form.querySelector('[name="emailId"]')?.value || '',
+      emailId: pick('emailId', 'email_id', 'email'),
       addressType: form.querySelector('[name="addressType"]:checked')?.value || 'Both',
-      employerName: form.querySelector('[name="employerNameText"]')?.value || '',
-      industryType: form.querySelector('[name="industryType"]')?.value || '',
-      monthlyIncome: form.querySelector('[name="monthlyIncome"]')?.value || '',
-      ongoingEmis: form.querySelector('[name="ongoingEmis"]')?.value || '',
-      loanType: form.querySelector('[name="loanType"]')?.value || 'Fresh Loan',
-      officeAddress: form.querySelector('[name="officeAddress"]')?.value || '',
-      referenceFullName: form.querySelector('[name="referenceFullName"]')?.value || '',
-      referenceMobile: form.querySelector('[name="referenceMobile"]')?.value || '',
+      employerName: pick('employerNameText', 'employer_name', 'employerName'),
+      industryType: pick('industryType', 'industry_type'),
+      monthlyIncome: pick('monthlyIncome', 'monthly_income'),
+      ongoingEmis: pick('ongoingEmis', 'ongoing_emis'), // cspell:disable-line
+      loanType: pick('loanType', 'loan_type') || 'Fresh Loan',
+      officeAddress: pick('officeAddress', 'office_address'),
+      referenceFullName: pick('referenceFullName', 'reference_full_name', 'refFullName', 'refName'),
+      referenceMobile: pick('referenceMobile', 'reference_mobile', 'refMobile'),
     };
     sessionStorage.setItem('personalInfoData', JSON.stringify(personalInfoData));
     trackEvent('personalInfo_confirmed', { loanType: personalInfoData.loanType });
@@ -827,8 +833,9 @@ export async function initOfferPage() {
   if (!form) return;
 
   const rate = Number.parseFloat(offer.rateOfInterest);
-  const offerAmount = Math.min(Number.parseFloat(offer.offerAmount), 1500000);
-  const offerTenure = Number.parseInt(offer.tenure, 10);
+  // Default sliders to maximum values (15L / 84 months) so users start with the full offer.
+  const offerAmount = 1500000;
+  const offerTenure = 84;
 
   const amountSlider = form.querySelector('[name="loanAmount"]');
   const tenureSlider = form.querySelector('[name="loanTenure"]');
@@ -860,24 +867,34 @@ export async function initOfferPage() {
   );
 
   // Populate authored offer summary fields.
-  // taxes = 18% GST on the processing fee returned by the API.
+  // Processing fee = 1% of principal; taxes = 18% GST on processing fee.
+  // Both recalculate whenever the slider moves.
   // The taxes field is not readonly in authoring, so the Rule Engine can reset it to
   // empty when it restores form state (sync-complete). Re-apply it once loading is done.
   const fullName = [offer.customerFirstName, offer.customerLastName].filter(Boolean).join(' ');
-  const processingFee = Number.parseFloat(offer.processingFee || '0');
-  const taxes = Math.round(processingFee * 0.18);
-  const applyTaxes = () => setField(form, 'taxes', formatINR(taxes));
+
+  const calcFeeAndTax = (principal) => {
+    const fee = Math.round(principal * 0.01);
+    const tax = Math.round(fee * 0.18);
+    return { fee, tax };
+  };
+
+  const applyFeeAndTax = (principal) => {
+    const { fee, tax } = calcFeeAndTax(principal);
+    setField(form, 'processingFee', formatINR(fee));
+    setField(form, 'taxes', formatINR(tax));
+  };
 
   setField(form, 'customerName', fullName);
   setField(form, 'loanAmountDisplay', formatINR(offerAmount));
   setField(form, 'monthlyEMI', formatINR(calculateEMI(offerAmount, rate, offerTenure)));
   setField(form, 'interestRate', `${rate}%`);
-  applyTaxes();
+  applyFeeAndTax(offerAmount);
 
   // Re-apply once the Rule Engine finishes restoring form state (removes "loading" class).
   if (form.classList.contains('loading')) {
     const obs = new MutationObserver(() => {
-      if (!form.classList.contains('loading')) { obs.disconnect(); applyTaxes(); }
+      if (!form.classList.contains('loading')) { obs.disconnect(); applyFeeAndTax(offerAmount); }
     });
     obs.observe(form, { attributes: true, attributeFilter: ['class'] });
   }
@@ -889,7 +906,7 @@ export async function initOfferPage() {
 
     setField(form, 'loanAmountDisplay', formatINR(principal));
     setField(form, 'monthlyEMI', formatINR(emi));
-    applyTaxes();
+    applyFeeAndTax(principal);
     if (amountPill) amountPill.textContent = formatINR(principal);
     if (tenurePill) tenurePill.textContent = `${tenure} months`;
     syncSliderTrack(amountSlider);
@@ -953,7 +970,8 @@ export async function initPreviewPage() {
 
   const fullName = [offer.customerFirstName, offer.customerLastName]
     .filter(Boolean).join(' ');
-  const processingFee = Number.parseFloat(offer.processingFee || '0');
+  // Processing fee = 1% of selected loan amount; taxes = 18% GST on that fee.
+  const processingFee = Math.round(selectedAmount * 0.01);
   const address = [
     offer.customerAddress1,
     offer.customerAddress2,
@@ -969,6 +987,7 @@ export async function initPreviewPage() {
   setField(form, 'emi_amount_display', formatINR(selectedEMI));
   setField(form, 'tenure_display', `${selectedTenure} months`);
   setField(form, 'processing_fee_display', formatINR(processingFee));
+  setField(form, 'taxes_display', formatINR(Math.round(processingFee * 0.18)));
   setField(form, 'rate_display', `${offer.rateOfInterest}%`);
   setField(form, 'employer_display', offer.employerName || '—');
   setField(form, 'schedule_charges', 'Click here');
@@ -1016,6 +1035,24 @@ export async function initPreviewPage() {
       panel.setAttribute('data-collapsed', String(!collapsed));
     });
   });
+
+  // ── Email pre-fill ─────────────────────────────────────────────────────────
+  // personal-info page stores verified email as 'verifiedEmail'; setupEmailVerification
+  // reads 'verifiedEmail:field-personal-email'. Bridge the gap so the email is
+  // pre-populated and already-verified status carries forward to this page.
+  const carriedEmail = sessionStorage.getItem('verifiedEmail')
+    || personalInfo.emailId
+    || offer.emailAddress
+    || '';
+  if (carriedEmail) {
+    sessionStorage.setItem('verifiedEmail:field-personal-email', carriedEmail);
+  }
+
+  // Remove authored readonly from email inputs so setupEmailVerification can
+  // manage their readonly state (it re-applies readonly when marking as verified).
+  // work_email has no pre-filled source so the user must be able to type in it.
+  form.querySelector('.field-personal-email input')?.removeAttribute('readonly');
+  form.querySelector('.field-work-email input')?.removeAttribute('readonly');
 
   const personalEmailVerification = setupEmailVerification(form, 'field-personal-email');
   setupEmailVerification(form, 'field-work-email');

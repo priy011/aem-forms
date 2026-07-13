@@ -3192,3 +3192,141 @@ main .form form fieldset.panel-wrapper.field-header-bar .field-safe-badge img {
   width: auto;
 }
 
+/* ── Personal Info: Inline Verify button inside email field ──────────────── */
+
+/* Email wrapper becomes a relative container for absolute-positioned button */
+main .form form .field-personaldetails .field-emailid {
+  position: relative !important;
+}
+
+/* Email input gets right padding so text doesn't run under the Verify button */
+main .form form .field-personaldetails .field-emailid input[type="email"] {
+  padding-right: 5.5rem !important;
+}
+
+/* Verify button wrapper — absolute, right-inside the input */
+main .form form .field-personaldetails .field-emailid .field-verifyemailbtn {
+  position: absolute !important;
+  right: 0.75rem !important;
+  bottom: 0.55rem !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  grid-column: unset !important;
+}
+
+/* Verify button itself: text-only blue link style */
+main .form form .field-personaldetails .field-emailid .field-verifyemailbtn button {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: #3d5af1 !important;
+  font-size: 0.9rem !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  min-width: unset !important;
+  width: auto !important;
+}
+
+main .form form .field-personaldetails .field-emailid .field-verifyemailbtn button:disabled {
+  color: #8fa3f7 !important;
+  cursor: default !important;
+}
+
+/* Inline error — shown below the email field, inside the panel */
+main .form form .email-field-error {
+  grid-column: 1 / -1 !important;
+  color: #d32f2f !important;
+  font-size: 0.8rem !important;
+  margin: 0.1rem 0 0 !important;
+  padding: 0 !important;
+}
+
+/* ── Email Verification (Preview page) ───────────────────────────────────── */
+
+/* Outlined Verify button */
+main .form form .email-verify-btn {
+  display: inline-block;
+  padding: 0.45rem 1.25rem;
+  background: transparent;
+  color: #3d5af1;
+  border: 1.5px solid #3d5af1;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.18s, color 0.18s;
+}
+
+main .form form .email-verify-btn:hover { background: #eef1fb; }
+
+main .form form .email-verify-btn:disabled {
+  color: #8fa3f7;
+  border-color: #c0ccfa;
+  cursor: default;
+  background: transparent;
+}
+
+/* OTP row — hidden until Verify is clicked */
+main .form form .email-otp-row {
+  display: none;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+}
+
+main .form form .email-otp-row.visible { display: flex; }
+
+main .form form .email-otp-input {
+  flex: 0 0 140px;
+  padding: 0.45rem 0.7rem;
+  border: 1.5px solid #c0c8f0;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  letter-spacing: 0.12em;
+}
+
+main .form form .email-otp-confirm-btn,
+main .form form .email-otp-resend-btn {
+  padding: 0.45rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s;
+}
+
+main .form form .email-otp-confirm-btn { background: #3d5af1; color: #fff; }
+main .form form .email-otp-confirm-btn:disabled { background: #8fa3f7; cursor: default; }
+
+main .form form .email-otp-resend-btn {
+  background: transparent;
+  color: #3d5af1;
+  border: 1.5px solid #3d5af1;
+}
+
+main .form form .email-otp-resend-btn:disabled { opacity: 0.5; cursor: default; }
+
+main .form form .email-otp-msg { width: 100%; font-size: 0.8rem; }
+main .form form .email-otp-msg.email-otp-error { color: #d32f2f; }
+main .form form .email-otp-msg.email-otp-success { color: #2e7d32; }
+
+/* Verified badge */
+main .form form .email-verified-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.85rem;
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #a5d6a7;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
