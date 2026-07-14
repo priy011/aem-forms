@@ -883,7 +883,7 @@ export async function initOfferPage() {
   const amountPill = addSliderExtras(
     amountSlider,
     formatINR(offerAmount),
-    ['50K', '2L', '4L', '6L', '8L', '10L', '12L', '15L'],
+    ['50K', '3L', '6L', '9L', '12L', '15L'],
   );
   const tenurePill = addSliderExtras(
     tenureSlider,
