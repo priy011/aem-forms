@@ -366,25 +366,24 @@ export async function initWelcomePage() {
     if (submitBtn) submitBtn.disabled = !checkFormValid();
   }
 
-  // Mobile: strip non-digits, cap at 10, and immediately flag a bad starting digit
-  mobileInput?.addEventListener('input', () => {
-    const digits = mobileInput.value.replace(/\D/g, '').slice(0, 10);
-    if (mobileInput.value !== digits) mobileInput.value = digits;
-    if (mobileInput.value.length >= 1 && !/^[6-9]/.test(mobileInput.value)) {
-      mobileInput.setCustomValidity('Mobile number must start with 6, 7, 8, or 9.');
-      checkValidation(mobileInput);
-    } else {
-      if (mobileInput.validity.customError) mobileInput.setCustomValidity('');
-      if (mobileInput.validity.valid) checkValidation(mobileInput);
+  // Mobile: block 0-5 as the first digit — the character never appears in the field.
+  // keydown handles direct keyboard input; the input handler catches paste.
+  mobileInput?.addEventListener('keydown', (e) => {
+    if (/^[0-5]$/.test(e.key) && mobileInput.value.replace(/\D/g, '').length === 0) {
+      e.preventDefault();
     }
+  });
+  mobileInput?.addEventListener('input', () => {
+    let digits = mobileInput.value.replace(/\D/g, '').slice(0, 10);
+    // Strip a leading 0-5 that could arrive via paste or autofill
+    if (/^[0-5]/.test(digits)) digits = digits.slice(1);
+    if (mobileInput.value !== digits) mobileInput.value = digits;
+    if (mobileInput.validity.customError) mobileInput.setCustomValidity('');
+    if (mobileInput.validity.valid) checkValidation(mobileInput);
     updateSubmitBtn();
   });
   mobileInput?.addEventListener('blur', () => {
-    if (!mobileInput.value) return;
-    mobileInput.setCustomValidity(
-      !/^[6-9]/.test(mobileInput.value) ? 'Mobile number must start with 6, 7, 8, or 9.' : '',
-    );
-    checkValidation(mobileInput);
+    if (mobileInput.value) checkValidation(mobileInput);
   });
 
   // PAN: auto-uppercase; flag 4th-character 'P' rule from the 4th keystroke onwards
