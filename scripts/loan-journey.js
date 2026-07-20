@@ -349,7 +349,7 @@ export async function initWelcomePage() {
     if (!/^[6-9]\d{9}$/.test(mobileInput?.value ?? '')) return false;
     const type = getIdentifierType();
     if (!type) return false;
-    if (type === 'PAN_NO' && !/^[A-Z]{5}\d{4}[A-Z]$/.test(panInput?.value ?? '')) return false;
+    if (type === 'PAN_NO' && !/^[A-Z]{3}P[A-Z]\d{4}[A-Z]$/.test(panInput?.value ?? '')) return false;
     if (type !== 'PAN_NO') {
       const dob = dobInput?.value;
       const parsed = new Date(dob);
@@ -366,26 +366,53 @@ export async function initWelcomePage() {
     if (submitBtn) submitBtn.disabled = !checkFormValid();
   }
 
-  // Mobile: strip non-digits and cap at 10 characters, then update button + inline error
+  // Mobile: strip non-digits, cap at 10, and immediately flag a bad starting digit
   mobileInput?.addEventListener('input', () => {
     const digits = mobileInput.value.replace(/\D/g, '').slice(0, 10);
     if (mobileInput.value !== digits) mobileInput.value = digits;
+    if (mobileInput.value.length >= 1 && !/^[6-9]/.test(mobileInput.value)) {
+      mobileInput.setCustomValidity('Mobile number must start with 6, 7, 8, or 9.');
+      checkValidation(mobileInput);
+    } else {
+      if (mobileInput.validity.customError) mobileInput.setCustomValidity('');
+      if (mobileInput.validity.valid) checkValidation(mobileInput);
+    }
     updateSubmitBtn();
-    if (mobileInput.validity.valid) checkValidation(mobileInput);
   });
   mobileInput?.addEventListener('blur', () => {
-    if (mobileInput.value) checkValidation(mobileInput);
+    if (!mobileInput.value) return;
+    mobileInput.setCustomValidity(
+      !/^[6-9]/.test(mobileInput.value) ? 'Mobile number must start with 6, 7, 8, or 9.' : '',
+    );
+    checkValidation(mobileInput);
   });
 
-  // PAN: auto-uppercase, then update button + inline error
+  // PAN: auto-uppercase; flag 4th-character 'P' rule from the 4th keystroke onwards
   panInput?.addEventListener('input', () => {
     const upper = panInput.value.toUpperCase();
     if (panInput.value !== upper) panInput.value = upper;
+    const val = panInput.value;
+    let msg = '';
+    if (val.length >= 4 && val[3] !== 'P') {
+      msg = 'The 4th character of PAN must be "P" for individual applicants (e.g. AAAPX9999Y).';
+    } else if (val.length === 10 && !/^[A-Z]{3}P[A-Z]\d{4}[A-Z]$/.test(val)) {
+      msg = 'Please enter a valid PAN number (format: AAAPX9999Y).';
+    }
+    panInput.setCustomValidity(msg);
+    if (msg || panInput.validity.valid) checkValidation(panInput);
     updateSubmitBtn();
-    if (panInput.validity.valid) checkValidation(panInput);
   });
   panInput?.addEventListener('blur', () => {
-    if (panInput.value) checkValidation(panInput);
+    if (!panInput.value) return;
+    const val = panInput.value;
+    let msg = '';
+    if (val[3] && val[3] !== 'P') {
+      msg = 'The 4th character of PAN must be "P" for individual applicants (e.g. AAAPX9999Y).';
+    } else if (!/^[A-Z]{3}P[A-Z]\d{4}[A-Z]$/.test(val)) {
+      msg = 'Please enter a valid PAN number (format: AAAPX9999Y).';
+    }
+    panInput.setCustomValidity(msg);
+    checkValidation(panInput);
   });
 
   identifierRadios.forEach((r) => r.addEventListener('change', updateSubmitBtn));
