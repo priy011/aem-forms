@@ -102,7 +102,7 @@ async function initiateIdentificationAndNavigate(mobileNo, identifierName, ident
  * @return {void}
  */
 async function verifyOtpAndNavigate(otp, globals) {
-  if (!otp || otp.length !== 6) {
+  if (otp?.length !== 6) {
     alert('Please enter the 6-digit OTP.');
     return;
   }
@@ -124,21 +124,75 @@ async function verifyOtpAndNavigate(otp, globals) {
 }
 
 /**
- * Returns true if the applicant is at least 18 years old.
- * Use in Rule Editor condition to show/hide the DOB error field and enable/disable 
-the submit button:
- *   When dobValue changes → If validateAge(dobValue) is false → Show dob-error-msg
- *   When dobValue changes → If validateAge(dobValue) is true  → Hide dob-error-msg
- * @name validateAge Checks if applicant is 18 or older
- * @param {string} dob - Date of birth in YYYY-MM-DD or DD/MM/YYYY format
- * @return {boolean} true if age >= 18, false otherwise
+ * Validates that the applicant's age falls within the configured eligible range.
+ *
+ * The min and max age limits are read from the DOB field's properties, which are
+ * set by a content author in AEM Universal Editor (Validation tab → "Minimum eligible
+ * age" / "Maximum eligible age").  No code change or deployment is needed when
+ * the business requirement changes — the author simply updates the field property.
+ *
+ * Rule Editor usage:
+ *   When dobValue changes
+ *     → If validateEligibleAge(dobValue, $globals) is false
+ *       → Set focus on dobValue   (field error is shown automatically)
+ *
+ * The field's "Script validation message" (validateExpMessage) in AEM Author should
+ * be set to something like "Applicant age must be between {minAge} and {maxAge} years."
+ * Authors update both the message and the numeric limits together in one place.
+ *
+ * @name validateEligibleAge Validates applicant age against authored min/max limits
+ * @param {string} dob     - Date of birth (YYYY-MM-DD or any Date-parseable string)
+ * @param {scope}  globals - AEM Forms globals object (injected by the rule engine)
+ * @return {boolean} true if age is within [minEligibleAge, maxEligibleAge], false otherwise
  */
-function validateAge(dob) {
+function validateEligibleAge(dob, globals) {
   if (!dob) return false;
+
   const parsed = new Date(dob);
   if (Number.isNaN(parsed.getTime())) return false;
-  const age = (Date.now() - parsed) / (365.25 * 24 * 3600 * 1000);
-  return age >= 21;
+
+  // Read limits authored on the field.  globals.field is the DOB field the rule
+  // is attached to; its .properties object carries the values set in Universal Editor.
+  const fieldProps = globals?.field?.properties ?? {};
+  const minAge = Number(fieldProps.minEligibleAge ?? 21);
+  const maxAge = Number(fieldProps.maxEligibleAge ?? 65);
+
+  const ageYears = (Date.now() - parsed.getTime()) / (365.25 * 24 * 3600 * 1000);
+  return ageYears >= minAge && ageYears <= maxAge;
+}
+
+/**
+ * Returns a human-readable explanation of why the age check failed.
+ * Wire this to a plain-text / error field to show a specific message:
+ *
+ *   When dobValue changes
+ *     → If validateEligibleAge(dobValue, $globals) is false
+ *       → Set value of dob-error-msg to getAgeValidationMessage(dobValue, $globals)
+ *
+ * @name getAgeValidationMessage Returns the reason the age validation failed
+ * @param {string} dob     - Date of birth
+ * @param {scope}  globals - AEM Forms globals object
+ * @return {string} Empty string if valid; descriptive message if invalid
+ */
+function getAgeValidationMessage(dob, globals) {
+  if (!dob) return 'Please enter your date of birth.';
+
+  const parsed = new Date(dob);
+  if (Number.isNaN(parsed.getTime())) return 'Please enter a valid date of birth.';
+
+  const fieldProps = globals?.field?.properties ?? {};
+  const minAge = Number(fieldProps.minEligibleAge ?? 21);
+  const maxAge = Number(fieldProps.maxEligibleAge ?? 65);
+
+  const ageYears = (Date.now() - parsed.getTime()) / (365.25 * 24 * 3600 * 1000);
+
+  if (ageYears < minAge) {
+    return `Applicant must be at least ${minAge} years old to apply for this loan.`;
+  }
+  if (ageYears > maxAge) {
+    return `Applicant must be below ${maxAge} years of age to be eligible for this loan.`;
+  }
+  return '';
 }
 
 // eslint-disable-next-line import/prefer-default-export
@@ -147,7 +201,8 @@ export {
   days,
   submitFormArrayToString,
   maskMobileNumber,
-  validateAge,
+  validateEligibleAge,
+  getAgeValidationMessage,
   initiateIdentificationAndNavigate,
   verifyOtpAndNavigate,
 };

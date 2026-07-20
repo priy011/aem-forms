@@ -1129,6 +1129,22 @@
         "description": "Error message shown when the date entered is after the maximum date."
       },
       {
+        "component": "number",
+        "name": "minEligibleAge",
+        "label": "Minimum eligible age (years)",
+        "valueType": "number",
+        "value": 21,
+        "description": "Applicants younger than this age will fail validation. Default: 21."
+      },
+      {
+        "component": "number",
+        "name": "maxEligibleAge",
+        "label": "Maximum eligible age (years)",
+        "valueType": "number",
+        "value": 65,
+        "description": "Applicants older than this age will fail validation. Change this value in AEM Author to update the business rule without any code deployment."
+      },
+      {
         "component": "tab",
         "label": "Formats",
         "name": "formats"
