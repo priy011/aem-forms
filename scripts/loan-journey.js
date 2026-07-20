@@ -67,21 +67,10 @@ function trackEvent(eventName, payload = {}) {
   console.info('[Analytics]', eventName, event);
 }
 
-function isAgeValid(dob, dobInputEl) {
+function isAgeValid(dob, minAge = 21, maxAge = 65) {
   if (!dob) return false;
   const years = (Date.now() - new Date(dob)) / (365.25 * 24 * 3600 * 1000);
-  if (Number.isNaN(years)) return false;
-  // Read age limits from the date picker's current min/max attributes.
-  // These start as defaults set below, then get overridden by the Rule Editor's
-  // initDobDateRange() when authored minEligibleAge / maxEligibleAge values exist.
-  const now = Date.now();
-  const maxAge = dobInputEl?.min
-    ? Math.floor((now - new Date(dobInputEl.min)) / (365.25 * 24 * 3600 * 1000))
-    : 65;
-  const minAge = dobInputEl?.max
-    ? Math.floor((now - new Date(dobInputEl.max)) / (365.25 * 24 * 3600 * 1000))
-    : 21;
-  return years >= minAge && years <= maxAge;
+  return !Number.isNaN(years) && years >= minAge && years <= maxAge;
 }
 
 // Injects a Verify button + OTP row into a plain text-input field wrapper and
@@ -305,14 +294,18 @@ export async function initWelcomePage() {
 
   if (submitBtn) submitBtn.disabled = true;
 
-  // Set initial DOB picker range using default age limits (21 – 65).
-  // The Rule Editor's initDobDateRange() overwrites these with the authored
-  // minEligibleAge / maxEligibleAge values once the field initialises.
+  // Read age limits authored in Universal Editor (Validation tab → "Minimum / Maximum
+  // eligible age").  createFieldWrapper() stores all field properties as data-* attrs,
+  // so these are available on the wrapper div as soon as the form renders — no Rule
+  // Editor rule or extra initialisation step needed.
+  const dobMinAge = Number(dobWrapper?.dataset?.minEligibleAge ?? 21);
+  const dobMaxAge = Number(dobWrapper?.dataset?.maxEligibleAge ?? 65);
+
   if (dobInput) {
     const today = new Date();
-    dobInput.max = new Date(today.getFullYear() - 21, today.getMonth(), today.getDate())
+    dobInput.max = new Date(today.getFullYear() - dobMinAge, today.getMonth(), today.getDate())
       .toISOString().split('T')[0];
-    dobInput.min = new Date(today.getFullYear() - 65, today.getMonth(), today.getDate())
+    dobInput.min = new Date(today.getFullYear() - dobMaxAge, today.getMonth(), today.getDate())
       .toISOString().split('T')[0];
   }
 
@@ -340,20 +333,11 @@ export async function initWelcomePage() {
     } else if (dob && parsed > new Date()) {
       msg = 'Date of birth cannot be a future date.';
     } else if (dob) {
-      const now = Date.now();
-      const years = (now - parsed.getTime()) / (365.25 * 24 * 3600 * 1000);
-      // Read live limits from the picker attributes so authored values (set by
-      // initDobDateRange) are respected automatically without any extra wiring.
-      const maxAge = dobInput.min
-        ? Math.floor((now - new Date(dobInput.min)) / (365.25 * 24 * 3600 * 1000))
-        : 65;
-      const minAge = dobInput.max
-        ? Math.floor((now - new Date(dobInput.max)) / (365.25 * 24 * 3600 * 1000))
-        : 21;
-      if (years < minAge) {
-        msg = `Applicant must be at least ${minAge} years old to apply for this loan.`;
-      } else if (years > maxAge) {
-        msg = `Applicant must be below ${maxAge} years of age to be eligible for this loan.`;
+      const years = (Date.now() - parsed.getTime()) / (365.25 * 24 * 3600 * 1000);
+      if (years < dobMinAge) {
+        msg = `Applicant must be at least ${dobMinAge} years old to apply for this loan.`;
+      } else if (years > dobMaxAge) {
+        msg = `Applicant must be below ${dobMaxAge} years of age to be eligible for this loan.`;
       }
     }
     dobInput.setCustomValidity(msg);
@@ -369,7 +353,7 @@ export async function initWelcomePage() {
     if (type !== 'PAN_NO') {
       const dob = dobInput?.value;
       const parsed = new Date(dob);
-      if (!dob || Number.isNaN(parsed.getTime()) || parsed > new Date() || !isAgeValid(dob, dobInput)) {
+      if (!dob || Number.isNaN(parsed.getTime()) || parsed > new Date() || !isAgeValid(dob, dobMinAge, dobMaxAge)) {
         return false;
       }
     }

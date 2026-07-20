@@ -104,6 +104,13 @@ export function createFieldWrapper(fd, tagName = 'div', labelFn = createLabel) {
     fieldWrapper.dataset.type = fd.type;
   }
   fieldWrapper.classList.add('field-wrapper');
+  if (fd.properties) {
+    Object.keys(fd.properties).forEach((key) => {
+      if (!key.startsWith('fd:')) {
+        fieldWrapper.dataset[key] = fd.properties[key];
+      }
+    });
+  }
   if (fd.label && fd.label.value && typeof labelFn === 'function') {
     const label = labelFn(fd);
     if (label) { fieldWrapper.append(label); }
