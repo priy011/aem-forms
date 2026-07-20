@@ -195,6 +195,35 @@ function getAgeValidationMessage(dob, globals) {
   return '';
 }
 
+/**
+ * Sets the date picker's selectable range based on the authored min/max age limits.
+ * Call this from the DOB field's "Initialize" rule in Universal Editor so the
+ * calendar always reflects the current authored values — no hardcoded dates.
+ *
+ * Rule Editor usage (on dobValue field):
+ *   When dobValue is initialized → call initDobDateRange($globals)
+ *
+ * @name initDobDateRange Initializes DOB calendar range from authored age limits
+ * @param {scope} globals - AEM Forms globals object (injected by the rule engine)
+ * @return {void}
+ */
+function initDobDateRange(globals) {
+  const fieldProps = globals?.field?.properties ?? {};
+  const minAge = Number(fieldProps.minEligibleAge ?? 21);
+  const maxAge = Number(fieldProps.maxEligibleAge ?? 65);
+
+  const today = new Date();
+  // Earliest selectable date: someone exactly maxAge years old today
+  const minDate = new Date(today.getFullYear() - maxAge, today.getMonth(), today.getDate());
+  // Latest selectable date: someone exactly minAge years old today
+  const maxDate = new Date(today.getFullYear() - minAge, today.getMonth(), today.getDate());
+
+  globals.functions.setProperty(globals.field, {
+    minimum: minDate.toISOString().split('T')[0],
+    maximum: maxDate.toISOString().split('T')[0],
+  });
+}
+
 // eslint-disable-next-line import/prefer-default-export
 export {
   getFullName,
@@ -203,6 +232,7 @@ export {
   maskMobileNumber,
   validateEligibleAge,
   getAgeValidationMessage,
+  initDobDateRange,
   initiateIdentificationAndNavigate,
   verifyOtpAndNavigate,
 };
