@@ -232,7 +232,10 @@ function startOtpTimer(form) {
     if (!timerEl) return;
     timerEl.innerHTML = '';
     if (attemptsLeft <= 0) {
-      timerEl.textContent = 'No more resend attempts allowed.';
+      timerEl.textContent = 'Resend limit reached. Redirecting to support page…';
+      setTimeout(() => {
+        globalThis.location.href = `${siblingPath('personal-loan-technical-issue')}.html`;
+      }, 2000);
       return;
     }
     const btn = document.createElement('button');
@@ -545,6 +548,7 @@ export async function initOtpPage() {
     else form.prepend(errEl);
   };
 
+  let otpFailureCount = 0;
   const handleOtpSubmit = async (e) => {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -570,8 +574,16 @@ export async function initOtpPage() {
         trackEvent('otp_success');
         globalThis.location.href = `${siblingPath('personal-loan-personal-info')}.html`;
       } else {
-        trackEvent('otp_failure', { errorCode: result.status.errorCode });
-        showOtpError(result.status.errorDesc || 'Invalid OTP. Please try again.');
+        otpFailureCount += 1;
+        trackEvent('otp_failure', { errorCode: result.status.errorCode, attempt: otpFailureCount });
+        if (otpFailureCount >= 3) {
+          showOtpError('Verification failed. Redirecting to support page…');
+          setTimeout(() => {
+            globalThis.location.href = `${siblingPath('personal-loan-technical-issue')}.html`;
+          }, 2000);
+          return;
+        }
+        showOtpError(result.status.errorDesc || `Invalid OTP. ${3 - otpFailureCount} attempt(s) remaining.`);
         if (submitBtn) submitBtn.disabled = false;
       }
     } catch (err) {
