@@ -275,6 +275,38 @@ function startOtpTimer(form) {
   startCountdown();
 }
 
+// ── Email domain suggestion chips ────────────────────────────────────────────
+// Injects @gmail.com / @outlook.com / @yahoo.com pill buttons below the email
+// input. Clicking a chip appends (or replaces) the domain part of whatever the
+// user has already typed, then fires an input event so any live validation picks
+// up the new value.
+function addEmailDomainSuggestions(form) {
+  const emailWrapper = form.querySelector('.field-emailid');
+  const emailInput = emailWrapper?.querySelector('input[type="email"]');
+  if (!emailWrapper || !emailInput) return;
+
+  const chips = document.createElement('div');
+  chips.className = 'email-domain-chips';
+
+  ['@gmail.com', '@outlook.com', '@yahoo.com'].forEach((domain) => {
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'email-domain-chip';
+    chip.textContent = domain;
+    chip.addEventListener('click', () => {
+      const local = emailInput.value.includes('@')
+        ? emailInput.value.slice(0, emailInput.value.indexOf('@'))
+        : emailInput.value;
+      emailInput.value = local + domain;
+      emailInput.dispatchEvent(new Event('input', { bubbles: true }));
+      emailInput.focus();
+    });
+    chips.append(chip);
+  });
+
+  emailWrapper.append(chips);
+}
+
 // ── Welcome page ─────────────────────────────────────────────────────────────
 export async function initWelcomePage() {
   const form = await waitForForm();
@@ -644,6 +676,9 @@ export async function initPersonalInfoPage() {
   const emailFieldWrapper = form.querySelector('.field-emailid');
   const verifyBtnWrapper = form.querySelector('.field-verifyemailbtn');
   if (emailFieldWrapper && verifyBtnWrapper) emailFieldWrapper.appendChild(verifyBtnWrapper);
+
+  // Inject @gmail.com / @outlook.com / @yahoo.com suggestion chips
+  addEmailDomainSuggestions(form);
 
   // Show errors inside the personalDetails panel (below email field), not at form top.
   const showEmailError = (msg) => {

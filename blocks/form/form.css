@@ -1177,6 +1177,32 @@ fieldset#fragment-fc65022d7b {
   margin: 0.25rem 0 0;
 }
 
+/* Email domain suggestion chips (@gmail.com / @outlook.com / @yahoo.com) */
+ .form form .field-emailid .email-domain-chips {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+ .form form .field-emailid .email-domain-chip {
+  padding: 4px 14px;
+  border-radius: 20px;
+  border: 1.5px solid #c5cae9;
+  background: #fff;
+  color: #3f51b5;
+  font-size: 0.8rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  line-height: 1.4;
+}
+
+ .form form .field-emailid .email-domain-chip:hover {
+  background: #e8eaf6;
+  border-color: #7986cb;
+}
+
 /* Collapsible panels: legend acts as toggle header */
  .form form .field-panname > legend,
  .form form .field-personaldetails > legend,
